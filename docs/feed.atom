@@ -4,7 +4,7 @@
 	<title>Muhammad Azeez</title>
 	<link rel="self" href="https://mazeez.dev/" />
 	<rights>2019</rights>
-	<updated>2019-05-30T19:32:31Z</updated>
+	<updated>2019-05-30T20:57:13Z</updated>
 	<subtitle>A blog about software engineering and beyond!</subtitle>
 	<entry>
 		<id>https://mazeez.dev/posts/how-to-get-an-instance-of-a-page-when-you-navigate-to-it-in-uwp</id>
@@ -76,7 +76,7 @@ page.Init(&amp;quot;Hello World&amp;quot;, 42);
 	</entry>
 	<entry>
 		<id>https://mazeez.dev/posts/why-you-should-read-on-topics-that-you-might-not-need-right-now</id>
-		<title>How the C# yield keyword works</title>
+		<title>Why you should read on topics that you might not need right now?</title>
 		<link href="https://mazeez.dev/posts/why-you-should-read-on-topics-that-you-might-not-need-right-now" />
 		<updated>2019-05-23T00:00:00Z</updated>
 		<content>&lt;p&gt;I was browsing web once when I stumbled upon an article about &lt;a href="https://github.com/mono/SkiaSharp"&gt;SkiaSharp&lt;/a&gt;. It's a C# wrapper around Google's fast 2D rending engine. I was developing desktop apps in WPF at the time and didn't feel the need to learn a low level library like that.&lt;/p&gt;
