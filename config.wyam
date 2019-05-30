@@ -1,0 +1,9 @@
+#recipe Blog
+
+// Customize your settings and add new ones here
+Settings[Keys.Host] = "mazeez.dev";
+Settings[BlogKeys.Title] = "Muhammad Azeez";
+Settings[BlogKeys.Description] = "A blog about software engineering and beyond!";
+Settings[Keys.LinksUseHttps] = true;
+
+// Add any pipeline customizations here

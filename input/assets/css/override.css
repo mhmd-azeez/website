@@ -1,0 +1,24 @@
+pre {
+    border: 0px solid #ccc;
+    border-radius: 0px;
+    padding: 0;
+    margin: 0;
+    overflow: auto;
+    word-wrap: normal;
+    word-break: normal;
+    margin-bottom: 20px;
+    background: transparent;
+    font-size: inherit;
+}
+
+pre code{
+    border: 0px solid #ccc;
+    border-radius: 0px;
+    padding: 10px;
+    margin: 0;
+    overflow: auto;
+    font-size: 14px;
+    word-wrap: normal;
+    word-break: normal;
+    margin-bottom: 20px;
+}

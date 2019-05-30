@@ -1,0 +1,490 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+	<channel>
+		<title>Muhammad Azeez</title>
+		<link>https://mazeez.dev/</link>
+		<description>A blog about software engineering and beyond!</description>
+		<copyright>2019</copyright>
+		<pubDate>Thu, 30 May 2019 11:27:31 GMT</pubDate>
+		<lastBuildDate>Thu, 30 May 2019 11:27:31 GMT</lastBuildDate>
+		<item>
+			<title>How to get an instance of a page when you navigate to it in UWP</title>
+			<link>https://mazeez.dev/posts/how-to-get-an-instance-of-a-page-when-you-navigate-to-it-in-uwp</link>
+			<description>&lt;p&gt;By default when navigating a frame to a page, UWP doesn't give you back a page instance. So the only way of passing parameters is to use the &lt;code&gt;parameter&lt;/code&gt; parameter. But having an instance to the page can have many other benefits: For example it allows the child page to have custom events and the parent page can subscribe to them.&lt;/p&gt;</description>
+			<guid>https://mazeez.dev/posts/how-to-get-an-instance-of-a-page-when-you-navigate-to-it-in-uwp</guid>
+			<pubDate>Sun, 26 May 2019 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;By default when navigating a frame to a page, UWP doesn't give you back a page instance. So the only way of passing parameters is to use the &lt;code&gt;parameter&lt;/code&gt; parameter. But having an instance to the page can have many other benefits: For example it allows the child page to have custom events and the parent page can subscribe to them.&lt;/p&gt;
+&lt;p&gt;However &lt;code&gt;Frame&lt;/code&gt; has an event called &lt;code&gt;Navigated&lt;/code&gt; that can help us to write an extension method to get a reference to the actual instance:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Navigation;
+
+namespace Windows.UI.Xaml.Controls
+{
+    public static class FrameExtensions
+    {
+        /// &amp;lt;summary&amp;gt;
+        /// Navigates to a page and returns the instance of the page if it succeeded,
+        /// otherwise returns null.
+        /// &amp;lt;/summary&amp;gt;
+        /// &amp;lt;typeparam name=&amp;quot;TPage&amp;quot;&amp;gt;&amp;lt;/typeparam&amp;gt;
+        /// &amp;lt;param name=&amp;quot;frame&amp;quot;&amp;gt;&amp;lt;/param&amp;gt;
+        /// &amp;lt;param name=&amp;quot;transitionInfo&amp;quot;&amp;gt;The navigation transition.
+        /// Example: &amp;lt;see cref=&amp;quot;DrillInNavigationTransitionInfo&amp;quot;/&amp;gt; or
+        /// &amp;lt;see cref=&amp;quot;SlideNavigationTransitionInfo&amp;quot;/&amp;gt;&amp;lt;/param&amp;gt;
+        /// &amp;lt;returns&amp;gt;&amp;lt;/returns&amp;gt;
+        public static TPage Navigate&amp;lt;TPage&amp;gt;(
+            this Frame frame,
+            NavigationTransitionInfo transitionInfo = null)
+            where TPage : Page
+        {
+            TPage view = null;
+            void OnNavigated(object s, NavigationEventArgs args)
+            {
+                frame.Navigated -= OnNavigated;
+                view = args.Content as TPage;
+            }
+
+            frame.Navigated += OnNavigated;
+
+            frame.Navigate(typeof(TPage), null, transitionInfo);
+            return view;
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Suppose we have page called &lt;code&gt;Page1&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;public sealed partial class Page1 : Page
+{
+    public Page1()
+    {
+        this.InitializeComponent();
+    }
+
+    public void Init(string param1, int param2)
+    {
+        // Initialize the page
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You can navigate to it like so:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;Page1 page = frame.Navigate&amp;lt;Page1&amp;gt;();
+// You can now do stuff with the page
+// for example pass in as many parameters as you want
+page.Init(&amp;quot;Hello World&amp;quot;, 42);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; &lt;code&gt;Page1.Init&lt;/code&gt; will be called after &lt;code&gt;Page1.OnNavigatedTo&lt;/code&gt; and before &lt;code&gt;Page1.Loading&lt;/code&gt;.&lt;/p&gt;
+</content:encoded>
+		</item>
+		<item>
+			<title>How the C# yield keyword works</title>
+			<link>https://mazeez.dev/posts/why-you-should-read-on-topics-that-you-might-not-need-right-now</link>
+			<description>&lt;p&gt;I was browsing web once when I stumbled upon an article about &lt;a href="https://github.com/mono/SkiaSharp"&gt;SkiaSharp&lt;/a&gt;. It's a C# wrapper around Google's fast 2D rending engine. I was developing desktop apps in WPF at the time and didn't feel the need to learn a low level library like that.&lt;/p&gt;</description>
+			<guid>https://mazeez.dev/posts/why-you-should-read-on-topics-that-you-might-not-need-right-now</guid>
+			<pubDate>Thu, 23 May 2019 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;I was browsing web once when I stumbled upon an article about &lt;a href="https://github.com/mono/SkiaSharp"&gt;SkiaSharp&lt;/a&gt;. It's a C# wrapper around Google's fast 2D rending engine. I was developing desktop apps in WPF at the time and didn't feel the need to learn a low level library like that.&lt;/p&gt;
+&lt;p&gt;A few weeks later, I found myself in a project that required building a fast layout designer. First, I tried to write it purely in WPF, and I did. It was super slow, on a decently fast computer, it took a few seconds to load a layout.&lt;/p&gt;
+&lt;p&gt;Then I remembered SkiaSharp. I headed over to its documentation and it seemed easy enough for me to use it. I rewrote the layout engine in SkiaSharp and It was blazing fast. You could have loaded a layout many times in one second and you still wouldn't feel any delay.&lt;/p&gt;
+&lt;p&gt;So when you see an article about something interesting, even if it's not directly related to what you work on right now, read it. At least skim it. That way when you do need it, you'll at least have a name to google.&lt;/p&gt;
+&lt;p&gt;I feel like software engineering is not about memorizing every algorithm and data structure out there, but it's about knowing about the right tools for the right problems.&lt;/p&gt;
+</content:encoded>
+		</item>
+		<item>
+			<title>How the C# yield keyword works</title>
+			<link>https://mazeez.dev/posts/csharp-yield</link>
+			<description>&lt;p&gt;The &lt;a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/yield"&gt;C# yield keyword&lt;/a&gt; is an interesting keyword, because when you use it, you can return an &lt;code&gt;IEnumerable&amp;lt;T&amp;gt;&lt;/code&gt; without specifying any concrete implementation explicitly.&lt;/p&gt;</description>
+			<guid>https://mazeez.dev/posts/csharp-yield</guid>
+			<pubDate>Mon, 20 May 2019 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;The &lt;a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/yield"&gt;C# yield keyword&lt;/a&gt; is an interesting keyword, because when you use it, you can return an &lt;code&gt;IEnumerable&amp;lt;T&amp;gt;&lt;/code&gt; without specifying any concrete implementation explicitly.&lt;/p&gt;
+&lt;p&gt;Here is a code snippet:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;static IEnumerable&amp;lt;int&amp;gt; GetNumbers()
+{
+    yield return 0;
+    yield return 1;
+    yield return 2;
+}
+
+static void Main(string[] args)
+{
+    var numbers = GetNumbers();
+    foreach (var n in numbers)
+        Console.WriteLine(n);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This is the output:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;0
+1
+2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;But how does this work? What does &lt;code&gt;GetNumbers&lt;/code&gt; return exactly? Lets dig a little bit deeper:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;static void Main(string[] args)
+{
+    var numbers = GetNumbers();
+    Console.WriteLine(numbers.GetType().Name);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;GetType()&lt;/code&gt; returns the type of an object and &lt;code&gt;Name&lt;/code&gt; gives us the name of the type.&lt;/p&gt;
+&lt;p&gt;We will see that it outputs &lt;code&gt;&amp;lt;GetNumbers&amp;gt;d__0&lt;/code&gt;. Strange right? Because in C# you can't use &lt;code&gt;&amp;lt;&lt;/code&gt; or &lt;code&gt;&amp;gt;&lt;/code&gt; in identifiers. That's because &lt;code&gt;&amp;lt;GetNumbers&amp;gt;d__0&lt;/code&gt; is actually a class that's generated by the compiler at compile time. It represents a &lt;a href="https://medium.freecodecamp.org/state-machines-basics-of-computer-science-d42855debc66"&gt;state machine&lt;/a&gt; that implements &lt;code&gt;GetNumbers()&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To understand it better, you have to see the decompiled C#, which is quite easy with the help of &lt;a href="https://sharplab.io/#v2:D4AQDABCCMDcCwAocVoBYGKQOwIYFsBTAZwAdcBjQiACUIBt6B7AdSYCd6ATJAbyQiCoAJlQB2AUP6Ihs1ADZUAZgA8AS2wAXAHwQA4oU0A5AK74ARoXbEAFAEpJciNKdOY0KGIhhMrue88IOEc/VA8QL2FfVwBfJBDZGEUQNAgAWVwNGxgwAG0AXQhcdgBzYgcZVxdQwQA3YohsM0trCABefUNTCytbO2iamABOGyae6wA6A00AFQBPUkJ7CaMCQn6EoTjKwW2YoA=="&gt;SharpLab&lt;/a&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;namespace HelloWorld
+{
+    internal class Program
+    {
+        [CompilerGenerated]
+        private sealed class &amp;lt;GetNumbers&amp;gt;d__0 : IEnumerable&amp;lt;int&amp;gt;, IEnumerable, IEnumerator&amp;lt;int&amp;gt;, IDisposable, IEnumerator
+        {
+            private int &amp;lt;&amp;gt;1__state;
+
+            private int &amp;lt;&amp;gt;2__current;
+
+            private int &amp;lt;&amp;gt;l__initialThreadId;
+
+            int IEnumerator&amp;lt;int&amp;gt;.Current
+            {
+                [DebuggerHidden]
+                get
+                {
+                    return &amp;lt;&amp;gt;2__current;
+                }
+            }
+
+            object IEnumerator.Current
+            {
+                [DebuggerHidden]
+                get
+                {
+                    return &amp;lt;&amp;gt;2__current;
+                }
+            }
+
+            [DebuggerHidden]
+            public &amp;lt;GetNumbers&amp;gt;d__0(int &amp;lt;&amp;gt;1__state)
+            {
+                this.&amp;lt;&amp;gt;1__state = &amp;lt;&amp;gt;1__state;
+                &amp;lt;&amp;gt;l__initialThreadId = Environment.CurrentManagedThreadId;
+            }
+
+            [DebuggerHidden]
+            void IDisposable.Dispose()
+            {
+            }
+
+            private bool MoveNext()
+            {
+                switch (&amp;lt;&amp;gt;1__state)
+                {
+                    default:
+                        return false;
+                    case 0:
+                        &amp;lt;&amp;gt;1__state = -1;
+                        &amp;lt;&amp;gt;2__current = 0;
+                        &amp;lt;&amp;gt;1__state = 1;
+                        return true;
+                    case 1:
+                        &amp;lt;&amp;gt;1__state = -1;
+                        &amp;lt;&amp;gt;2__current = 1;
+                        &amp;lt;&amp;gt;1__state = 2;
+                        return true;
+                    case 2:
+                        &amp;lt;&amp;gt;1__state = -1;
+                        &amp;lt;&amp;gt;2__current = 2;
+                        &amp;lt;&amp;gt;1__state = 3;
+                        return true;
+                    case 3:
+                        &amp;lt;&amp;gt;1__state = -1;
+                        return false;
+                }
+            }
+
+            bool IEnumerator.MoveNext()
+            {
+                //ILSpy generated this explicit interface implementation from .override directive in MoveNext
+                return this.MoveNext();
+            }
+
+            [DebuggerHidden]
+            void IEnumerator.Reset()
+            {
+                throw new NotSupportedException();
+            }
+
+            [DebuggerHidden]
+            IEnumerator&amp;lt;int&amp;gt; IEnumerable&amp;lt;int&amp;gt;.GetEnumerator()
+            {
+                if (&amp;lt;&amp;gt;1__state == -2 &amp;amp;&amp;amp; &amp;lt;&amp;gt;l__initialThreadId == Environment.CurrentManagedThreadId)
+                {
+                    &amp;lt;&amp;gt;1__state = 0;
+                    return this;
+                }
+                return new &amp;lt;GetNumbers&amp;gt;d__0(0);
+            }
+
+            [DebuggerHidden]
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return System.Collections.Generic.IEnumerable&amp;lt;System.Int32&amp;gt;.GetEnumerator();
+            }
+        }
+
+        [IteratorStateMachine(typeof(&amp;lt;GetNumbers&amp;gt;d__0))]
+        private static IEnumerable&amp;lt;int&amp;gt; GetNumbers()
+        {
+            return new &amp;lt;GetNumbers&amp;gt;d__0(-2);
+        }
+
+        private static void Main(string[] args)
+        {
+            Console.WriteLine(GetNumbers().GetType().Name);
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can see, there is a hidden &lt;code&gt;&amp;lt;GetNumbers&amp;gt;d__0&lt;/code&gt; class generated by the compiler and &lt;code&gt;GetNumbers()&lt;/code&gt; is modified to return a new instance of that class. The most interesting part of &lt;code&gt;&amp;lt;GetNumbers&amp;gt;d__0&lt;/code&gt; is the &lt;code&gt;MoveNext()&lt;/code&gt; method in which the compiler translates the logic in GetNumbers() into a state machine.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/dotnet/roslyn"&gt;Roslyn&lt;/a&gt; (the C# compiler) generates a lot of code on your behalf, this operation is called lowering. Some other examples are when you use a &lt;a href="https://sharplab.io/#v2:D4AQDABCCMDcCwAocVoDoAyBLAdgRwWUhgFZCkcBDAWwFMBnAB0oGNaIAJWgG24HsA6nwBO3ACZIA3kgiyoAJlQB2GXOmI5m1ADYoAFggBZSrgAUMMAG0AuhErCA5vQCUqrRHXv3AN3sQcAK7UAEa0wvQQALwQAKKBdMKUwdy0aABKlDgOtKbQADQQ0GDOhF5aAGYitKwAFqa+wv4QuP5BoeGuGmVqbt0QAJAwAJymOCVyvWUAvpNyM12y81NAA="&gt;&lt;code&gt;for each&lt;/code&gt;&lt;/a&gt; or when you use &lt;a href="https://sharplab.io/#v2:D4AQDABCCMDcCwAocVoFYGKQOwIYFsBTAZwAdcBjQiACUIBt6B7AdSYCd6ATJAbyQiCoAJlQB2AUP6Ihs1ADYoADiiKAIkwDKTIgBcAFgEtsAcwCCxAJ7YKACgCUkuRGnOIASHcwAnLYBEAEKEAGYchH72mG5yIN6qAHRqDLiWtmhgYJFO0ai+fmbBuoTsEVFuAL5I2bIwiiAALBAAsrjGtjBgANoAuhC47CbEjjJurjmCGtp6RqYW1nb28QDihLpmAO6tRewOy6sASiQArvS6DmXOlSOCV+VAA="&gt;&lt;code&gt;async/await&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Knowing how the compiler translates your code helps you to understand the code better and it also helps you in troubleshooting. For example, if we have a piece of code like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;static IEnumerable&amp;lt;int&amp;gt; GetNumbers()
+{
+    yield return 0;
+    throw new Exception();
+}
+
+static void Main(string[] args)
+{
+    try
+    {
+        var numbers = GetNumbers();
+        foreach(var n in numbers)
+        {
+            Console.WriteLine(n);
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex);
+    }
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This will be the output:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;0
+System.Exception: Exception of type 'System.Exception' was thrown.
+   at HelloWorld.Program.&amp;lt;GetNumbers&amp;gt;d__0.MoveNext()
+   at HelloWorld.Program.Main(String[] args)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Notice how the first element is returned and then an exception is thrown in &lt;code&gt;&amp;lt;GetNumbers&amp;gt;d__0.MoveNext()&lt;/code&gt;. Knowing what is &lt;code&gt;&amp;lt;GetNumbers&amp;gt;d__0&lt;/code&gt; makes you more comforatable dealing with these kinds of exceptions.&lt;/p&gt;
+</content:encoded>
+		</item>
+		<item>
+			<title>Writing Native Libraries in C# and using them in other languages</title>
+			<link>https://mazeez.dev/posts/writing-native-libraries-in-csharp</link>
+			<description>&lt;p&gt;Recently I stumbled upon &lt;a href="https://medium.com/@MStrehovsky/fight-the-global-warming-compile-your-c-apps-ahead-of-time-9997e953645b"&gt;this article&lt;/a&gt; from &lt;a href="https://twitter.com/MStrehovsky"&gt;Michal Strehovsky&lt;/a&gt;. It was a great introduction to CoreRT, it made me curious, can you write native libraries with CoreRT? and the answer was Yes!&lt;/p&gt;</description>
+			<guid>https://mazeez.dev/posts/writing-native-libraries-in-csharp</guid>
+			<pubDate>Fri, 03 May 2019 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;Recently I stumbled upon &lt;a href="https://medium.com/&amp;#64;MStrehovsky/fight-the-global-warming-compile-your-c-apps-ahead-of-time-9997e953645b"&gt;this article&lt;/a&gt; from &lt;a href="https://twitter.com/MStrehovsky"&gt;Michal Strehovsky&lt;/a&gt;. It was a great introduction to CoreRT, it made me curious, can you write native libraries with CoreRT? and the answer was Yes!&lt;/p&gt;
+&lt;?# Twitter 1123859217654460424 /?&gt;
+&lt;p&gt;I have a little library that I want to be available for multiple languages, so I was quite interested in it. So I tried out the &lt;a href="https://github.com/dotnet/corert/tree/master/samples/NativeLibrary"&gt;official sample&lt;/a&gt; and was delighted with the results.&lt;/p&gt;
+&lt;p&gt;I compiled the library using &lt;code&gt;dotnet publish /p:NativeLib=Shared -r win-x64 -c Release&lt;/code&gt; and it produced a 4.52 MB dll. With the help of Michal and by following the steps of &lt;a href="https://github.com/dotnet/corert/blob/master/Documentation/using-corert/optimizing-corert.md"&gt;this article&lt;/a&gt;, I was able to get the size down to 1.67 MB, which is good enough for me.&lt;/p&gt;
+&lt;p&gt;The official sample has &lt;a href="https://github.com/dotnet/corert/blob/master/samples/NativeLibrary/Class1.cs"&gt;a class&lt;/a&gt; that contains two methods: &lt;code&gt;Add&lt;/code&gt; and &lt;code&gt;WriteLine&lt;/code&gt; which demonstrate how to take primitives and strings as parameters. By default, CoreRT only allows primitives as parameter types, you'll have to marshal anything else that's more complex. However, &lt;code&gt;System.Runtime.InteropServices.Marshal&lt;/code&gt; does some have helpful methods.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;public class Class1
+{
+    [NativeCallable(EntryPoint = &amp;quot;add&amp;quot;, CallingConvention = CallingConvention.StdCall)]
+    public static int Add(int a, int b)
+    {
+        return a + b;
+    }
+
+    [NativeCallable(EntryPoint = &amp;quot;write_line&amp;quot;, CallingConvention = CallingConvention.StdCall)]
+    public static int WriteLine(IntPtr pString)
+    {
+        // The marshalling code is typically auto-generated by a custom tool in larger projects.
+        try
+        {
+            // NativeCallable methods only accept primitive arguments. The primitive arguments
+            // have to be marshalled manually if necessary.
+            string str = Marshal.PtrToStringAnsi(pString);
+
+            Console.WriteLine(str);
+        }
+        catch
+        {
+            // Exceptions escaping out of NativeCallable methods are treated as unhandled exceptions.
+            // The errors have to be marshalled manually if necessary.
+            return -1;
+        }
+        return 0;
+    }
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The methods that are decorated with &lt;code&gt;NativeCallable&lt;/code&gt; cannot be called through normal C# methods, but they can be called through P/Invoke 😈.&lt;/p&gt;
+&lt;p&gt;To do that, you have to:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Build the native library by running &lt;code&gt;dotnet publish /p:NativeLib=Shared -r win-x64 -c Release&lt;/code&gt; in its folder.&lt;/li&gt;
+&lt;li&gt;Create a new console app (I created a dotnet core console app, but it doesn't matter).&lt;/li&gt;
+&lt;li&gt;Right click on the project and click &lt;code&gt;Add =&amp;gt; Exisiting Item&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Browse to &lt;code&gt;bin\Release\netcoreapp2.2\win-x64\native&lt;/code&gt; folder of the native library project and then select the dll and click on &lt;code&gt;Add As Link&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Right Click on the dll in Solution Explorer and click on properties.&lt;/li&gt;
+&lt;li&gt;Change &lt;code&gt;Copy to Output Directory&lt;/code&gt; to &lt;code&gt;Copy if newer&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Change Solutions Platform to &lt;code&gt;x64&lt;/code&gt;
+&lt;img src="https://thepracticaldev.s3.amazonaws.com/i/czdhpxbk35a55er415n3.PNG" class="img-fluid" alt="Solutions Platform" /&gt;&lt;/li&gt;
+&lt;li&gt;And then change the code in &lt;code&gt;Program.cs&lt;/code&gt; as follows:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;class Program
+{
+    [DllImport(&amp;quot;NativeLibrary.dll&amp;quot;, EntryPoint = &amp;quot;add&amp;quot;, CallingConvention = CallingConvention.StdCall)]
+    public static extern int Add(int a, int b);
+
+    [DllImport(&amp;quot;NativeLibrary.dll&amp;quot;, EntryPoint = &amp;quot;write_line&amp;quot;, CallingConvention = CallingConvention.StdCall)]
+    public static extern void WriteLine(string text);
+
+    static void Main(string[] args)
+    {
+        var result = Add(1, 2);
+        WriteLine(result.ToString());
+        WriteLine(&amp;quot;Hello World!&amp;quot;);
+    }
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now run the console app and you'll get an output like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;3
+Hello World!
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src="https://thepracticaldev.s3.amazonaws.com/i/84kbvfvss1xwiy7vnvbx.gif" class="img-fluid" alt="But Why?" /&gt;&lt;/p&gt;
+&lt;p&gt;Now p/invoking the library might not be very useful, but compiling a class library as a native library opens doors for other languages to call the library.&lt;/p&gt;
+&lt;p&gt;It was a long and painful process, but I was eventually able to reference the library from the C++ app. This &lt;a href="https://youtu.be/or1dAmUO8k0"&gt;video&lt;/a&gt; and this &lt;a href="https://docs.microsoft.com/en-us/cpp/build/walkthrough-creating-and-using-a-dynamic-link-library-cpp?view=vs-2019"&gt;article&lt;/a&gt; were super helpful.&lt;/p&gt;
+&lt;p&gt;Here are the steps:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Add an empty C++ project to the solution.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Add a source file and paste in this code snippet:&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class="language-cpp"&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;NativeLibrary.h&amp;gt;
+using namespace std;
+
+void main()
+{
+    int result = add(1, 2);
+    cout &amp;lt;&amp;lt; result &amp;lt;&amp;lt; endl;
+    write_line(&amp;quot;Hello World!&amp;quot;);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start="3"&gt;
+&lt;li&gt;Create a new header file called &lt;code&gt;NativeLibrary.h&lt;/code&gt; (That's the name of the library) and paste in this code snippet:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class="language-cpp"&gt;#pragma once
+extern &amp;quot;C&amp;quot; int __stdcall add(int a, int b);
+extern &amp;quot;C&amp;quot; void __stdcall write_line(const char* pString);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can see have written the signatures of the functions that are exported from &lt;code&gt;NativeLibrary&lt;/code&gt;.&lt;/p&gt;
+&lt;ol start="4"&gt;
+&lt;li&gt;&lt;p&gt;Right Click on the C++ project and Click on Properties.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Choose &lt;code&gt;All Configurations&lt;/code&gt; from &lt;code&gt;Configuration:&lt;/code&gt;. This will make sure that the changes apply to both &lt;code&gt;Release&lt;/code&gt; and &lt;code&gt;Debug&lt;/code&gt; configurations (And any other configuration you might have).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Go to General and change &lt;code&gt;Output Directory&lt;/code&gt; to &lt;code&gt;$(ProjectDir)bin\$(Platform)\$(Configuration)\&lt;/code&gt;. This is not necessary, but I felt more at home like this.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Go to &lt;code&gt;C\C++&lt;/code&gt; &amp;gt; &lt;code&gt;Linker&lt;/code&gt; &amp;gt; &lt;code&gt;General&lt;/code&gt; and add &lt;code&gt;$(SolutionDir)NativeLibrary\bin\Release\netcoreapp2.2\win-x64\native&lt;/code&gt; to &lt;code&gt;Additional Library Directories&lt;/code&gt;. This allows the linker to discover &lt;code&gt;NativeLibrary.lib&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Go to &lt;code&gt;C\C++&lt;/code&gt; &amp;gt; &lt;code&gt;Linker&lt;/code&gt; &amp;gt; &lt;code&gt;Input&lt;/code&gt; and add &lt;code&gt;NativeLibrary.lib&lt;/code&gt; to the list of &lt;code&gt;Additional Dependencies&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Go to &lt;code&gt;Build Events&lt;/code&gt; &amp;gt; &lt;code&gt;Post-Build Event&lt;/code&gt; and paste in this code snippet to &lt;code&gt;Command Line&lt;/code&gt;:&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;xcopy /y /d &amp;quot;$(SolutionDir)NativeLibrary\bin\Release\netcoreapp2.2\win-x64\native\NativeLibrary.dll&amp;quot; &amp;quot;$(OutDir)&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This will copy &lt;code&gt;NativeLibrary.dll&lt;/code&gt; to the output dir whenever you build the C++ project.&lt;/p&gt;
+&lt;ol start="10"&gt;
+&lt;li&gt;Build and run the application and you should see this output:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;3
+Hello World!
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;If this is not cool, I don't know what is.&lt;/p&gt;
+&lt;p&gt;The source code is &lt;a href="https://github.com/encrypt0r/CoreRTDemo"&gt;available on GitHub&lt;/a&gt;.&lt;/p&gt;
+</content:encoded>
+		</item>
+		<item>
+			<title>Enabling automatic updates for sideloaded UWP apps</title>
+			<link>https://mazeez.dev/posts/update-sideloaded-uwp</link>
+			<description>&lt;p&gt;Recently we wanted to enable auto-updates for an app that we were developing for a client. The app is developed in UWP and it's sideloaded into the client's computers. Although Microsoft has added an auto-update functionality in the &lt;code&gt;1803&lt;/code&gt; build of Windows, we had a few issues with it:&lt;/p&gt;</description>
+			<guid>https://mazeez.dev/posts/update-sideloaded-uwp</guid>
+			<pubDate>Fri, 28 Dec 2018 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;Recently we wanted to enable auto-updates for an app that we were developing for a client. The app is developed in UWP and it's sideloaded into the client's computers. Although Microsoft has added an auto-update functionality in the &lt;code&gt;1803&lt;/code&gt; build of Windows, we had a few issues with it:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;It was not very reliable&lt;/li&gt;
+&lt;li&gt;We didn't have much control over it beside a simple auto-update policy that specified how often it should check for updates.&lt;/li&gt;
+&lt;li&gt;Troubleshooting was very hard as there were no clear way to find out why the auto-updater was not working properly.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So I found &lt;a href="https://matthijs.hoekstraonline.net/2016/09/27/auto-updater-for-my-side-loaded-uwp-apps/"&gt;an article&lt;/a&gt; from 2016 and decided to improve upon it and put it a &lt;a href="http://nuget.org/packages/Dwrandaz.AutoUpdateComponent"&gt;nuget package&lt;/a&gt;. The library is open-source and is available on &lt;a href="https://github.com/dwrandaz/AutoUpdateComponent"&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="how-to-use"&gt;How to use&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;First, &lt;a href="https://docs.microsoft.com/en-us/windows/uwp/packaging/web-install-iis"&gt;configure the IIS server and create a web app&lt;/a&gt;. You can also take a look &lt;a href="https://github.com/Dwrandaz/AutoUpdateComponent/tree/master/Sample/CustomStore"&gt;at the sample web app&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Install the nuget package: [&lt;code&gt;Dwrandaz.AutoUpdateComponent&lt;/code&gt;] (&lt;a href="http://nuget.org/packages/Dwrandaz.AutoUpdateComponent"&gt;http://nuget.org/packages/Dwrandaz.AutoUpdateComponent&lt;/a&gt;) in the UWP app.&lt;/li&gt;
+&lt;li&gt;Set minimum version of the app to &lt;code&gt;1803&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Open the package manifest &lt;code&gt;.appmanifest&lt;/code&gt; file of the main app and declare an app service:
+&lt;ul&gt;
+&lt;li&gt;Name: The default values is &lt;code&gt;Dwrandaz.AutoUpdate&lt;/code&gt;. However, you can change it to any name you like but you should note that this name is important and it should be passed to &lt;code&gt;AutoUpdateManager.TryToUpdateAsync&lt;/code&gt; if you don't use the default name.&lt;/li&gt;
+&lt;li&gt;Entry point: &lt;code&gt;Dwrandaz.AutoUpdateComponent.UpdateTask&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Right click on the package manifest &lt;code&gt;.appmanifest&lt;/code&gt; file and click on &lt;code&gt;View Code&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Add this namespace declaration: &lt;code&gt;xmlns:rescap=&amp;quot;http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Add &lt;code&gt;rescap&lt;/code&gt; to the &lt;code&gt;IgnorableNamespaces&lt;/code&gt;, for example: &lt;code&gt;IgnorableNamespaces=&amp;quot;uap mp rescap&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Inside the &lt;code&gt;Package&lt;/code&gt; tag, make sure these elements exist:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;Capabilities&amp;gt;
+    &amp;lt;Capability Name=&amp;quot;internetClient&amp;quot; /&amp;gt;
+    &amp;lt;rescap:Capability Name=&amp;quot;packageManagement&amp;quot; /&amp;gt;
+&amp;lt;/Capabilities&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For more information, take a look at the &lt;a href="https://github.com/Dwrandaz/AutoUpdateComponent/blob/master/Sample/SampleApp/Package.appxmanifest"&gt;sample apps manifest file&lt;/a&gt;.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Example usage:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;var path = &amp;quot;http://localhost:5000/install/AwesomeApp.appinstaller&amp;quot;;
+var info = await AutoUpdateManager.CheckForUpdatesAsync(path);
+if (!info.Succeeded)
+{
+    // There was an error in getting the update information from the server
+    // use info.ErrorMessage to get the error message
+    return;
+}
+
+if (!info.ShouldUpdate)
+{
+    // The app is already up-to-date :)
+    return;
+}
+
+// You can use info.MainBundleVersion to get the update version
+
+var result = await AutoUpdateManager.TryToUpdateAsync(info);
+if (!result.Succeeded)
+{
+    // There was an error in updating the app
+    // use result.ErrorMessage to get the error message
+    return;
+}
+
+// Success! The app was updated, it will restart soon!
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For more infromation take a look at the &lt;a href="https://github.com/Dwrandaz/AutoUpdateComponent/blob/master/Sample/SampleApp/MainPage.xaml.cs#L35"&gt;Sample app&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="creating-update-packages"&gt;Creating update packages&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Make sure you select the &lt;code&gt;Release&lt;/code&gt; configuration&lt;/li&gt;
+&lt;li&gt;Right click on the main app project and click &lt;code&gt;Store&lt;/code&gt; &amp;gt; &lt;code&gt;Create App Packages...&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Select &lt;code&gt;I want to create packages for sideloading.&lt;/code&gt;And check the &lt;code&gt;Enable automatic updates&lt;/code&gt; checkbox&lt;/li&gt;
+&lt;li&gt;Click on &lt;code&gt;Next&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Check the &lt;code&gt;Automatically Incremenent&lt;/code&gt; checkbox under &lt;code&gt;version&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Select &lt;code&gt;Always&lt;/code&gt; under &lt;code&gt;Generate App bundle&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Click on &lt;code&gt;Next&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Write the update location path and Select &lt;code&gt;Check every 1 Week&lt;/code&gt; or more so that the native auto-update mechanism doesn't mess with our auto-update mechanism.&lt;/li&gt;
+&lt;li&gt;Click on &lt;code&gt;Create&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Upload the &lt;code&gt;.appinstaller&lt;/code&gt;, &lt;code&gt;.index.html&lt;/code&gt; and the package folder to the web app in the path that was used in &lt;code&gt;AutoUpdateManager.CheckForUpdatesAsync&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+</content:encoded>
+		</item>
+	</channel>
+</rss>
