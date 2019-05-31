@@ -5,12 +5,13 @@
 		<link>https://mazeez.dev/</link>
 		<description>A blog about software engineering and beyond!</description>
 		<copyright>2019</copyright>
-		<pubDate>Thu, 30 May 2019 20:57:13 GMT</pubDate>
-		<lastBuildDate>Thu, 30 May 2019 20:57:13 GMT</lastBuildDate>
+		<pubDate>Fri, 31 May 2019 12:33:48 GMT</pubDate>
+		<lastBuildDate>Fri, 31 May 2019 12:33:48 GMT</lastBuildDate>
 		<item>
 			<title>How to get an instance of a page when you navigate to it in UWP</title>
 			<link>https://mazeez.dev/posts/how-to-get-an-instance-of-a-page-when-you-navigate-to-it-in-uwp</link>
 			<description>&lt;p&gt;By default when navigating a frame to a page, UWP doesn't give you back a page instance. So the only way of passing parameters is to use the &lt;code&gt;parameter&lt;/code&gt; parameter. But having an instance to the page can have many other benefits: For example it allows the child page to have custom events and the parent page can subscribe to them.&lt;/p&gt;</description>
+			<enclosure url="https://mazeez.dev/assets/images/cover.jpg" length="0" type="image" />
 			<guid>https://mazeez.dev/posts/how-to-get-an-instance-of-a-page-when-you-navigate-to-it-in-uwp</guid>
 			<pubDate>Sun, 26 May 2019 00:00:00 GMT</pubDate>
 			<content:encoded>&lt;p&gt;By default when navigating a frame to a page, UWP doesn't give you back a page instance. So the only way of passing parameters is to use the &lt;code&gt;parameter&lt;/code&gt; parameter. But having an instance to the page can have many other benefits: For example it allows the child page to have custom events and the parent page can subscribe to them.&lt;/p&gt;
@@ -79,6 +80,7 @@ page.Init(&amp;quot;Hello World&amp;quot;, 42);
 			<title>Why you should read on topics that you might not need right now?</title>
 			<link>https://mazeez.dev/posts/why-you-should-read-on-topics-that-you-might-not-need-right-now</link>
 			<description>&lt;p&gt;I was browsing web once when I stumbled upon an article about &lt;a href="https://github.com/mono/SkiaSharp"&gt;SkiaSharp&lt;/a&gt;. It's a C# wrapper around Google's fast 2D rending engine. I was developing desktop apps in WPF at the time and didn't feel the need to learn a low level library like that.&lt;/p&gt;</description>
+			<enclosure url="https://mazeez.dev/assets/images/cover.jpg" length="0" type="image" />
 			<guid>https://mazeez.dev/posts/why-you-should-read-on-topics-that-you-might-not-need-right-now</guid>
 			<pubDate>Thu, 23 May 2019 00:00:00 GMT</pubDate>
 			<content:encoded>&lt;p&gt;I was browsing web once when I stumbled upon an article about &lt;a href="https://github.com/mono/SkiaSharp"&gt;SkiaSharp&lt;/a&gt;. It's a C# wrapper around Google's fast 2D rending engine. I was developing desktop apps in WPF at the time and didn't feel the need to learn a low level library like that.&lt;/p&gt;
@@ -92,6 +94,7 @@ page.Init(&amp;quot;Hello World&amp;quot;, 42);
 			<title>How the C# yield keyword works</title>
 			<link>https://mazeez.dev/posts/csharp-yield</link>
 			<description>&lt;p&gt;The &lt;a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/yield"&gt;C# yield keyword&lt;/a&gt; is an interesting keyword, because when you use it, you can return an &lt;code&gt;IEnumerable&amp;lt;T&amp;gt;&lt;/code&gt; without specifying any concrete implementation explicitly.&lt;/p&gt;</description>
+			<enclosure url="https://mazeez.dev/assets/images/cover.jpg" length="0" type="image" />
 			<guid>https://mazeez.dev/posts/csharp-yield</guid>
 			<pubDate>Mon, 20 May 2019 00:00:00 GMT</pubDate>
 			<content:encoded>&lt;p&gt;The &lt;a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/yield"&gt;C# yield keyword&lt;/a&gt; is an interesting keyword, because when you use it, you can return an &lt;code&gt;IEnumerable&amp;lt;T&amp;gt;&lt;/code&gt; without specifying any concrete implementation explicitly.&lt;/p&gt;
@@ -277,6 +280,7 @@ System.Exception: Exception of type 'System.Exception' was thrown.
 			<title>Writing Native Libraries in C# and using them in other languages</title>
 			<link>https://mazeez.dev/posts/writing-native-libraries-in-csharp</link>
 			<description>&lt;p&gt;Recently I stumbled upon &lt;a href="https://medium.com/@MStrehovsky/fight-the-global-warming-compile-your-c-apps-ahead-of-time-9997e953645b"&gt;this article&lt;/a&gt; from &lt;a href="https://twitter.com/MStrehovsky"&gt;Michal Strehovsky&lt;/a&gt;. It was a great introduction to CoreRT, it made me curious, can you write native libraries with CoreRT? and the answer was Yes!&lt;/p&gt;</description>
+			<enclosure url="https://mazeez.dev/assets/images/cover.jpg" length="0" type="image" />
 			<guid>https://mazeez.dev/posts/writing-native-libraries-in-csharp</guid>
 			<pubDate>Fri, 03 May 2019 00:00:00 GMT</pubDate>
 			<content:encoded>&lt;p&gt;Recently I stumbled upon &lt;a href="https://medium.com/&amp;#64;MStrehovsky/fight-the-global-warming-compile-your-c-apps-ahead-of-time-9997e953645b"&gt;this article&lt;/a&gt; from &lt;a href="https://twitter.com/MStrehovsky"&gt;Michal Strehovsky&lt;/a&gt;. It was a great introduction to CoreRT, it made me curious, can you write native libraries with CoreRT? and the answer was Yes!&lt;/p&gt;
@@ -409,6 +413,7 @@ Hello World!
 			<title>Enabling automatic updates for sideloaded UWP apps</title>
 			<link>https://mazeez.dev/posts/update-sideloaded-uwp</link>
 			<description>&lt;p&gt;Recently we wanted to enable auto-updates for an app that we were developing for a client. The app is developed in UWP and it's sideloaded into the client's computers. Although Microsoft has added an auto-update functionality in the &lt;code&gt;1803&lt;/code&gt; build of Windows, we had a few issues with it:&lt;/p&gt;</description>
+			<enclosure url="https://mazeez.dev/assets/images/cover.jpg" length="0" type="image" />
 			<guid>https://mazeez.dev/posts/update-sideloaded-uwp</guid>
 			<pubDate>Fri, 28 Dec 2018 00:00:00 GMT</pubDate>
 			<content:encoded>&lt;p&gt;Recently we wanted to enable auto-updates for an app that we were developing for a client. The app is developed in UWP and it's sideloaded into the client's computers. Although Microsoft has added an auto-update functionality in the &lt;code&gt;1803&lt;/code&gt; build of Windows, we had a few issues with it:&lt;/p&gt;

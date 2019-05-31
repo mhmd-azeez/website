@@ -91,7 +91,7 @@
         </nav>
 
         <!-- Page Header -->
-        <header class="intro-header" id="intro-header">
+        <header class="intro-header" id="intro-header" style="background-image: url(&quot;/assets/images/cover.jpg&quot;)">
                 <div class="container">
                         <div class="row">
                                 <div class="col-md-12">
@@ -131,27 +131,26 @@
                     </a>
                     <p class="post-meta">Posted on Monday, May 20, 2019</p>
 <p>The <a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/yield">C# yield keyword</a> is an interesting keyword, because when you use it, you can return an <code>IEnumerable&lt;T&gt;</code> without specifying any concrete implementation explicitly.</p>                </div>       
-        <ul class="pager">
-            <li class="previous">                
-            </li>
-            <li class="next">
-            </li>
-        </ul>
+                    <ul class="pager">
+                <li class="next">
+                    <a href="/posts">All posts</a>
+                </li>
+            </ul>
     </div>
     <div class="col-sm-4 sidebar">
         <hr class="visible-xs-block" />
 
             <h5>Tags</h5>
             <div>
-                    <a role="button" href="/tags/uwp" class="btn btn-default btn-sm"> uwp (2)</a>
                     <a role="button" href="/tags/csharp" class="btn btn-default btn-sm"> csharp (2)</a>
+                    <a role="button" href="/tags/uwp" class="btn btn-default btn-sm"> uwp (2)</a>
                     <a role="button" href="/tags/Career" class="btn btn-default btn-sm"> Career (1)</a>
                     <a role="button" href="/tags/devops" class="btn btn-default btn-sm"> devops (1)</a>
-                    <a role="button" href="/tags/navigation" class="btn btn-default btn-sm"> navigation (1)</a>
                     <a role="button" href="/tags/roslyn" class="btn btn-default btn-sm"> roslyn (1)</a>
+                    <a role="button" href="/tags/navigation" class="btn btn-default btn-sm"> navigation (1)</a>
+                    <a role="button" href="/tags/Reading" class="btn btn-default btn-sm"> Reading (1)</a>
                     <a role="button" href="/tags/Tip" class="btn btn-default btn-sm"> Tip (1)</a>
                     <a role="button" href="/tags/corert" class="btn btn-default btn-sm"> corert (1)</a>
-                    <a role="button" href="/tags/Reading" class="btn btn-default btn-sm"> Reading (1)</a>
             </div>
             <ul class="pager">
                 <li class="next">
@@ -249,20 +248,6 @@
                 });
         </script>
 
-        <script type="text/javascript">
-                // Header background                        
-                var colors = Please.make_color({
-                        colors_returned: 3,
-                        saturation: .6
-                });
-                var t = new Trianglify({
-                        x_gradient: colors,
-                        y_gradient: ["#FFFFFF"]
-                });
-                var header = document.getElementById("intro-header");
-                var pattern = t.generate(header.clientWidth, header.clientHeight);
-                header.setAttribute('style', 'background-image: ' + pattern.dataUrl);
-        </script>
 
         <script>
                 BackgroundCheck.init({

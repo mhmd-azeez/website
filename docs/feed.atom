@@ -4,12 +4,14 @@
 	<title>Muhammad Azeez</title>
 	<link rel="self" href="https://mazeez.dev/" />
 	<rights>2019</rights>
-	<updated>2019-05-30T20:57:13Z</updated>
+	<updated>2019-05-31T12:33:48Z</updated>
+	<logo>https://mazeez.dev/assets/images/cover.jpg</logo>
 	<subtitle>A blog about software engineering and beyond!</subtitle>
 	<entry>
 		<id>https://mazeez.dev/posts/how-to-get-an-instance-of-a-page-when-you-navigate-to-it-in-uwp</id>
 		<title>How to get an instance of a page when you navigate to it in UWP</title>
 		<link href="https://mazeez.dev/posts/how-to-get-an-instance-of-a-page-when-you-navigate-to-it-in-uwp" />
+		<link rel="enclosure" type="image" href="https://mazeez.dev/assets/images/cover.jpg" />
 		<updated>2019-05-26T00:00:00Z</updated>
 		<content>&lt;p&gt;By default when navigating a frame to a page, UWP doesn't give you back a page instance. So the only way of passing parameters is to use the &lt;code&gt;parameter&lt;/code&gt; parameter. But having an instance to the page can have many other benefits: For example it allows the child page to have custom events and the parent page can subscribe to them.&lt;/p&gt;
 &lt;p&gt;However &lt;code&gt;Frame&lt;/code&gt; has an event called &lt;code&gt;Navigated&lt;/code&gt; that can help us to write an extension method to get a reference to the actual instance:&lt;/p&gt;
@@ -78,6 +80,7 @@ page.Init(&amp;quot;Hello World&amp;quot;, 42);
 		<id>https://mazeez.dev/posts/why-you-should-read-on-topics-that-you-might-not-need-right-now</id>
 		<title>Why you should read on topics that you might not need right now?</title>
 		<link href="https://mazeez.dev/posts/why-you-should-read-on-topics-that-you-might-not-need-right-now" />
+		<link rel="enclosure" type="image" href="https://mazeez.dev/assets/images/cover.jpg" />
 		<updated>2019-05-23T00:00:00Z</updated>
 		<content>&lt;p&gt;I was browsing web once when I stumbled upon an article about &lt;a href="https://github.com/mono/SkiaSharp"&gt;SkiaSharp&lt;/a&gt;. It's a C# wrapper around Google's fast 2D rending engine. I was developing desktop apps in WPF at the time and didn't feel the need to learn a low level library like that.&lt;/p&gt;
 &lt;p&gt;A few weeks later, I found myself in a project that required building a fast layout designer. First, I tried to write it purely in WPF, and I did. It was super slow, on a decently fast computer, it took a few seconds to load a layout.&lt;/p&gt;
@@ -91,6 +94,7 @@ page.Init(&amp;quot;Hello World&amp;quot;, 42);
 		<id>https://mazeez.dev/posts/csharp-yield</id>
 		<title>How the C# yield keyword works</title>
 		<link href="https://mazeez.dev/posts/csharp-yield" />
+		<link rel="enclosure" type="image" href="https://mazeez.dev/assets/images/cover.jpg" />
 		<updated>2019-05-20T00:00:00Z</updated>
 		<content>&lt;p&gt;The &lt;a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/yield"&gt;C# yield keyword&lt;/a&gt; is an interesting keyword, because when you use it, you can return an &lt;code&gt;IEnumerable&amp;lt;T&amp;gt;&lt;/code&gt; without specifying any concrete implementation explicitly.&lt;/p&gt;
 &lt;p&gt;Here is a code snippet:&lt;/p&gt;
@@ -276,6 +280,7 @@ System.Exception: Exception of type 'System.Exception' was thrown.
 		<id>https://mazeez.dev/posts/writing-native-libraries-in-csharp</id>
 		<title>Writing Native Libraries in C# and using them in other languages</title>
 		<link href="https://mazeez.dev/posts/writing-native-libraries-in-csharp" />
+		<link rel="enclosure" type="image" href="https://mazeez.dev/assets/images/cover.jpg" />
 		<updated>2019-05-03T00:00:00Z</updated>
 		<content>&lt;p&gt;Recently I stumbled upon &lt;a href="https://medium.com/&amp;#64;MStrehovsky/fight-the-global-warming-compile-your-c-apps-ahead-of-time-9997e953645b"&gt;this article&lt;/a&gt; from &lt;a href="https://twitter.com/MStrehovsky"&gt;Michal Strehovsky&lt;/a&gt;. It was a great introduction to CoreRT, it made me curious, can you write native libraries with CoreRT? and the answer was Yes!&lt;/p&gt;
 &lt;?# Twitter 1123859217654460424 /?&gt;
@@ -408,6 +413,7 @@ Hello World!
 		<id>https://mazeez.dev/posts/update-sideloaded-uwp</id>
 		<title>Enabling automatic updates for sideloaded UWP apps</title>
 		<link href="https://mazeez.dev/posts/update-sideloaded-uwp" />
+		<link rel="enclosure" type="image" href="https://mazeez.dev/assets/images/cover.jpg" />
 		<updated>2018-12-28T00:00:00Z</updated>
 		<content>&lt;p&gt;Recently we wanted to enable auto-updates for an app that we were developing for a client. The app is developed in UWP and it's sideloaded into the client's computers. Although Microsoft has added an auto-update functionality in the &lt;code&gt;1803&lt;/code&gt; build of Windows, we had a few issues with it:&lt;/p&gt;
 &lt;ul&gt;
