@@ -7,7 +7,7 @@ Title: About Me
    </p>
 
    <p>
- I have been writing about programming for a few years now, although most of my older articles were in Kurdish. You can find them <a href="http://devstree.io/author/muhammad">here</a>. I also try to contribute to Wikipedia as much as I can.
+ I have been writing about programming for a few years now, although most of my older articles are in Kurdish. You can find them <a href="http://devstree.io/author/muhammad">here</a>. I also try to contribute to Wikipedia from time to time.
    </p>
   </div>
 
