@@ -5,8 +5,228 @@
 		<link>https://mazeez.dev/</link>
 		<description>A blog about software engineering and beyond!</description>
 		<copyright>2019</copyright>
-		<pubDate>Fri, 31 May 2019 12:35:51 GMT</pubDate>
-		<lastBuildDate>Fri, 31 May 2019 12:35:51 GMT</lastBuildDate>
+		<pubDate>Sun, 27 Oct 2019 19:04:02 GMT</pubDate>
+		<lastBuildDate>Sun, 27 Oct 2019 19:04:02 GMT</lastBuildDate>
+		<item>
+			<title>Setting up automated build and release pipeline for side-loaded UWP apps using Azure DevOps</title>
+			<link>https://mazeez.dev/posts/uwp-devops</link>
+			<description>&lt;p&gt;This week we set up a CI/CD pipeline for one of our UWP apps that needs to be sideloaded because we don't publish it through the Microsoft Store. &lt;a href="https://docs.microsoft.com/en-us/windows/uwp/packaging/auto-build-package-uwp-apps"&gt;This article&lt;/a&gt; was super useful in getting me started. Microsoft has made things quite easy with Azure DevOps, but there were a few things that took us a little bit of time to figure out.&lt;/p&gt;</description>
+			<enclosure url="https://mazeez.dev/assets/images/cover.jpg" length="0" type="image" />
+			<guid>https://mazeez.dev/posts/uwp-devops</guid>
+			<pubDate>Sun, 27 Oct 2019 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;This week we set up a CI/CD pipeline for one of our UWP apps that needs to be sideloaded because we don't publish it through the Microsoft Store. &lt;a href="https://docs.microsoft.com/en-us/windows/uwp/packaging/auto-build-package-uwp-apps"&gt;This article&lt;/a&gt; was super useful in getting me started. Microsoft has made things quite easy with Azure DevOps, but there were a few things that took us a little bit of time to figure out.&lt;/p&gt;
+&lt;h2 id="a-little-bit-of-context"&gt;A little bit of context&lt;/h2&gt;
+&lt;p&gt;We have an enterprise UWP application that we publish via an http server. We also have a custom auto-update mechanism that updates the apps whenever an update is available. You can learn more about the &lt;a href="https://mazeez.dev/posts/update-sideloaded-uwp"&gt;auto-updater here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;So what we needed, is a build pipeline that builds the app for both &lt;code&gt;x64&lt;/code&gt; and &lt;code&gt;x86&lt;/code&gt; and generate an index.html page, &lt;code&gt;appinstaller&lt;/code&gt; file and the &lt;code&gt;msixbundle&lt;/code&gt; files for both the app and its dependencies.&lt;/p&gt;
+&lt;h2 id="the-plan"&gt;The plan&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Setup a build pipeline to generate update package and increase version&lt;/li&gt;
+&lt;li&gt;Set up a release pipeline to upload the update package via FTP&lt;/li&gt;
+&lt;li&gt;Celebrate&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id="setting-up-a-build-pipeline"&gt;1. Setting up a build pipeline&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://docs.microsoft.com/en-us/windows/uwp/packaging/auto-build-package-uwp-apps"&gt;This article&lt;/a&gt; provides most of the information needed. But I have a few notes:&lt;/p&gt;
+&lt;h3 id="use-self-hosted-agents"&gt;1.1 Use self hosted agents&lt;/h3&gt;
+&lt;p&gt;Unfortunately, it seems like Microsoft hosted agents &lt;a href="https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops#capabilities-and-limitations"&gt;are not powerful enough&lt;/a&gt; to build release modes of moderate to big UWP applications. Because in release mode, it has to compile the app natively and so uses the native compilation toolchain. In our experience, the native compilation toolchain requires at least 8 GB of RAM to work properly. For our app, the Microsft hosted agents had a build success rate of less than 50%. They fail because &lt;a href="https://dev.to/encrypt0r/solving-nutcdriver-exe-returned-code-1-error-while-building-uwp-app-in-release-mode-2mc6"&gt;of memory usage issues&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Besides, hosted agents are much faster. Microsoft hosted agents would take about 45 minutes to build our app, our own hosted agents usually take about 10 minutes. This is partly because they use incremental build, instead of a clean build every time they need to build the app.&lt;/p&gt;
+&lt;p&gt;So you have to use your own hosted agents. You use your own machines or virtual machines to build the application. Adding an agent to a pool is very easy:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Go to project settings &amp;gt; Agent Pools&lt;/li&gt;
+&lt;li&gt;Click on &amp;quot;Default&amp;quot; or create another pool&lt;/li&gt;
+&lt;li&gt;Click on &amp;quot;New Agent&amp;quot; and follow the instructions&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Now you will need to tell the build pipeline to use your self-hosted agents.
+You can specify the pool name very easily in yaml:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-yaml"&gt;pool:
+  name: &amp;quot;Default&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You might also want to use the 64 bit compiler, for that add this xml snippet a &lt;code&gt;PropertyGroup&lt;/code&gt; in your project's &lt;code&gt;csproj&lt;/code&gt; file:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;Use64Bitcompiler&amp;gt;true&amp;lt;/Use64Bitcompiler&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="use-nuget-version-4.x"&gt;1.2 Use Nuget version &lt;code&gt;4.x&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;For some reason, not specifying Nuget version leads to the failure of the build.&lt;/p&gt;
+&lt;h3 id="using-extension-sdks-with-a-build-pipeline"&gt;1.3 Using Extension SDKs with a build pipeline&lt;/h3&gt;
+&lt;blockquote class="blockquote"&gt;
+&lt;p&gt;An Extension SDK is similar in concept to a regular assembly reference, but is instead a rich collection of files to cover various configurations and design time scenarios.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;If you're using an SDK reference, for example if you use &lt;a href="https://marketplace.visualstudio.com/items?itemName=SQLiteDevelopmentTeam.SQLiteforUniversalWindowsPlatform"&gt;SQLite for UWP&lt;/a&gt;, you must include the SDK with the source code and tell MSBuild to use the local version before searching for the SDK in the global folder. &lt;a href="https://oren.codes/2012/03/24/how-to-use-extension-sdks-per-project/"&gt;This article&lt;/a&gt; explains the steps, but here is a summary:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Create a folder beside your solution file and call it &lt;code&gt;SDKs&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Copy UAP folder from &lt;code&gt;C:\Program Files (x86)\Microsoft SDKs&lt;/code&gt; into the &lt;code&gt;SDKs&lt;/code&gt; folder beside your solution file.&lt;/li&gt;
+&lt;li&gt;Add this snippet to the &lt;code&gt;.csproj&lt;/code&gt; file:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;PropertyGroup&amp;gt;
+  &amp;lt;SDKReferenceDirectoryRoot&amp;gt;$(SolutionDir)\SDKs;$(SDKReferenceDirectoryRoot)&amp;lt;/SDKReferenceDirectoryRoot&amp;gt;
+&amp;lt;/PropertyGroup&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="versioning-the-packages"&gt;1.4 Versioning the packages&lt;/h3&gt;
+&lt;p&gt;Usually the version of the package is stored inside &lt;code&gt;Package.appxmanifest&lt;/code&gt; and auto-incremented by Visual Studio. But this requires you to commit the changes to make sure you don't reuse versions.&lt;/p&gt;
+&lt;p&gt;I am not comfortable with build pipelines committing changes to source code. Fortunately there are a few extensions for Azure DevOps that can help with this. The one I decided to use is &lt;a href="https://marketplace.visualstudio.com/items?itemName=maikvandergaag.maikvandergaag-versioncounter"&gt;Version Number counter&lt;/a&gt;. &lt;a href="https://msftplayground.com/2018/11/version-number-counter-for-azure-devops/"&gt;This article&lt;/a&gt; does a great job of explaining how you can use it.&lt;/p&gt;
+&lt;p&gt;What we can do is have a PowerShell script  update the app manifest file:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-powershell"&gt;# https://stackoverflow.com/a/42699995
+$xmlFileName = &amp;quot;$(Build.SourcesDirectory)\{ProjectName}\Package.appxmanifest&amp;quot;
+      
+[xml]$xmlDoc = Get-Content $xmlFileName
+$xmlDoc.Package.Identity.Version = &amp;quot;$env:appVersion.0&amp;quot;
+
+echo 'New version:' $xmlDoc.Package.Identity.Version
+
+$xmlDoc.Save($xmlFileName)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For that you need to define a variable called &lt;code&gt;appVersion&lt;/code&gt; with the initial version in this format: &lt;code&gt;1.0.0&lt;/code&gt;. Because UWP package version format is like &lt;code&gt;1.0.0.0&lt;/code&gt;, you have to concatenate another &amp;quot;0&amp;quot; at the end of &lt;code&gt;appVersion&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;If you're a desktop developer, you might not like PowerShell or bash scripts. But they are very powerful and flexible for automation scenarios.&lt;/p&gt;
+&lt;h3 id="use-templates"&gt;1.5 Use templates&lt;/h3&gt;
+&lt;p&gt;Sometimes you have multiple configurations and environments you want to build for. We wanted to be able to build for both Production and Staging environments. Each of which have different build configuration (Release, Debug, Staging...), supported different build platforms (x86, x64, ARM), had different auto-update URLs, etc..&lt;/p&gt;
+&lt;p&gt;Azure DevOps yaml files support templates. You define a base template and put all of the common steps and jobs there, then you define a bunch of parameters for the template so that the pipelines that inherit from the base template can configure these parameters.&lt;/p&gt;
+&lt;h2 id="the-code"&gt;The code&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;Template.yaml&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-yaml"&gt;parameters:
+    # Platforms to generate bundles for: x86, x64, x86|x64
+    buildPlatform: 'x86|x64'
+    # Platforms to generate bundles for (Debug, Release...)
+    buildConfiguration: 'Release'
+
+    # Where will the installer be uploaded to?
+    installerUrl: 'Replace this by the actual URL'
+
+    # The version of the app
+    appVersion: '1.1.1'
+
+    solution: '{ProjectName}.sln'
+    appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
+
+steps:
+- task: PowerShell&amp;#64;2
+  env:
+    appVersion: ${{ parameters.appVersion }}
+    buildPlatform: ${{ parameters.buildPlatform }}
+    buildConfiguration: ${{ parameters.buildConfiguration }}
+    installerUrl: ${{ parameters.installerUrl }}
+
+  displayName: 'Print variables'
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo &amp;quot;appVersion: $env:appVersion&amp;quot;
+      echo &amp;quot;buildPlatform: $env:buildPlatform&amp;quot;
+      echo &amp;quot;buildConfiguration: $env:buildConfiguration&amp;quot;
+      echo &amp;quot;installerUrl: $env:installerUrl&amp;quot;
+
+- task: versioncounter&amp;#64;1
+  inputs:
+    VersionVariable: 'appVersion'
+    UpdateMinorVersion: true
+    DevOpsPat: '{Your_PAT}'
+
+- task: PowerShell&amp;#64;2
+  env:
+    appVersion: ${{ parameters.appVersion }}
+  displayName: 'Replace Version Number in the manifest file'
+  inputs:
+    targetType: 'inline'
+    script: |
+      # https://stackoverflow.com/a/42699995
+      $xmlFileName = &amp;quot;$(Build.SourcesDirectory)\{ProjectName}\Package.appxmanifest&amp;quot;
+      
+      [xml]$xmlDoc = Get-Content $xmlFileName
+      $xmlDoc.Package.Identity.Version = &amp;quot;$env:appVersion.0&amp;quot;
+
+      echo 'New version:' $xmlDoc.Package.Identity.Version
+
+      $xmlDoc.Save($xmlFileName)
+
+- task: NuGetToolInstaller&amp;#64;1
+  inputs:
+    versionSpec: '4.9.2'
+
+- task: NuGetCommand&amp;#64;2
+  inputs:
+    command: 'restore'
+    restoreSolution: '${{ parameters.solution }}'
+
+- task: VSBuild&amp;#64;1
+  inputs:
+    solution: '${{ parameters.solution }}'
+    msbuildArgs: '/p:AppxBundlePlatforms=&amp;quot;${{ parameters.buildPlatform}}&amp;quot; /p:AppxPackageDir=&amp;quot;${{ parameters.appxPackageDir}}&amp;quot; /p:AppxBundle=Always /p:UapAppxPackageBuildMode=SideloadOnly'
+    platform: 'x64'
+    configuration: '${{ parameters.buildConfiguration }}'
+    msbuildArchitecture: 'x64'
+
+- task: PowerShell&amp;#64;2
+  env:
+    installerUrl: ${{ parameters.installerUrl }}
+  displayName: 'Replace installer url'
+  inputs:
+    targetType: 'inline'
+    script: |
+      # https://stackoverflow.com/a/17144445
+      $fileName = &amp;quot;$(build.artifactStagingDirectory)\AppxPackages\{ProjectName}.appinstaller&amp;quot;
+      
+      $original = &amp;quot;{Original Url in the .appinstaller file}&amp;quot;
+
+      $content = Get-Content $fileName
+      $content = $content.replace($original, $env:installerUrl)
+
+      Set-Content -Path $fileName -Value $content
+
+      echo 'Install Url:' $env:installerUrl
+
+- task: CopyFiles&amp;#64;2
+  displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+  inputs:
+    SourceFolder: '$(system.defaultworkingdirectory)'
+    Contents: '**\bin\${{ parameters.buildConfiguration }}\**'
+    TargetFolder: '$(build.artifactstagingdirectory)'
+
+- task: PublishBuildArtifacts&amp;#64;1
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;Staging.yml&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-yaml"&gt;# Staging
+trigger:
+ - master
+
+pool:
+  name: &amp;quot;Default&amp;quot;
+
+steps:
+    - template: Template.yml
+      parameters:
+        buildPlatform: 'x64'
+        buildConfiguration: 'Release'
+        installerUrl: '{Staging_URL}'
+        appVersion: $(appVersion)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;Production.yml&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-yml"&gt;# Production
+trigger: none
+
+pool:
+  name: &amp;quot;Default&amp;quot;
+
+steps:
+    - template: Template.yml
+      parameters:
+        buildPlatform: 'x86|x64'
+        buildConfiguration: 'Release'
+        installerUrl: '{Production_URL}'
+        appVersion: $(appVersion)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="setup-a-release-pipeline"&gt;2. Setup a release pipeline&lt;/h1&gt;
+&lt;p&gt;The release pipeline is very easy, since all of the hard work is done in the build pipeline. The only thing you have to do is:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Get the build artifacts from the build pipeline. You can do that by clicking &amp;quot;Artifacts&amp;quot; part. Select &amp;quot;Build&amp;quot; from &amp;quot;Source Type&amp;quot; and select the appropriate build pipeline.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Upload the &lt;code&gt;index.html&lt;/code&gt;, &lt;code&gt;{ProjectName}.appinstaller&lt;/code&gt; and the package folder to the update website via FTP. Azure DevOps has a built-in task for FTP upload.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id="celebrate"&gt;3. Celebrate 🎉&lt;/h1&gt;
+&lt;p&gt;The title pretty much says it all.&lt;/p&gt;
+</content:encoded>
+		</item>
 		<item>
 			<title>How to get an instance of a page when you navigate to it in UWP</title>
 			<link>https://mazeez.dev/posts/how-to-get-an-instance-of-a-page-when-you-navigate-to-it-in-uwp</link>

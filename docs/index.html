@@ -112,6 +112,13 @@
 <div class="row">
     <div class="col-sm-8 right-border">
                 <div class="post-preview">
+                    <a href="/posts/uwp-devops">
+                        <h2 class="post-title">Setting up automated build and release pipeline for side-loaded UWP apps using Azure DevOps</h2>
+                    </a>
+                    <p class="post-meta">Posted on Sunday, October 27, 2019</p>
+<p>This week we set up a CI/CD pipeline for one of our UWP apps that needs to be sideloaded because we don't publish it through the Microsoft Store. <a href="https://docs.microsoft.com/en-us/windows/uwp/packaging/auto-build-package-uwp-apps">This article</a> was super useful in getting me started. Microsoft has made things quite easy with Azure DevOps, but there were a few things that took us a little bit of time to figure out.</p>                </div>       
+                    <hr /> 
+                <div class="post-preview">
                     <a href="/posts/how-to-get-an-instance-of-a-page-when-you-navigate-to-it-in-uwp">
                         <h2 class="post-title">How to get an instance of a page when you navigate to it in UWP</h2>
                     </a>
@@ -124,13 +131,6 @@
                     </a>
                     <p class="post-meta">Posted on Thursday, May 23, 2019</p>
 <p>I was browsing web once when I stumbled upon an article about <a href="https://github.com/mono/SkiaSharp">SkiaSharp</a>. It's a C# wrapper around Google's fast 2D rending engine. I was developing desktop apps in WPF at the time and didn't feel the need to learn a low level library like that.</p>                </div>       
-                    <hr /> 
-                <div class="post-preview">
-                    <a href="/posts/csharp-yield">
-                        <h2 class="post-title">How the C# yield keyword works</h2>
-                    </a>
-                    <p class="post-meta">Posted on Monday, May 20, 2019</p>
-<p>The <a href="https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/yield">C# yield keyword</a> is an interesting keyword, because when you use it, you can return an <code>IEnumerable&lt;T&gt;</code> without specifying any concrete implementation explicitly.</p>                </div>       
                     <ul class="pager">
                 <li class="next">
                     <a href="/posts">All posts</a>
@@ -142,15 +142,16 @@
 
             <h5>Tags</h5>
             <div>
-                    <a role="button" href="/tags/uwp" class="btn btn-default btn-sm"> uwp (2)</a>
                     <a role="button" href="/tags/csharp" class="btn btn-default btn-sm"> csharp (2)</a>
-                    <a role="button" href="/tags/devops" class="btn btn-default btn-sm"> devops (1)</a>
-                    <a role="button" href="/tags/corert" class="btn btn-default btn-sm"> corert (1)</a>
-                    <a role="button" href="/tags/Career" class="btn btn-default btn-sm"> Career (1)</a>
+                    <a role="button" href="/tags/uwp" class="btn btn-default btn-sm"> uwp (2)</a>
                     <a role="button" href="/tags/Reading" class="btn btn-default btn-sm"> Reading (1)</a>
-                    <a role="button" href="/tags/Tip" class="btn btn-default btn-sm"> Tip (1)</a>
-                    <a role="button" href="/tags/roslyn" class="btn btn-default btn-sm"> roslyn (1)</a>
+                    <a role="button" href="/tags/Career" class="btn btn-default btn-sm"> Career (1)</a>
+                    <a role="button" href="/tags/devops" class="btn btn-default btn-sm"> devops (1)</a>
+                    <a role="button" href="/tags/DevOps" class="btn btn-default btn-sm"> DevOps (1)</a>
+                    <a role="button" href="/tags/corert" class="btn btn-default btn-sm"> corert (1)</a>
                     <a role="button" href="/tags/navigation" class="btn btn-default btn-sm"> navigation (1)</a>
+                    <a role="button" href="/tags/UWP" class="btn btn-default btn-sm"> UWP (1)</a>
+                    <a role="button" href="/tags/Tip" class="btn btn-default btn-sm"> Tip (1)</a>
             </div>
             <ul class="pager">
                 <li class="next">
@@ -161,6 +162,7 @@
             <hr />
             <h5>Older Posts</h5>
             <ul class="list-unstyled">
+                    <li><a href="/posts/csharp-yield">How the C# yield keyword works</a></li>
                     <li><a href="/posts/writing-native-libraries-in-csharp">Writing Native Libraries in C# and using them in other languages</a></li>
                     <li><a href="/posts/update-sideloaded-uwp">Enabling automatic updates for sideloaded UWP apps</a></li>
             </ul>
@@ -240,7 +242,7 @@
 
         </footer>
 
-        <script>hljs.configure({languages: []});</script>
+        
         <script>
                 hljs.initHighlightingOnLoad();
                 hljs.configure({
