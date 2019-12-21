@@ -11,8 +11,6 @@ When connecting an app or website to a database, most of the time you're queryin
 
 **This article is a part of the [3rd annual C# advent calendar](https://crosscuttingconcerns.com/The-Third-Annual-csharp-Advent).**
 
-**Disclaimer**: The sample codes in this article are for demonstration purposes alone and should NOT be used in production environments.
-
 The idea of ORMs is simple, since most of the code mapping code is mechanical and repetitive, it's a very good candidate for automation. Lets assume we have a `Person` table with this schema:
 
 | Column    	| DataType     	|
@@ -235,3 +233,5 @@ As you can see, with a few lines of code we were able to implement a bare minimu
 And the way we have implemented, it won't have a very good performance. Some easy tricks to improve performance would be cache the `PropertyInfo`s for each type and reuse it, because reflection is very expensive. Actual ORMs much better optimized both in the c# side and in the way they generate SQL.
 
 The code for this article is available [on GitHub](https://github.com/encrypt0r/ORMSample).
+
+**Disclaimer**: The sample codes in this article are for demonstration purposes alone and should NOT be used in production environments.

@@ -120,7 +120,6 @@ Published on Saturday, December 21, 2019<br>    </div>
 
 <p>When connecting an app or website to a database, most of the time you're querying the database and mapping the result to strongly typed objects. If you've been using an ORM like Enitity Framework or a Micro-ORM like Dapper, they handle the mapping of the objects and translation of the queries between C# and SQL.</p>
 <p><strong>This article is a part of the <a href="https://crosscuttingconcerns.com/The-Third-Annual-csharp-Advent">3rd annual C# advent calendar</a>.</strong></p>
-<p><strong>Disclaimer</strong>: The sample codes in this article are for demonstration purposes alone and should NOT be used in production environments.</p>
 <p>The idea of ORMs is simple, since most of the code mapping code is mechanical and repetitive, it's a very good candidate for automation. Lets assume we have a <code>Person</code> table with this schema:</p>
 <table class="table">
 <thead>
@@ -349,6 +348,7 @@ public async Task Update&lt;T&gt;(string idPropertyName, T item)
 <p>As you can see, with a few lines of code we were able to implement a bare minimum Micro-ORM. But there are a lot of features in an ORM. One of them is that ORMs usually support multiple DBMSs, we only support MSSQL with our implementation here (Although for a simple mapper like this one, it's not very hard to support other DBMSs). Another thing would be providing a way to query the database (adding where clauses in the <code>GetAll</code> method). It's usually implemented using <a href="https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/expression-trees/"><code>ExpressionTree</code>s</a>.</p>
 <p>And the way we have implemented, it won't have a very good performance. Some easy tricks to improve performance would be cache the <code>PropertyInfo</code>s for each type and reuse it, because reflection is very expensive. Actual ORMs much better optimized both in the c# side and in the way they generate SQL.</p>
 <p>The code for this article is available <a href="https://github.com/encrypt0r/ORMSample">on GitHub</a>.</p>
+<p><strong>Disclaimer</strong>: The sample codes in this article are for demonstration purposes alone and should NOT be used in production environments.</p>
 
 
 <div id="disqus_thread"></div>

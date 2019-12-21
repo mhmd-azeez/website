@@ -4,7 +4,7 @@
 	<title>Muhammad Azeez</title>
 	<link rel="self" href="https://mazeez.dev/" />
 	<rights>2019</rights>
-	<updated>2019-12-21T08:34:47Z</updated>
+	<updated>2019-12-21T08:37:29Z</updated>
 	<logo>https://mazeez.dev/assets/images/cover.jpg</logo>
 	<subtitle>A blog about software engineering and beyond!</subtitle>
 	<entry>
@@ -15,7 +15,6 @@
 		<updated>2019-12-21T00:00:00Z</updated>
 		<content>&lt;p&gt;When connecting an app or website to a database, most of the time you're querying the database and mapping the result to strongly typed objects. If you've been using an ORM like Enitity Framework or a Micro-ORM like Dapper, they handle the mapping of the objects and translation of the queries between C# and SQL.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;This article is a part of the &lt;a href="https://crosscuttingconcerns.com/The-Third-Annual-csharp-Advent"&gt;3rd annual C# advent calendar&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Disclaimer&lt;/strong&gt;: The sample codes in this article are for demonstration purposes alone and should NOT be used in production environments.&lt;/p&gt;
 &lt;p&gt;The idea of ORMs is simple, since most of the code mapping code is mechanical and repetitive, it's a very good candidate for automation. Lets assume we have a &lt;code&gt;Person&lt;/code&gt; table with this schema:&lt;/p&gt;
 &lt;table class="table"&gt;
 &lt;thead&gt;
@@ -244,6 +243,7 @@ public async Task Update&amp;lt;T&amp;gt;(string idPropertyName, T item)
 &lt;p&gt;As you can see, with a few lines of code we were able to implement a bare minimum Micro-ORM. But there are a lot of features in an ORM. One of them is that ORMs usually support multiple DBMSs, we only support MSSQL with our implementation here (Although for a simple mapper like this one, it's not very hard to support other DBMSs). Another thing would be providing a way to query the database (adding where clauses in the &lt;code&gt;GetAll&lt;/code&gt; method). It's usually implemented using &lt;a href="https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/expression-trees/"&gt;&lt;code&gt;ExpressionTree&lt;/code&gt;s&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;And the way we have implemented, it won't have a very good performance. Some easy tricks to improve performance would be cache the &lt;code&gt;PropertyInfo&lt;/code&gt;s for each type and reuse it, because reflection is very expensive. Actual ORMs much better optimized both in the c# side and in the way they generate SQL.&lt;/p&gt;
 &lt;p&gt;The code for this article is available &lt;a href="https://github.com/encrypt0r/ORMSample"&gt;on GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Disclaimer&lt;/strong&gt;: The sample codes in this article are for demonstration purposes alone and should NOT be used in production environments.&lt;/p&gt;
 </content>
 		<summary>&lt;p&gt;When connecting an app or website to a database, most of the time you're querying the database and mapping the result to strongly typed objects. If you've been using an ORM like Enitity Framework or a Micro-ORM like Dapper, they handle the mapping of the objects and translation of the queries between C# and SQL.&lt;/p&gt;</summary>
 	</entry>
