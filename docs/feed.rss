@@ -5,8 +5,248 @@
 		<link>https://mazeez.dev/</link>
 		<description>A blog about software engineering and beyond!</description>
 		<copyright>2019</copyright>
-		<pubDate>Sun, 27 Oct 2019 19:04:02 GMT</pubDate>
-		<lastBuildDate>Sun, 27 Oct 2019 19:04:02 GMT</lastBuildDate>
+		<pubDate>Sat, 21 Dec 2019 08:34:47 GMT</pubDate>
+		<lastBuildDate>Sat, 21 Dec 2019 08:34:47 GMT</lastBuildDate>
+		<item>
+			<title>How do Object Relational Mappers (like Entity Framework) work?</title>
+			<link>https://mazeez.dev/posts/how-orms-work</link>
+			<description>&lt;p&gt;When connecting an app or website to a database, most of the time you're querying the database and mapping the result to strongly typed objects. If you've been using an ORM like Enitity Framework or a Micro-ORM like Dapper, they handle the mapping of the objects and translation of the queries between C# and SQL.&lt;/p&gt;</description>
+			<enclosure url="https://mazeez.dev/assets/images/cover.jpg" length="0" type="image" />
+			<guid>https://mazeez.dev/posts/how-orms-work</guid>
+			<pubDate>Sat, 21 Dec 2019 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;When connecting an app or website to a database, most of the time you're querying the database and mapping the result to strongly typed objects. If you've been using an ORM like Enitity Framework or a Micro-ORM like Dapper, they handle the mapping of the objects and translation of the queries between C# and SQL.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;This article is a part of the &lt;a href="https://crosscuttingconcerns.com/The-Third-Annual-csharp-Advent"&gt;3rd annual C# advent calendar&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Disclaimer&lt;/strong&gt;: The sample codes in this article are for demonstration purposes alone and should NOT be used in production environments.&lt;/p&gt;
+&lt;p&gt;The idea of ORMs is simple, since most of the code mapping code is mechanical and repetitive, it's a very good candidate for automation. Lets assume we have a &lt;code&gt;Person&lt;/code&gt; table with this schema:&lt;/p&gt;
+&lt;table class="table"&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Column&lt;/th&gt;
+&lt;th&gt;DataType&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Id&lt;/td&gt;
+&lt;td&gt;int&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Name&lt;/td&gt;
+&lt;td&gt;nvarchar(50)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Height&lt;/td&gt;
+&lt;td&gt;float&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Birthdate&lt;/td&gt;
+&lt;td&gt;datetime&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;And we have a corresponding &lt;code&gt;Person&lt;/code&gt; class:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;class Person
+{
+   public int Id { get; set; }
+   public string Name { get; set; }
+   public double Height { get; set; }
+   public DateTime Birthdate { get; set; }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Here is the C# code if we manually retrieve the data and map it to a list of the &lt;code&gt;Person&lt;/code&gt; class:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;public async Task&amp;lt;List&amp;lt;Person&amp;gt;&amp;gt; GetPeople()
+{
+    var list = new List&amp;lt;Person&amp;gt;();
+
+    var sql = &amp;quot;SELECT Id, Name, Height, Birthdate From Person&amp;quot;;
+
+    using (var connection = new SqlConnection(ConnectionString))
+    using (var command = new SqlCommand(sql, connection))
+    {
+        await connection.OpenAsync();
+
+        using (var reader = await command.ExecuteReaderAsync())
+        {
+            while (await reader.ReadAsync())
+            {
+                var person = new Person
+                {
+                    Id = (int)reader[&amp;quot;Id&amp;quot;],
+                    Name = (string)reader[&amp;quot;Name&amp;quot;],
+                    Height = (double)reader[&amp;quot;Height&amp;quot;],
+                    Birthdate = (DateTime)reader[&amp;quot;Birthdate&amp;quot;],
+                };
+
+                list.Add(person);
+            }
+        }
+    }
+
+    return list;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The SQL query and the mapping of columns to properties are the only two things that differ from one table/class to another. If only we can get the list of properties of a class and their types... Well, it turns out that we can!&lt;/p&gt;
+&lt;p&gt;System.Reflection.Type represents a .NET type. It has a lot of metadata about the type. We can get the list of the properties of a type by using the &lt;code&gt;GetProperties&lt;/code&gt; method:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;PropertyInfo[] properties = typeof(Person).GetProperties();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The &lt;code&gt;typeof&lt;/code&gt; keyword is used to get the type of a class at compile time. The &lt;code&gt;PropertyInfo&lt;/code&gt; class has many useful properties and methods, but we are only interested in these:&lt;/p&gt;
+&lt;table class="table"&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Member&lt;/th&gt;
+&lt;th&gt;Type&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Name&lt;/td&gt;
+&lt;td&gt;string&lt;/td&gt;
+&lt;td&gt;Gets the name for a property.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;GetMethod&lt;/td&gt;
+&lt;td&gt;MethodInfo&lt;/td&gt;
+&lt;td&gt;Gets the &lt;code&gt;get&lt;/code&gt; method of a property.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SetMethod&lt;/td&gt;
+&lt;td&gt;MethodInfo&lt;/td&gt;
+&lt;td&gt;Gets the &lt;code&gt;set&lt;/code&gt; method of a property.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;For example, if we have this code:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;var person = new Person
+{
+    Name = &amp;quot;Ahmed&amp;quot;,
+    Height = 180.4,
+    Birthdate = new DateTime(1998, 1, 1),
+    Id = 24
+};
+
+var heightProperty = typeof(Person).GetProperty(nameof(Person.Height));
+heightProperty.SetValue(person, 185);
+
+var properies = typeof(Person).GetProperties();
+foreach (var prop in properies)
+{
+    Console.WriteLine($&amp;quot;{prop.Name} =&amp;gt; {prop.GetValue(person)}&amp;quot;);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This will be the output:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Height =&amp;gt; 185
+Id =&amp;gt; 24
+Name =&amp;gt; Ahmed
+Birthdate =&amp;gt; 1/1/1998 12:00:00 AM
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: It's interesting to see that because we fetched the metadata of &lt;code&gt;Height&lt;/code&gt; above the loop using &lt;code&gt;GetProperty&lt;/code&gt;, the order of returned properties from &lt;code&gt;GetProperties&lt;/code&gt; has changed and &lt;code&gt;Height&lt;/code&gt; is the first property.&lt;/p&gt;
+&lt;p&gt;As you can see, the value of height is changed from &lt;code&gt;180.4&lt;/code&gt; to &lt;code&gt;185&lt;/code&gt; by using reflection.&lt;/p&gt;
+&lt;p&gt;The second thing we needed was to generate an SQL query, which is very easy as well:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;var columnNames = properties.Select(p =&amp;gt; p.Name);
+var columns = string.Join(&amp;quot;, &amp;quot;, columnNames);
+
+var sql = $&amp;quot;SELECT {columns} FROM {typeof(T).Name}&amp;quot;;
+Console.WriteLine(sql);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: If you are not sure why &lt;code&gt;GetSelectQuery&lt;/code&gt; has a &lt;code&gt;&amp;lt;T&amp;gt;&lt;/code&gt; at the end, it's because the method is generic. It allows &lt;code&gt;GetSelectQuery&amp;lt;T&amp;gt;&lt;/code&gt; to be called with any type the programmer likes. In the example above, we have used it with &lt;code&gt;Person&lt;/code&gt;. Generics is a very powerful concept. You can learn more about generics from &lt;a href="https://www.youtube.com/watch?v=J9Cwi45UtZU&amp;amp;list=PLdbkZkVDyKZURWIWQOw2KubVRIsxdkflI"&gt;Jeremy Clark&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This will be the output:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;SELECT Id, Name, Height, Birthdate FROM Person
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;If you take close look at the generated SQL query, it's exactly like our own hand written query. So now we can combine our new found knowledge to write a method that can query the database for any table we like and map the results to c# types:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;public async Task&amp;lt;List&amp;lt;T&amp;gt;&amp;gt; GetAll&amp;lt;T&amp;gt;() where T : new()
+{
+    var list = new List&amp;lt;T&amp;gt;();
+
+    var properties = typeof(T).GetProperties();
+
+    var columnNames = properties.Select(p =&amp;gt; p.Name);
+    var columns = string.Join(&amp;quot;, &amp;quot;, columnNames);
+
+    var sql = $&amp;quot;SELECT {columns} FROM {typeof(T).Name}&amp;quot;;
+
+    using (var connection = new SqlConnection(ConnectionString))
+    using (var command = new SqlCommand(sql, connection))
+    {
+        await connection.OpenAsync();
+
+        using (var reader = await command.ExecuteReaderAsync())
+        {
+            while (await reader.ReadAsync())
+            {
+                var model = new T();
+
+                foreach (var property in properties)
+                {
+                    property.SetValue(model, reader[property.Name]);
+                }
+
+                list.Add(model);
+            }
+        }
+    }
+
+    return list;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: the &lt;code&gt;new()&lt;/code&gt; constraint makes sure the &lt;code&gt;T&lt;/code&gt; has a public constructor that takes no parameters. So that we can write &lt;code&gt;var model = new T();&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;And we can use it like so:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;List&amp;lt;Person&amp;gt; people = GetAll&amp;lt;Person&amp;gt;();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Pretty neat right?&lt;/p&gt;
+&lt;p&gt;And here is what &lt;code&gt;Insert&lt;/code&gt; and &lt;code&gt;Update&lt;/code&gt; would look like:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;public async Task Insert&amp;lt;T&amp;gt;(T item)
+{
+    var properties = typeof(T).GetProperties();
+
+    var columns = string.Join(&amp;quot;, &amp;quot;, properties.Select(p =&amp;gt; p.Name));
+    var columnParameters = string.Join(&amp;quot;, &amp;quot;, properties.Select(p =&amp;gt; $&amp;quot;&amp;#64;{p.Name}&amp;quot;));
+
+    var sql = $&amp;quot;INSERT INTO {typeof(T).Name} ({columns}) VALUES ({columnParameters})&amp;quot;;
+
+    using (var connection = new SqlConnection(ConnectionString))
+    using (var command = new SqlCommand(sql, connection))
+    {
+        await connection.OpenAsync();
+
+        foreach (var property in properties)
+        {
+            command.Parameters.AddWithValue($&amp;quot;&amp;#64;{property.Name}&amp;quot;, property.GetValue(item));
+        }
+
+        await command.ExecuteNonQueryAsync();
+    }
+}
+
+public async Task Update&amp;lt;T&amp;gt;(string idPropertyName, T item)
+{
+    var properties = typeof(T).GetProperties();
+
+    var columnUpdates = properties.Where(p =&amp;gt; p.Name != idPropertyName)
+                                  .Select(p =&amp;gt; $&amp;quot;{p.Name} = &amp;#64;{p.Name}&amp;quot;);
+    var columns = string.Join(&amp;quot;, &amp;quot;, columnUpdates);
+
+    var sql = $&amp;quot;UPDATE {typeof(T).Name} SET {columns} WHERE {idPropertyName} = &amp;#64;{idPropertyName}&amp;quot;;
+
+    using (var connection = new SqlConnection(ConnectionString))
+    using (var command = new SqlCommand(sql, connection))
+    {
+        await connection.OpenAsync();
+
+        foreach (var property in properties)
+        {
+            command.Parameters.AddWithValue($&amp;quot;&amp;#64;{property.Name}&amp;quot;, property.GetValue(item));
+        }
+
+        await command.ExecuteNonQueryAsync();
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can see, with a few lines of code we were able to implement a bare minimum Micro-ORM. But there are a lot of features in an ORM. One of them is that ORMs usually support multiple DBMSs, we only support MSSQL with our implementation here (Although for a simple mapper like this one, it's not very hard to support other DBMSs). Another thing would be providing a way to query the database (adding where clauses in the &lt;code&gt;GetAll&lt;/code&gt; method). It's usually implemented using &lt;a href="https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/expression-trees/"&gt;&lt;code&gt;ExpressionTree&lt;/code&gt;s&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;And the way we have implemented, it won't have a very good performance. Some easy tricks to improve performance would be cache the &lt;code&gt;PropertyInfo&lt;/code&gt;s for each type and reuse it, because reflection is very expensive. Actual ORMs much better optimized both in the c# side and in the way they generate SQL.&lt;/p&gt;
+&lt;p&gt;The code for this article is available &lt;a href="https://github.com/encrypt0r/ORMSample"&gt;on GitHub&lt;/a&gt;.&lt;/p&gt;
+</content:encoded>
+		</item>
 		<item>
 			<title>Setting up automated build and release pipeline for side-loaded UWP apps using Azure DevOps</title>
 			<link>https://mazeez.dev/posts/uwp-devops</link>
@@ -298,10 +538,10 @@ page.Init(&amp;quot;Hello World&amp;quot;, 42);
 		</item>
 		<item>
 			<title>Why you should read on topics that you might not need right now?</title>
-			<link>https://mazeez.dev/posts/why-you-should-read-on-topics-that-you-might-not-need-right-now</link>
+			<link>https://mazeez.dev/posts/why-you-should-read-on-topics-that-you-might-not-need-right-now%20-%20Copy</link>
 			<description>&lt;p&gt;I was browsing web once when I stumbled upon an article about &lt;a href="https://github.com/mono/SkiaSharp"&gt;SkiaSharp&lt;/a&gt;. It's a C# wrapper around Google's fast 2D rending engine. I was developing desktop apps in WPF at the time and didn't feel the need to learn a low level library like that.&lt;/p&gt;</description>
 			<enclosure url="https://mazeez.dev/assets/images/cover.jpg" length="0" type="image" />
-			<guid>https://mazeez.dev/posts/why-you-should-read-on-topics-that-you-might-not-need-right-now</guid>
+			<guid>https://mazeez.dev/posts/why-you-should-read-on-topics-that-you-might-not-need-right-now%20-%20Copy</guid>
 			<pubDate>Thu, 23 May 2019 00:00:00 GMT</pubDate>
 			<content:encoded>&lt;p&gt;I was browsing web once when I stumbled upon an article about &lt;a href="https://github.com/mono/SkiaSharp"&gt;SkiaSharp&lt;/a&gt;. It's a C# wrapper around Google's fast 2D rending engine. I was developing desktop apps in WPF at the time and didn't feel the need to learn a low level library like that.&lt;/p&gt;
 &lt;p&gt;A few weeks later, I found myself in a project that required building a fast layout designer. First, I tried to write it purely in WPF, and I did. It was super slow, on a decently fast computer, it took a few seconds to load a layout.&lt;/p&gt;
