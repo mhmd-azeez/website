@@ -3,8 +3,8 @@
 	<id>https://mazeez.dev/</id>
 	<title>Muhammad Azeez</title>
 	<link rel="self" href="https://mazeez.dev/" />
-	<rights>2019</rights>
-	<updated>2019-12-21T08:37:29Z</updated>
+	<rights>2020</rights>
+	<updated>2020-02-02T16:16:17Z</updated>
 	<logo>https://mazeez.dev/assets/images/cover.jpg</logo>
 	<subtitle>A blog about software engineering and beyond!</subtitle>
 	<entry>
@@ -742,7 +742,10 @@ System.Exception: Exception of type 'System.Exception' was thrown.
 		<link href="https://mazeez.dev/posts/writing-native-libraries-in-csharp" />
 		<link rel="enclosure" type="image" href="https://mazeez.dev/assets/images/cover.jpg" />
 		<updated>2019-05-03T00:00:00Z</updated>
-		<content>&lt;p&gt;Recently I stumbled upon &lt;a href="https://medium.com/&amp;#64;MStrehovsky/fight-the-global-warming-compile-your-c-apps-ahead-of-time-9997e953645b"&gt;this article&lt;/a&gt; from &lt;a href="https://twitter.com/MStrehovsky"&gt;Michal Strehovsky&lt;/a&gt;. It was a great introduction to CoreRT, it made me curious, can you write native libraries with CoreRT? and the answer was Yes!&lt;/p&gt;
+		<content>&lt;blockquote class="blockquote"&gt;
+&lt;p&gt;Note: Stefan Hausotte has ported &lt;a href="https://secanablog.wordpress.com/2020/02/01/writing-a-native-library-in-f-which-can-be-called-from-c/"&gt;this little experiment to F#&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Recently I stumbled upon &lt;a href="https://medium.com/&amp;#64;MStrehovsky/fight-the-global-warming-compile-your-c-apps-ahead-of-time-9997e953645b"&gt;this article&lt;/a&gt; from &lt;a href="https://twitter.com/MStrehovsky"&gt;Michal Strehovsky&lt;/a&gt;. It was a great introduction to CoreRT, it made me curious, can you write native libraries with CoreRT? and the answer was Yes!&lt;/p&gt;
 &lt;?# Twitter 1123859217654460424 /?&gt;
 &lt;p&gt;I have a little library that I want to be available for multiple languages, so I was quite interested in it. So I tried out the &lt;a href="https://github.com/dotnet/corert/tree/master/samples/NativeLibrary"&gt;official sample&lt;/a&gt; and was delighted with the results.&lt;/p&gt;
 &lt;p&gt;I compiled the library using &lt;code&gt;dotnet publish /p:NativeLib=Shared -r win-x64 -c Release&lt;/code&gt; and it produced a 4.52 MB dll. With the help of Michal and by following the steps of &lt;a href="https://github.com/dotnet/corert/blob/master/Documentation/using-corert/optimizing-corert.md"&gt;this article&lt;/a&gt;, I was able to get the size down to 1.67 MB, which is good enough for me.&lt;/p&gt;
@@ -867,7 +870,7 @@ Hello World!
 &lt;p&gt;If this is not cool, I don't know what is.&lt;/p&gt;
 &lt;p&gt;The source code is &lt;a href="https://github.com/encrypt0r/CoreRTDemo"&gt;available on GitHub&lt;/a&gt;.&lt;/p&gt;
 </content>
-		<summary>&lt;p&gt;Recently I stumbled upon &lt;a href="https://medium.com/@MStrehovsky/fight-the-global-warming-compile-your-c-apps-ahead-of-time-9997e953645b"&gt;this article&lt;/a&gt; from &lt;a href="https://twitter.com/MStrehovsky"&gt;Michal Strehovsky&lt;/a&gt;. It was a great introduction to CoreRT, it made me curious, can you write native libraries with CoreRT? and the answer was Yes!&lt;/p&gt;</summary>
+		<summary>&lt;p&gt;Note: Stefan Hausotte has ported &lt;a href="https://secanablog.wordpress.com/2020/02/01/writing-a-native-library-in-f-which-can-be-called-from-c/"&gt;this little experiment to F#&lt;/a&gt;.&lt;/p&gt;</summary>
 	</entry>
 	<entry>
 		<id>https://mazeez.dev/posts/update-sideloaded-uwp</id>

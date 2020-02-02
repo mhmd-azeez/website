@@ -1,9 +1,12 @@
 Title: Writing Native Libraries in C# and using them in other languages
 Published: 05/03/2019
 Tags:
+
  - csharp
  - corert
 ---
+> Note: Stefan Hausotte has ported [this little experiment to F#](https://secanablog.wordpress.com/2020/02/01/writing-a-native-library-in-f-which-can-be-called-from-c/).
+
 Recently I stumbled upon [this article](https://medium.com/@MStrehovsky/fight-the-global-warming-compile-your-c-apps-ahead-of-time-9997e953645b) from [Michal Strehovsky](https://twitter.com/MStrehovsky). It was a great introduction to CoreRT, it made me curious, can you write native libraries with CoreRT? and the answer was Yes!
 
 <?# Twitter 1123859217654460424 /?>
