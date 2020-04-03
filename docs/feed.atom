@@ -4,9 +4,41 @@
 	<title>Muhammad Azeez</title>
 	<link rel="self" href="https://mazeez.dev/" />
 	<rights>2020</rights>
-	<updated>2020-02-02T16:16:17Z</updated>
+	<updated>2020-04-03T23:02:04Z</updated>
 	<logo>https://mazeez.dev/assets/images/cover.jpg</logo>
 	<subtitle>A blog about software engineering and beyond!</subtitle>
+	<entry>
+		<id>https://mazeez.dev/posts/debugging-native-library-dependencies-linux</id>
+		<title>Debugging native library dependencies on Linux</title>
+		<link href="https://mazeez.dev/posts/debugging-native-library-dependencies-linux" />
+		<link rel="enclosure" type="image" href="https://mazeez.dev/assets/images/cover.jpg" />
+		<updated>2020-04-04T00:00:00Z</updated>
+		<content>&lt;p&gt;.NET Core apps can run on a number of operating systems. When using purely .NET libraries, deployment is a breeze. However, if you're using a library that wraps a native (C/C++) library, then you might have come across this error message when trying to run your app on Linux:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;System.TypeInitializationException: The type initializer for 'DlibDotNet.NativeMethods' threw an exception.
+ ---&amp;gt; System.DllNotFoundException: Unable to load shared library 'DlibDotNetNativeDnn' or one of its dependencies. In order to help diagnose loading problems, consider setting the LD_DEBUG environment variable: libDlibDotNetNativeDnn: cannot open shared object file: No such file or directory
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This tells us that &lt;code&gt;libDlibDotNetNativeDnn.so&lt;/code&gt; that either &lt;code&gt;libDlibDotNetNativeDnn.so&lt;/code&gt; doesn't exist (which in my case it did), or it has some other native dependencies that are missing.&lt;/p&gt;
+&lt;p&gt;To see which dependencies are missing, you use &lt;code&gt;ldd&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ldd libDlibDotNetNativeDnn.so
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And it would give you an output like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;linux-vdso.so.1 (0x00007ffdb9fe1000)
+libpthread.so.0 =&amp;gt; /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007f06b2254000)
+libopenblas.so.0 =&amp;gt; not found
+libstdc++.so.6 =&amp;gt; /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f06b2072000)
+libm.so.6 =&amp;gt; /lib/x86_64-linux-gnu/libm.so.6 (0x00007f06b1f24000)
+libgcc_s.so.1 =&amp;gt; /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f06b1f0a000)
+libc.so.6 =&amp;gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007f06b1d1d000)
+/lib64/ld-linux-x86-64.so.2 (0x00007f06b490d000)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now it's clear that &lt;code&gt;libopenblas&lt;/code&gt; is missing from the system. Search for it on google and find the package that contains the library. In &lt;code&gt;libopenblas&lt;/code&gt;'s case, it happens to be in the &lt;code&gt;libopenblas-base&lt;/code&gt; . To install it on ubuntu, you can run:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo apt-get install libopenblas-base
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Tada 🎉 and now your app (hopefully) works as expected!&lt;/p&gt;
+&lt;p&gt;This little error wasted several hours from me. I am grateful to the people who maintain these native library wrappers and hide (most of) the ugliness from us.&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;.NET Core apps can run on a number of operating systems. When using purely .NET libraries, deployment is a breeze. However, if you're using a library that wraps a native (C/C++) library, then you might have come across this error message when trying to run your app on Linux:&lt;/p&gt;</summary>
+	</entry>
 	<entry>
 		<id>https://mazeez.dev/posts/how-orms-work</id>
 		<title>How do Object Relational Mappers (like Entity Framework) work?</title>
