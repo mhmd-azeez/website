@@ -122,7 +122,7 @@ Published on Saturday, April 4, 2020<br>    </div>
 <pre><code>System.TypeInitializationException: The type initializer for 'DlibDotNet.NativeMethods' threw an exception.
  ---&gt; System.DllNotFoundException: Unable to load shared library 'DlibDotNetNativeDnn' or one of its dependencies. In order to help diagnose loading problems, consider setting the LD_DEBUG environment variable: libDlibDotNetNativeDnn: cannot open shared object file: No such file or directory
 </code></pre>
-<p>This tells us that <code>libDlibDotNetNativeDnn.so</code> that either <code>libDlibDotNetNativeDnn.so</code> doesn't exist (which in my case it did), or it has some other native dependencies that are missing.</p>
+<p>This tells us that either <code>libDlibDotNetNativeDnn.so</code> doesn't exist (which in my case it did), or it has some other native dependencies that are missing.</p>
 <p>To see which dependencies are missing, you use <code>ldd</code>:</p>
 <pre><code>ldd libDlibDotNetNativeDnn.so
 </code></pre>
