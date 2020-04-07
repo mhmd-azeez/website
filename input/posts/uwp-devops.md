@@ -1,8 +1,8 @@
 Title: Setting up automated build and release pipeline for side-loaded UWP apps using Azure DevOps
 Published: 10/27/2019
 Tags:
- - DevOps
- - UWP
+ - devops
+ - uwp
 ---
 This week we set up a CI/CD pipeline for one of our UWP apps that needs to be sideloaded because we don't publish it through the Microsoft Store. [This article](https://docs.microsoft.com/en-us/windows/uwp/packaging/auto-build-package-uwp-apps) was super useful in getting me started. Microsoft has made things quite easy with Azure DevOps, but there were a few things that took us a little bit of time to figure out.
 

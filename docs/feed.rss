@@ -5,8 +5,129 @@
 		<link>https://mazeez.dev/</link>
 		<description>A blog about software engineering and beyond!</description>
 		<copyright>2020</copyright>
-		<pubDate>Fri, 03 Apr 2020 23:15:49 GMT</pubDate>
-		<lastBuildDate>Fri, 03 Apr 2020 23:15:49 GMT</lastBuildDate>
+		<pubDate>Tue, 07 Apr 2020 12:02:51 GMT</pubDate>
+		<lastBuildDate>Tue, 07 Apr 2020 12:02:51 GMT</lastBuildDate>
+		<item>
+			<title>Running ASP.NET Core on Linux Part 1</title>
+			<link>https://mazeez.dev/posts/aspnet-on-linux-1</link>
+			<description>&lt;p&gt;In the last couple of weeks, I have been busy setting up a CI/CD pipeline for one of my side projects and getting it to run on Linux. I'll try to write about what I have learned in the process.&lt;/p&gt;</description>
+			<enclosure url="https://mazeez.dev/assets/images/cover.jpg" length="0" type="image" />
+			<guid>https://mazeez.dev/posts/aspnet-on-linux-1</guid>
+			<pubDate>Tue, 07 Apr 2020 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;In the last couple of weeks, I have been busy setting up a CI/CD pipeline for one of my side projects and getting it to run on Linux. I'll try to write about what I have learned in the process.&lt;/p&gt;
+&lt;p&gt;This will be a series of blog posts as I don't want it to become too long. This is the first part. We will create a new ASP.NET Core application and manually run it on Linux and configure Nginx and systemd.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;Before anything lets create a new ASP.NET Core Razor Pages web application by running:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;dotnet new webapp
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Good, now add it to a git repository and upload it to GitHub, it will be useful for us in the next part of the series.&lt;/p&gt;
+&lt;h2 id="setting-up-vscode"&gt;Setting up VSCode&lt;/h2&gt;
+&lt;p&gt;VSCode is great for accessing remote Linux servers. It allows you to open multiple terminals and edit files and allows you to download and upload them too. Follow these steps to set it up:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Install the &lt;a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh"&gt;Remote - SSH&lt;/a&gt; extension to be able to login into the server and be able to run commands and edit files.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In &lt;em&gt;Remote Explorer&lt;/em&gt; tab add a new SSH Target for your server and inter username and IP address and follow the instructions. After you added the server to &lt;em&gt;Remote Explorer&lt;/em&gt; connect to it and in &lt;em&gt;Explorer&lt;/em&gt; tab open the &lt;code&gt;/&lt;/code&gt; directory.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Download and install the ASP.NET Core runtime on the server. You can find instructions &lt;a href="https://dotnet.microsoft.com/download/dotnet-core"&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="publishing-the-website"&gt;Publishing the website&lt;/h2&gt;
+&lt;p&gt;Before doing anything we have to publish the website first. We will automate this process later but for now, we will do it manually.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;dotnet publish -c Release
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote class="blockquote"&gt;
+&lt;p&gt;Note: This will publish the web app in Framework dependent (Meaning that ASP.NET Core runtime has to be installed on the server) and cross-platform (Meaning that it can work on any operating system) mode. You might need to publish it for a specific platform if you're using native libraries or one of your &lt;em&gt;Nuget&lt;/em&gt; packages uses them by using the &lt;a href="https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-publish"&gt;&lt;code&gt;--runtime&lt;/code&gt; switch&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Compress the contents of &lt;code&gt;bin\Release\netcoreapp3.1\publish\&lt;/code&gt;  folder (and rename it to publish.zip) and upload it to &lt;code&gt;/home/www/sample&lt;/code&gt; folder by dragging it into Explorer tab of VSCode.&lt;/p&gt;
+&lt;p&gt;Run these commands to unzip and delete the zip file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;cd /home/www/sample
+unzip publish.zip
+rm publish.zip
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Okay, now that all of the necessary files are on the server, you can now test if the app actually works:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;dotnet AspNetOnLinux.dll --urls=http://localhost:9999
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;If everything is set up correctly and port &lt;code&gt;9999&lt;/code&gt; is not being used by any other processes, kestrel must be up and running now.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;If there were an exception like &lt;code&gt;System.IO.IOException: Failed to bind to address http://127.0.0.1:9999: address already in use.&lt;/code&gt; Then change the port to something else.&lt;/li&gt;
+&lt;li&gt;If There was an error like &lt;code&gt;Command 'dotnet' not found&lt;/code&gt; Then it means that ASP.NET Core runtime has not been installed properly. Install them and try again.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Now that we have confirmed that everything works press next we need to configure Nginx as a reverse proxy, i.e. it listens for an external port on an IP address or domain name and re-routes it to kestrel.&lt;/p&gt;
+&lt;h2 id="configuring-nginx"&gt;Configuring Nginx&lt;/h2&gt;
+&lt;p&gt;Keep kestrel running and open &lt;strong&gt;a new&lt;/strong&gt; terminal in VSCode and run:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;code /etc/nginx/sites-available/default
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This will open Nginx default configurations in VSCode.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;server {
+    listen        IP_ADDRESS;
+    server_name   HOST_NAME;
+    location / {
+        proxy_pass         KESTREL_URL;
+        proxy_http_version 1.1;
+        proxy_set_header   Upgrade $http_upgrade;
+        proxy_set_header   Connection keep-alive;
+        proxy_set_header   Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Copy the above snippet to the configuration file and make these adjustments:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Instead of &lt;code&gt;IP_ADDRESS&lt;/code&gt; write the external ip address to which you want Nginx to listen. Example: &lt;code&gt;8080&lt;/code&gt;. If &lt;code&gt;HOST_NAME&lt;/code&gt; is a domain name you might want to use port &lt;code&gt;80&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Instead of &lt;code&gt;HOST_NAME&lt;/code&gt; write the domain name or IP address you want Nginx to listen to. If you've rented a VM they usually give you a static public IP that you can use for this. or if you want to use a domain name, you need to configure its DNS settings so that it points to your server's public IP address.&lt;/li&gt;
+&lt;li&gt;Instead of &lt;code&gt;KESTREL_URL&lt;/code&gt; write the URL you have kestrel listening to. Example: &lt;code&gt;http://localhost:9999&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Save the file and run this command for Nginx to reload the configuration file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# Validate configuration file
+nginx -t
+# Reload configuration file
+nginx -s reload
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now in a browser go to &lt;code&gt;http://HOST_NAME:IP_ADDRESS/&lt;/code&gt; and it should show our web app running 😊&lt;/p&gt;
+&lt;p&gt;For more information on configuration Nginx go to &lt;a href="https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-3.1"&gt;Microsoft docs&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="setting-up-systemd"&gt;Setting up systemd&lt;/h2&gt;
+&lt;p&gt;Everything seems to be working now. But if you close the ssh session our website will no longer be running and Nginx will return &lt;code&gt;ERROR 502: Bad Gateway&lt;/code&gt; if you visited the website. To make sure the website will always be running and will be restarted if it crashes we can use &lt;code&gt;systemd&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Go back to the terminal that's running kestrel and press CTRL+C to stop it. And then run these commands:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;code /etc/systemd/system/sample.service
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This will open up a blank file in VSCode. Write this configuration in the file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[Unit]
+Description=Sample ASP.NET Core application
+
+[Service]
+WorkingDirectory=/home/www/sample
+ExecStart=/usr/bin/dotnet /home/www/sample/sample.dll --urls=http://localhost:9999
+Restart=always
+# Restart service after 10 seconds if the dotnet service crashes:
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=dotnet-ec
+User=root
+# You can put your environment variables here:
+Environment=ASPNETCORE_ENVIRONMENT=Production
+
+[Install]
+WantedBy=multi-user.target
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Save it and then run these commands:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# Reload systemd configuration
+systemctl daemon-reload
+
+systemctl enable sample
+systemctl start sample
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You can verify that our application is up and running by running this command:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;systemctl status sample
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It should not show any errors if everything has gone according to our plan. Press CTRL+C to stop showing status.&lt;/p&gt;
+&lt;p&gt;Now our sample web application will be running reliably and will be restarted if it crashed. You can close VSCode and visit &lt;code&gt;http://HOST_NAME:IP_ADDRESS/&lt;/code&gt; and it should be serving requests.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;In the next post, we will talk about setting up a CI/CD pipeline using GitHub actions.&lt;/p&gt;
+&lt;p&gt;The code is available on  &lt;a href="https://github.com/encrypt0r/AspNetOnLinux"&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+</content:encoded>
+		</item>
 		<item>
 			<title>Debugging native library dependencies on Linux</title>
 			<link>https://mazeez.dev/posts/debugging-native-library-dependencies-linux</link>

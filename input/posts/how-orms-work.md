@@ -3,8 +3,8 @@ Published: 12/21/2019
 Tags:
 
  - csharp
- - ORM
- - EF
+ - orm
+ - ef
 ---
 
 When connecting an app or website to a database, most of the time you're querying the database and mapping the result to strongly typed objects. If you've been using an ORM like Enitity Framework or a Micro-ORM like Dapper, they handle the mapping of the objects and translation of the queries between C# and SQL.

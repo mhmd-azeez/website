@@ -2,9 +2,7 @@ Title: Why you should read on topics that you might not need right now?
 Published: 05/23/2019
 Tags:
 
- - Reading
- - Tip
- - Career
+ - career
 ---
 
 I was browsing web once when I stumbled upon an article about [SkiaSharp](https://github.com/mono/SkiaSharp). It's a C# wrapper around Google's fast 2D rending engine. I was developing desktop apps in WPF at the time and didn't feel the need to learn a low level library like that.
