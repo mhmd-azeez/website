@@ -4,7 +4,7 @@
 	<title>Muhammad Azeez</title>
 	<link rel="self" href="https://mazeez.dev/" />
 	<rights>2020</rights>
-	<updated>2020-04-07T12:02:51Z</updated>
+	<updated>2020-04-07T12:05:43Z</updated>
 	<logo>https://mazeez.dev/assets/images/cover.jpg</logo>
 	<subtitle>A blog about software engineering and beyond!</subtitle>
 	<entry>
@@ -14,7 +14,7 @@
 		<link rel="enclosure" type="image" href="https://mazeez.dev/assets/images/cover.jpg" />
 		<updated>2020-04-07T00:00:00Z</updated>
 		<content>&lt;p&gt;In the last couple of weeks, I have been busy setting up a CI/CD pipeline for one of my side projects and getting it to run on Linux. I'll try to write about what I have learned in the process.&lt;/p&gt;
-&lt;p&gt;This will be a series of blog posts as I don't want it to become too long. This is the first part. We will create a new ASP.NET Core application and manually run it on Linux and configure Nginx and systemd.&lt;/p&gt;
+&lt;p&gt;This will be a series of blog posts because I don't want it to become too long. This is the first part. We will create a new ASP.NET Core application and manually run it on Linux and configure Nginx and systemd.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;p&gt;Before anything lets create a new ASP.NET Core Razor Pages web application by running:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;dotnet new webapp

@@ -5,8 +5,8 @@
 		<link>https://mazeez.dev/</link>
 		<description>A blog about software engineering and beyond!</description>
 		<copyright>2020</copyright>
-		<pubDate>Tue, 07 Apr 2020 12:02:51 GMT</pubDate>
-		<lastBuildDate>Tue, 07 Apr 2020 12:02:51 GMT</lastBuildDate>
+		<pubDate>Tue, 07 Apr 2020 12:05:43 GMT</pubDate>
+		<lastBuildDate>Tue, 07 Apr 2020 12:05:43 GMT</lastBuildDate>
 		<item>
 			<title>Running ASP.NET Core on Linux Part 1</title>
 			<link>https://mazeez.dev/posts/aspnet-on-linux-1</link>
@@ -15,7 +15,7 @@
 			<guid>https://mazeez.dev/posts/aspnet-on-linux-1</guid>
 			<pubDate>Tue, 07 Apr 2020 00:00:00 GMT</pubDate>
 			<content:encoded>&lt;p&gt;In the last couple of weeks, I have been busy setting up a CI/CD pipeline for one of my side projects and getting it to run on Linux. I'll try to write about what I have learned in the process.&lt;/p&gt;
-&lt;p&gt;This will be a series of blog posts as I don't want it to become too long. This is the first part. We will create a new ASP.NET Core application and manually run it on Linux and configure Nginx and systemd.&lt;/p&gt;
+&lt;p&gt;This will be a series of blog posts because I don't want it to become too long. This is the first part. We will create a new ASP.NET Core application and manually run it on Linux and configure Nginx and systemd.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;p&gt;Before anything lets create a new ASP.NET Core Razor Pages web application by running:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;dotnet new webapp

@@ -7,7 +7,7 @@ Tags:
 
 In the last couple of weeks, I have been busy setting up a CI/CD pipeline for one of my side projects and getting it to run on Linux. I'll try to write about what I have learned in the process.
 
-This will be a series of blog posts as I don't want it to become too long. This is the first part. We will create a new ASP.NET Core application and manually run it on Linux and configure Nginx and systemd.
+This will be a series of blog posts because I don't want it to become too long. This is the first part. We will create a new ASP.NET Core application and manually run it on Linux and configure Nginx and systemd.
 
 ------
 
@@ -164,4 +164,3 @@ Now our sample web application will be running reliably and will be restarted if
 In the next post, we will talk about setting up a CI/CD pipeline using GitHub actions.
 
 The code is available on  [GitHub](https://github.com/encrypt0r/AspNetOnLinux).
-
