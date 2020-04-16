@@ -5,8 +5,65 @@
 		<link>https://mazeez.dev/</link>
 		<description>A blog about software engineering and beyond!</description>
 		<copyright>2020</copyright>
-		<pubDate>Tue, 07 Apr 2020 12:25:40 GMT</pubDate>
-		<lastBuildDate>Tue, 07 Apr 2020 12:25:40 GMT</lastBuildDate>
+		<pubDate>Thu, 16 Apr 2020 18:57:33 GMT</pubDate>
+		<lastBuildDate>Thu, 16 Apr 2020 18:57:33 GMT</lastBuildDate>
+		<item>
+			<title>Getting a code signing certificate for a company in Iraq</title>
+			<link>https://mazeez.dev/posts/code-signing-certificate-iraq</link>
+			<description>&lt;p&gt;If your company is based in one of the developed countries, chances are you won't have much of a problem. It would take a week at most to get a code signing certificate. However, If your company is based in a country like Iraq, which doesn't have an up-to-date online-accessible list of its companies, then you are going to have a harder time. Fortunately, this guide makes the process much easier and faster. The documents might vary by country, but the certificate authority support team will help you go through the process.&lt;/p&gt;</description>
+			<enclosure url="https://mazeez.dev/assets/images/cover.jpg" length="0" type="image" />
+			<guid>https://mazeez.dev/posts/code-signing-certificate-iraq</guid>
+			<pubDate>Thu, 16 Apr 2020 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;If your company is based in one of the developed countries, chances are you won't have much of a problem. It would take a week at most to get a code signing certificate. However, If your company is based in a country like Iraq, which doesn't have an up-to-date online-accessible list of its companies, then you are going to have a harder time. Fortunately, this guide makes the process much easier and faster. The documents might vary by country, but the certificate authority support team will help you go through the process.&lt;/p&gt;
+&lt;p&gt;Before we start I want to define some terms, because many people (like myself when I started out) are not familiar with the territory. Nate McMaster explains them very well in his &lt;a href="https://natemcmaster.com/blog/2018/07/02/code-signing/"&gt;blog post&lt;/a&gt;:&lt;/p&gt;
+&lt;blockquote class="blockquote"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Code_signing"&gt;&lt;em&gt;&lt;strong&gt;Code signing&lt;/strong&gt;&lt;/em&gt;&lt;/a&gt; means applying a digital signature to the executable binaries (for example &lt;code&gt;McMaster.Extensions.CommandLineUtils.dll&lt;/code&gt;). This signature confirms the authenticity and integrity of the files.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;em&gt;&lt;strong&gt;Authenticity&lt;/strong&gt;&lt;/em&gt; proves the files came from me, Nathan McMaster, and not someone pretending to be me.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;em&gt;&lt;strong&gt;Integrity&lt;/strong&gt;&lt;/em&gt; also proves the files have not been altered by anyone since I made them.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Public_key_certificate"&gt;A &lt;em&gt;&lt;strong&gt;certificate&lt;/strong&gt;&lt;/em&gt;&lt;/a&gt; contains public information about me and &lt;a href="https://en.wikipedia.org/wiki/Public-key_cryptography"&gt;a public key&lt;/a&gt;. Anyone can see my certificate, but only I can produce a signature with it because I keep secret the private key, which matches with the public key in the certificate. Anyone can create a certificate for free on their own, but Windows apps won’t treat this as “trusted” unless you get a certificate from a CA.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Certificate_authority"&gt;A &lt;em&gt;&lt;strong&gt;certificate authority&lt;/strong&gt;&lt;/em&gt; (CA)&lt;/a&gt; is an entity that issues certificates. In my case, I worked with &lt;a href="https://digicert.com/"&gt;DigiCert&lt;/a&gt; to get a certificate. This certificate, unlike a self-created cert, contains additional information which proves DigiCert gave me the certificate.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;What are the benefits of code signing certificates? Well, I had the same question. And I got two good reasons:&lt;/p&gt;
+&lt;?# Twitter 1210259160908075008 /?&gt;
+&lt;?# Twitter 1210259181854449672 /?&gt;
+&lt;p&gt;And code signing certificates come in two flavors: &lt;em&gt;Standard Code Signing Certificate&lt;/em&gt; and &lt;em&gt;Extended Validation (EV) Code Signing Certificates&lt;/em&gt;. &lt;em&gt;EV Code Signing Certificates&lt;/em&gt; are more expensive and harder to get but they provide with instant trust with Microsoft Smart Screen. But they also require either hardware USB tokens or and &lt;a href="https://en.wikipedia.org/wiki/Hardware_security_module"&gt;&lt;em&gt;Hardware Security Module&lt;/em&gt;&lt;/a&gt; to sign software. You can also store them in something like Azure Key Vault. In my limited experience, the standard one is enough and gives you less headache to deal with.&lt;/p&gt;
+&lt;p&gt;It took us more than 5 months to get a code signing certificate. Partly because we had no experience with the whole process and partly because our company is based in Iraq. One of our mistakes was that we asked for a EV code signing certificate at first, which made the validation process much harder.&lt;/p&gt;
+&lt;h3 id="get-a-db-number"&gt;1. Get a &lt;a href="https://en.wikipedia.org/wiki/Data_Universal_Numbering_System"&gt;D&amp;amp;B&lt;/a&gt; Number&lt;/h3&gt;
+&lt;p&gt;The official website of D&amp;amp;B does not open in Iraq and to my knowledge D&amp;amp;B doesn't have a branch in Iraq. Fortunately, you can go to &lt;a href="http://upik.de/en"&gt;http://upik.de/en&lt;/a&gt; and get D&amp;amp;B number. It makes your life much easier as all of the CAs I have talked to consider them a trusted source. They will ask you a few questions and will require documents to prove your company is legitimate. We sent them:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Company establishment certificate&lt;/li&gt;
+&lt;li&gt;Decision of approval for a company establishment.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Because these documents were in Kurdish (our company is based in Kurdistan region of Iraq), we translated both documents and send scanned and sent both the translated version and the original version.&lt;/p&gt;
+&lt;p&gt;The validation process can take up to 30 days. However, ours took about a week.&lt;/p&gt;
+&lt;h3 id="find-a-ca-that-can-work-with-companies-in-iraq"&gt;2. Find a CA that can work with companies in Iraq&lt;/h3&gt;
+&lt;p&gt;Not all of the CAs can issue certificates for companies in Iraq. They say it's because sanctions and things like that. But some companies have branches in Middle East and so they will happily issue a certificate for you. Talk with their sales or customer support to confirm that.&lt;/p&gt;
+&lt;p&gt;And make sure the CA is partnered to whatever operating system vendor you care about. Here is &lt;a href="https://docs.microsoft.com/en-us/security/trusted-root/participants-list"&gt;the list of CAs partnered with Microsoft&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="go-through-the-validation-process"&gt;3. Go through the validation process&lt;/h3&gt;
+&lt;p&gt;In the validation process, they will ask you some questions about your company name, address, and field of work. Make sure to write the full legal name when they ask for company name.&lt;/p&gt;
+&lt;p&gt;They will also ask you for documents to prove the answers you've sent them. We sent these documents:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Decision of approval for a company establishment.&lt;/li&gt;
+&lt;li&gt;Our lease contract&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Because you already have a D&amp;amp;B number, things should go on smoothly. The CAs are usually helpful and try their best to help you go through the process.&lt;/p&gt;
+&lt;h2 id="faq"&gt;FAQ&lt;/h2&gt;
+&lt;p&gt;Before starting the process I had these questions:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Should I get the EV or the standard code signing certificate?&lt;/strong&gt;
+To be honest the standard code signing certificate seems enough. We signed our app using a standard code signing certificate and Windows didn't complain even on the first download of the app.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Can I sign multiple apps with the same certificate?&lt;/strong&gt;
+Yes! The certificate is for your company, not a specific app. So you can sign as many apps as you need. Be careful though, if your certificate gets into the hands of malicious people they might sign malwares with it and the CA  will be forced to revoke the certificate.&lt;/li&gt;
+&lt;/ol&gt;
+</content:encoded>
+		</item>
 		<item>
 			<title>Running ASP.NET Core on Linux Part 1</title>
 			<link>https://mazeez.dev/posts/aspnet-on-linux-1</link>

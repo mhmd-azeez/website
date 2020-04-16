@@ -1,0 +1,293 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+
+        <title>Muhammad Azeez - Getting a code signing certificate for a company in Iraq</title>
+        <meta name="description" content="A blog about software engineering and beyond!" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link type="application/rss+xml" rel="alternate" title="Muhammad Azeez"
+                href="/feed.rss" />
+                <link type="application/atom+xml" rel="alternate" title="Muhammad Azeez"
+                href="/feed.atom" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+        <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="/assets/css/highlight.css" rel="stylesheet">
+        <link href="/assets/css/clean-blog.css" rel="stylesheet" />
+        <link href="/assets/css/master.css" rel="stylesheet" />
+        <link href="/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet'
+                type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+                rel='stylesheet' type='text/css'>
+        <link href="/assets/css/override.css" rel="stylesheet" />
+
+
+        <meta name="application-name" content="Muhammad Azeez" />
+        <meta name="msapplication-tooltip" content="Muhammad Azeez" />
+        <meta name="msapplication-starturl" content="/" />
+
+        <meta property="og:title" content="Muhammad Azeez - Getting a code signing certificate for a company in Iraq" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://mazeez.dev/posts/code-signing-certificate-iraq" />
+        <!-- TODO: More social graph meta tags -->
+
+        <script src="/assets/js/jquery.min.js"> </script> <script
+                src="/assets/js/bootstrap.min.js"> </script> <script
+                src="/assets/js/highlight.pack.js"> </script> <script
+                src="/assets/js/clean-blog.js"> </script> <script
+                src="/assets/js/d3.v3.min.js"> </script> <script
+                src="/assets/js/trianglify.min.js"> </script> <script
+                src="/assets/js/Please-compressed.js"> </script> <script
+                src="/assets/js/background-check.min.js"> </script> <!-- HTML5 Shim and Respond.js
+                IE8 support of HTML5 elements and media queries -->
+                <!-- WARNING: Respond.js doesn't work if you view the page via file:// 
+                -->
+        <!--[if lt IE 9]>
+                <script src="/assets/js/html5shiv.js"></script>
+                <script src="/assets/js/respond.min.js"></script>
+        <![endif]-->
+
+        
+
+
+</head>
+
+<body>
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+                <div class="container-fluid">
+                        <!-- Brand and toggle get grouped for better mobile display -->
+                        <div class="navbar-header page-scroll">
+                                <button type="button" class="navbar-toggle" data-toggle="collapse"
+                                        data-target="#navbar-collapse">
+                                        <span class="sr-only">Toggle navigation</span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                </button>
+                                <a class="navbar-brand" href="/">Muhammad Azeez
+                                        </a> </div> <!-- Collect the nav links, forms, and other content for toggling
+                                        -->
+                                        <div class="collapse navbar-collapse" id="navbar-collapse">
+                                                <ul class="nav navbar-nav navbar-right">
+                                                                <li><a href="/posts">Archive</a></li>
+        <li><a href="/tags">Tags</a></li>
+        <li><a href="/about">About Me</a></li>
+        <li><a href="/projects">Projects</a></li>
+
+                                                </ul>
+                                        </div>
+                                        <!-- /.navbar-collapse -->
+                        </div>
+                        <!-- /.container -->
+        </nav>
+
+        <!-- Page Header -->
+        <header class="intro-header" id="intro-header" style="background-image: url(&quot;/assets/images/cover.jpg&quot;)">
+                <div class="container">
+                        <div class="row">
+                                <div class="col-md-12">
+
+    
+<div class="post-heading">
+    <h1>Getting a code signing certificate for a company in Iraq</h1>
+    <div class="meta">        
+Published on Thursday, April 16, 2020<br>    </div>
+        <div class="tags">
+                    <a role="button" href="/tags/code-signing" class="btn btn-default btn-xs">code-signing</a>
+                    <a role="button" href="/tags/iraq" class="btn btn-default btn-xs">iraq</a>
+        </div>     
+</div>
+                                </div>
+                        </div>
+                </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="container">
+                <div class="row">
+                        <div id="content" class="col-md-12">
+                                
+
+<p>If your company is based in one of the developed countries, chances are you won't have much of a problem. It would take a week at most to get a code signing certificate. However, If your company is based in a country like Iraq, which doesn't have an up-to-date online-accessible list of its companies, then you are going to have a harder time. Fortunately, this guide makes the process much easier and faster. The documents might vary by country, but the certificate authority support team will help you go through the process.</p>
+<p>Before we start I want to define some terms, because many people (like myself when I started out) are not familiar with the territory. Nate McMaster explains them very well in his <a href="https://natemcmaster.com/blog/2018/07/02/code-signing/">blog post</a>:</p>
+<blockquote class="blockquote">
+<ul>
+<li><p><a href="https://en.wikipedia.org/wiki/Code_signing"><em><strong>Code signing</strong></em></a> means applying a digital signature to the executable binaries (for example <code>McMaster.Extensions.CommandLineUtils.dll</code>). This signature confirms the authenticity and integrity of the files.</p>
+</li>
+<li><p><em><strong>Authenticity</strong></em> proves the files came from me, Nathan McMaster, and not someone pretending to be me.</p>
+</li>
+<li><p><em><strong>Integrity</strong></em> also proves the files have not been altered by anyone since I made them.</p>
+</li>
+<li><p><a href="https://en.wikipedia.org/wiki/Public_key_certificate">A <em><strong>certificate</strong></em></a> contains public information about me and <a href="https://en.wikipedia.org/wiki/Public-key_cryptography">a public key</a>. Anyone can see my certificate, but only I can produce a signature with it because I keep secret the private key, which matches with the public key in the certificate. Anyone can create a certificate for free on their own, but Windows apps won’t treat this as “trusted” unless you get a certificate from a CA.</p>
+</li>
+<li><p><a href="https://en.wikipedia.org/wiki/Certificate_authority">A <em><strong>certificate authority</strong></em> (CA)</a> is an entity that issues certificates. In my case, I worked with <a href="https://digicert.com/">DigiCert</a> to get a certificate. This certificate, unlike a self-created cert, contains additional information which proves DigiCert gave me the certificate.</p>
+</li>
+</ul>
+</blockquote>
+<p>What are the benefits of code signing certificates? Well, I had the same question. And I got two good reasons:</p>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">It is a mechanism to revoke code in case it is reported to be malware</p>&mdash; Miguel de Icaza (@migueldeicaza) <a href="https://twitter.com/migueldeicaza/status/1210259160908075008?ref_src=twsrc%5Etfw">December 26, 2019</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">It doesn’t by itself. It does establish identity, which becomes part of a trust model.</p>&mdash; Claire Novotny (@clairernovotny) <a href="https://twitter.com/clairernovotny/status/1210259181854449672?ref_src=twsrc%5Etfw">December 26, 2019</a></blockquote>
+
+<p>And code signing certificates come in two flavors: <em>Standard Code Signing Certificate</em> and <em>Extended Validation (EV) Code Signing Certificates</em>. <em>EV Code Signing Certificates</em> are more expensive and harder to get but they provide with instant trust with Microsoft Smart Screen. But they also require either hardware USB tokens or and <a href="https://en.wikipedia.org/wiki/Hardware_security_module"><em>Hardware Security Module</em></a> to sign software. You can also store them in something like Azure Key Vault. In my limited experience, the standard one is enough and gives you less headache to deal with.</p>
+<p>It took us more than 5 months to get a code signing certificate. Partly because we had no experience with the whole process and partly because our company is based in Iraq. One of our mistakes was that we asked for a EV code signing certificate at first, which made the validation process much harder.</p>
+<h3 id="get-a-db-number">1. Get a <a href="https://en.wikipedia.org/wiki/Data_Universal_Numbering_System">D&amp;B</a> Number</h3>
+<p>The official website of D&amp;B does not open in Iraq and to my knowledge D&amp;B doesn't have a branch in Iraq. Fortunately, you can go to <a href="http://upik.de/en">http://upik.de/en</a> and get D&amp;B number. It makes your life much easier as all of the CAs I have talked to consider them a trusted source. They will ask you a few questions and will require documents to prove your company is legitimate. We sent them:</p>
+<ul>
+<li>Company establishment certificate</li>
+<li>Decision of approval for a company establishment.</li>
+</ul>
+<p>Because these documents were in Kurdish (our company is based in Kurdistan region of Iraq), we translated both documents and send scanned and sent both the translated version and the original version.</p>
+<p>The validation process can take up to 30 days. However, ours took about a week.</p>
+<h3 id="find-a-ca-that-can-work-with-companies-in-iraq">2. Find a CA that can work with companies in Iraq</h3>
+<p>Not all of the CAs can issue certificates for companies in Iraq. They say it's because sanctions and things like that. But some companies have branches in Middle East and so they will happily issue a certificate for you. Talk with their sales or customer support to confirm that.</p>
+<p>And make sure the CA is partnered to whatever operating system vendor you care about. Here is <a href="https://docs.microsoft.com/en-us/security/trusted-root/participants-list">the list of CAs partnered with Microsoft</a>.</p>
+<h3 id="go-through-the-validation-process">3. Go through the validation process</h3>
+<p>In the validation process, they will ask you some questions about your company name, address, and field of work. Make sure to write the full legal name when they ask for company name.</p>
+<p>They will also ask you for documents to prove the answers you've sent them. We sent these documents:</p>
+<ul>
+<li>Decision of approval for a company establishment.</li>
+<li>Our lease contract</li>
+</ul>
+<p>Because you already have a D&amp;B number, things should go on smoothly. The CAs are usually helpful and try their best to help you go through the process.</p>
+<h2 id="faq">FAQ</h2>
+<p>Before starting the process I had these questions:</p>
+<ol>
+<li><strong>Should I get the EV or the standard code signing certificate?</strong>
+To be honest the standard code signing certificate seems enough. We signed our app using a standard code signing certificate and Windows didn't complain even on the first download of the app.</li>
+<li><strong>Can I sign multiple apps with the same certificate?</strong>
+Yes! The certificate is for your company, not a specific app. So you can sign as many apps as you need. Be careful though, if your certificate gets into the hands of malicious people they might sign malwares with it and the CA  will be forced to revoke the certificate.</li>
+</ol>
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'mazeez'; // required: replace example with your forum shortname
+    var disqus_identifier = 'code-signing-certificate-iraq';
+    var disqus_title = 'Getting a code signing certificate for a company in Iraq';
+    var disqus_url = 'https://mazeez.dev/posts/code-signing-certificate-iraq';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+                        </div>
+                </div>
+        </div>
+
+        <hr>
+
+        <!-- Footer -->
+        <footer>
+                <ul class="list-inline text-center">
+                        <li>
+                                <a href="https://twitter.com/mhmd_azeez">
+                                        <span class="fa-stack fa-lg">
+                                                <i class="fa fa-circle fa-stack-2x"></i>
+                                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                </a>
+                        </li>
+
+                        <li>
+                                <a href="https://github.com/encrypt0r">
+                                        <span class="fa-stack fa-lg">
+                                                <i class="fa fa-circle fa-stack-2x"></i>
+                                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                </a>
+                        </li>
+
+                        
+                        <li>
+                                <a href="mailto:muhammad-azeez@outlook.com">
+                                        <span class="fa-stack fa-lg">
+                                                <i class="fa fa-circle fa-stack-2x"></i>
+                                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                </a>
+                        </li>
+
+                        
+                        <li>
+                                <a href="https://www.linkedin.com/in/muhammad-azeez/">
+                                        <span class="fa-stack fa-lg">
+                                                <i class="fa fa-circle fa-stack-2x"></i>
+                                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                </a>
+                        </li>
+                </ul>
+
+                <div class="container">
+        <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="copyright text-muted">
+                        Copyright © 2020
+                        <br />
+                            <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
+                        |
+                            <a href="/feed.atom"><i class="fa fa-rss"></i> Atom Feed</a>
+                        <br />
+                        <strong><a href="https://wyam.io">Generated by Wyam</a></strong>
+                    </p>
+                </div>
+        </div>
+</div>
+
+        </footer>
+
+        
+        <script>
+                hljs.initHighlightingOnLoad();
+                hljs.configure({
+                        languages: []
+                });
+        </script>
+
+
+        <script>
+                BackgroundCheck.init({
+                        targets: '.intro-header,.navbar',
+                        images: '.intro-header'
+                });
+        </script>
+
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-141113720-1"></script>
+        <script>
+                window.dataLayer = window.dataLayer || [];
+
+                function gtag() {
+                        dataLayer.push(arguments);
+                }
+                gtag('js', new Date());
+
+                gtag('config', 'UA-141113720-1');
+        </script>
+
+</body>
+
+</html>
