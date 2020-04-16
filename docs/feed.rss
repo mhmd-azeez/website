@@ -5,8 +5,8 @@
 		<link>https://mazeez.dev/</link>
 		<description>A blog about software engineering and beyond!</description>
 		<copyright>2020</copyright>
-		<pubDate>Thu, 16 Apr 2020 18:57:33 GMT</pubDate>
-		<lastBuildDate>Thu, 16 Apr 2020 18:57:33 GMT</lastBuildDate>
+		<pubDate>Thu, 16 Apr 2020 19:20:21 GMT</pubDate>
+		<lastBuildDate>Thu, 16 Apr 2020 19:20:21 GMT</lastBuildDate>
 		<item>
 			<title>Getting a code signing certificate for a company in Iraq</title>
 			<link>https://mazeez.dev/posts/code-signing-certificate-iraq</link>
@@ -60,7 +60,9 @@
 &lt;li&gt;&lt;strong&gt;Should I get the EV or the standard code signing certificate?&lt;/strong&gt;
 To be honest the standard code signing certificate seems enough. We signed our app using a standard code signing certificate and Windows didn't complain even on the first download of the app.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Can I sign multiple apps with the same certificate?&lt;/strong&gt;
-Yes! The certificate is for your company, not a specific app. So you can sign as many apps as you need. Be careful though, if your certificate gets into the hands of malicious people they might sign malwares with it and the CA  will be forced to revoke the certificate.&lt;/li&gt;
+Yes! The certificate is for your company, not a specific app. So you can sign as many apps as you need. Be careful though, if your certificate gets into the hands of malicious people they might sign malware with it and the CA  will be forced to revoke the certificate.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Can an individual get a code signing certificate?&lt;/strong&gt;
+Yes! Although I am not familiar with the process.&lt;/li&gt;
 &lt;/ol&gt;
 </content:encoded>
 		</item>

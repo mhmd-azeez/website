@@ -64,4 +64,6 @@ Before starting the process I had these questions:
 1. **Should I get the EV or the standard code signing certificate?**
    To be honest the standard code signing certificate seems enough. We signed our app using a standard code signing certificate and Windows didn't complain even on the first download of the app.
 2. **Can I sign multiple apps with the same certificate?**
-   Yes! The certificate is for your company, not a specific app. So you can sign as many apps as you need. Be careful though, if your certificate gets into the hands of malicious people they might sign malwares with it and the CA  will be forced to revoke the certificate.
+   Yes! The certificate is for your company, not a specific app. So you can sign as many apps as you need. Be careful though, if your certificate gets into the hands of malicious people they might sign malware with it and the CA  will be forced to revoke the certificate.
+3. **Can an individual get a code signing certificate?**
+   Yes! Although I am not familiar with the process.
