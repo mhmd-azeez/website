@@ -13,7 +13,7 @@ So I found [an article](https://matthijs.hoekstraonline.net/2016/09/27/auto-upda
 
 ## How to use
 1. First, [configure the IIS server and create a web app](https://docs.microsoft.com/en-us/windows/uwp/packaging/web-install-iis). You can also take a look [at the sample web app](https://github.com/Dwrandaz/AutoUpdateComponent/tree/master/Sample/CustomStore).
-1. Install the nuget package: [`Dwrandaz.AutoUpdateComponent`] (http://nuget.org/packages/Dwrandaz.AutoUpdateComponent) in the UWP app.
+1. Install the nuget package: [Dwrandaz.AutoUpdateComponent](http://nuget.org/packages/Dwrandaz.AutoUpdateComponent) in the UWP app.
 1. Set minimum version of the app to `1803`
 1. Open the package manifest `.appmanifest` file of the main app and declare an app service:
    - Name: The default values is `Dwrandaz.AutoUpdate`. However, you can change it to any name you like but you should note that this name is important and it should be passed to `AutoUpdateManager.TryToUpdateAsync` if you don't use the default name.

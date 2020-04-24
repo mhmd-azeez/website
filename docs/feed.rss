@@ -5,8 +5,8 @@
 		<link>https://mazeez.dev/</link>
 		<description>A blog about software engineering and beyond!</description>
 		<copyright>2020</copyright>
-		<pubDate>Thu, 16 Apr 2020 19:20:21 GMT</pubDate>
-		<lastBuildDate>Thu, 16 Apr 2020 19:20:21 GMT</lastBuildDate>
+		<pubDate>Fri, 24 Apr 2020 22:20:58 GMT</pubDate>
+		<lastBuildDate>Fri, 24 Apr 2020 22:20:58 GMT</lastBuildDate>
 		<item>
 			<title>Getting a code signing certificate for a company in Iraq</title>
 			<link>https://mazeez.dev/posts/code-signing-certificate-iraq</link>
@@ -1101,7 +1101,7 @@ Hello World!
 &lt;h2 id="how-to-use"&gt;How to use&lt;/h2&gt;
 &lt;ol&gt;
 &lt;li&gt;First, &lt;a href="https://docs.microsoft.com/en-us/windows/uwp/packaging/web-install-iis"&gt;configure the IIS server and create a web app&lt;/a&gt;. You can also take a look &lt;a href="https://github.com/Dwrandaz/AutoUpdateComponent/tree/master/Sample/CustomStore"&gt;at the sample web app&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;Install the nuget package: [&lt;code&gt;Dwrandaz.AutoUpdateComponent&lt;/code&gt;] (&lt;a href="http://nuget.org/packages/Dwrandaz.AutoUpdateComponent"&gt;http://nuget.org/packages/Dwrandaz.AutoUpdateComponent&lt;/a&gt;) in the UWP app.&lt;/li&gt;
+&lt;li&gt;Install the nuget package: &lt;a href="http://nuget.org/packages/Dwrandaz.AutoUpdateComponent"&gt;Dwrandaz.AutoUpdateComponent&lt;/a&gt; in the UWP app.&lt;/li&gt;
 &lt;li&gt;Set minimum version of the app to &lt;code&gt;1803&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Open the package manifest &lt;code&gt;.appmanifest&lt;/code&gt; file of the main app and declare an app service:
 &lt;ul&gt;
