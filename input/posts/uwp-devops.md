@@ -246,3 +246,9 @@ The release pipeline is very easy, since all of the hard work is done in the bui
 
 # 3. Celebrate 🎉
 The title pretty much says it all.
+
+------
+
+Update 04/25/2020:
+
+You can use the [Code Signing Task](https://marketplace.visualstudio.com/items?itemName=stefankert.codesigning) for signing your WUP app easily and securely.
