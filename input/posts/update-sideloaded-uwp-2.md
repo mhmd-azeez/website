@@ -7,11 +7,11 @@ Tags:
 ---
 In a [previous](https://mazeez.dev/posts/update-sideloaded-uwp) post we talked about getting more control over the update process in sideloaded UWP apps. And in [another post](https://mazeez.dev/posts/uwp-devops) we talked about setting up CI/CD pipelines for UWP apps. This time we will talk about how to create multiple update channels, i.e. alpha, beta, stable, for our UWP app.
 
-The idea is very simple, and although I am going to use Azure DevOps, nothing stops you from using a normal web host.
+The idea is very simple, and although I am going to use Azure Blob Storage, nothing stops you from using a normal web host.
 
 ## Build Pipeline
 
-All of the channels should have the same pipeline. The pipeline builds and signs the UWP. I have talked about setting up a build pipeline for UWP apps [here](https://mazeez.dev/posts/uwp-devops). You don't need to change much.
+All of the channels should use the same build pipeline. The pipeline builds and signs the UWP. I have talked about setting up a build pipeline for UWP apps [here](https://mazeez.dev/posts/uwp-devops). You don't need to change much.
 
 ## Release Pipeline
 
@@ -33,13 +33,13 @@ The stages are very similar, here is what each stage has to do:
 
 ### 1. Change index.html and .installer urls
 
-Because we now have multiple channels, each channel will have its own url. So we have to change index.html and the .appinstaller file to reflect the channels' URL. This can be done easily via a simple PowerShell script.
+Because we now have multiple channels, each channel will have its own url. So we have to change `index.html` and the `.appinstaller` file to reflect the channels' URL. This can be done easily via a simple PowerShell script.
 
 ```powershell
 Write-Host "Changing urls for beta channel..."
 
 $oldUrl = "Old URL HERE"
-$newUrl = "https://YOUR-STORaGE-ACCOUNT-HERE.blob.core.windows.net/beta"
+$newUrl = "https://YOUR-STORAGE-ACCOUNT-HERE.blob.core.windows.net/beta"
 
 $folder = "$(System.DefaultWorkingDirectory)/BUILD-ARTIFICAT-NAME/drop/AppxPackages"
 
@@ -52,7 +52,7 @@ $installerPath = "$folder/APP-NAME.appinstaller"
 
 ### 2. Delete old versions to reduce cost
 
-Although Azure Blob Storage is very cheap, UWP apps can become very large, ours is about 300 MB when compiled in Relase with both x64 and x86. So in order to make sure we don't store too much data, we will delete the older versions and only leave the last N versions.
+Although Azure Blob Storage is very cheap, UWP apps can become very large, ours is about 300 MB when compiled in `Release` configuration for both `x64` and `x86` architectures. So in order to make sure we don't store too much data, we will delete the older versions and only leave the last N versions.
 
 For this we can use the [Azure CLI](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureCLIV2/Readme.md) task. It's similar to a Powershell script, but you're already logged in to your azure subscription. In the script part we can use something like this:
 
@@ -96,13 +96,13 @@ Write-Host Done
 
 ### 3. Copy the build artifact to channel container
 
-We can use the amazingly fast [AzureBlob File Copy](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureFileCopyV1/README.md) task to upload the build artifact to azure blob storage. Using it pretty straightforward, you give it a folder to upload and the name of the container as well as the subscription and whatnot and it uploads the specified files in no time.
+We can use the amazingly fast [AzureBlob File Copy](https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureFileCopyV1/README.md) task to upload the build artifact to azure blob storage. Using it is straightforward, you give it a folder to upload and the name of the container as well as the subscription and it uploads the specified files in no time.
 
 ### 4. (Optional) Upload the UWP symbols to AppCenter
 
-This only needs to be done in the first stage. In order for AppCenter crashes to give you detailed stack traces, it needs the symbols to translate memory addresses to function and class names. You can find more [details here.](https://docs.microsoft.com/en-us/appcenter/diagnostics/windows-support#symbolication)
+This only needs to be done in the first stage. In order for AppCenter crashes to give you detailed stack traces, it needs the symbols to translate memory addresses to function and class names. You can find more [details here](https://docs.microsoft.com/en-us/appcenter/diagnostics/windows-support#symbolication).
 
-I have used the [AppCenter cli](https://github.com/microsoft/appcenter-cli) to easily upload the symbols.
+I have used the [appcenter cli](https://github.com/microsoft/appcenter-cli) to upload the symbols.
 
 ```powershell
 # AppCenter UWP symbolication

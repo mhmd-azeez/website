@@ -5,8 +5,8 @@
 		<link>https://mazeez.dev/</link>
 		<description>A blog about software engineering and beyond!</description>
 		<copyright>2020</copyright>
-		<pubDate>Sat, 25 Apr 2020 12:23:07 GMT</pubDate>
-		<lastBuildDate>Sat, 25 Apr 2020 12:23:07 GMT</lastBuildDate>
+		<pubDate>Sat, 25 Apr 2020 15:24:29 GMT</pubDate>
+		<lastBuildDate>Sat, 25 Apr 2020 15:24:29 GMT</lastBuildDate>
 		<item>
 			<title>Enabling automatic updates for sideloaded UWP apps: Multiple update channels</title>
 			<link>https://mazeez.dev/posts/update-sideloaded-uwp-2</link>
@@ -15,9 +15,9 @@
 			<guid>https://mazeez.dev/posts/update-sideloaded-uwp-2</guid>
 			<pubDate>Sat, 25 Apr 2020 00:00:00 GMT</pubDate>
 			<content:encoded>&lt;p&gt;In a &lt;a href="https://mazeez.dev/posts/update-sideloaded-uwp"&gt;previous&lt;/a&gt; post we talked about getting more control over the update process in sideloaded UWP apps. And in &lt;a href="https://mazeez.dev/posts/uwp-devops"&gt;another post&lt;/a&gt; we talked about setting up CI/CD pipelines for UWP apps. This time we will talk about how to create multiple update channels, i.e. alpha, beta, stable, for our UWP app.&lt;/p&gt;
-&lt;p&gt;The idea is very simple, and although I am going to use Azure DevOps, nothing stops you from using a normal web host.&lt;/p&gt;
+&lt;p&gt;The idea is very simple, and although I am going to use Azure Blob Storage, nothing stops you from using a normal web host.&lt;/p&gt;
 &lt;h2 id="build-pipeline"&gt;Build Pipeline&lt;/h2&gt;
-&lt;p&gt;All of the channels should have the same pipeline. The pipeline builds and signs the UWP. I have talked about setting up a build pipeline for UWP apps &lt;a href="https://mazeez.dev/posts/uwp-devops"&gt;here&lt;/a&gt;. You don't need to change much.&lt;/p&gt;
+&lt;p&gt;All of the channels should use the same build pipeline. The pipeline builds and signs the UWP. I have talked about setting up a build pipeline for UWP apps &lt;a href="https://mazeez.dev/posts/uwp-devops"&gt;here&lt;/a&gt;. You don't need to change much.&lt;/p&gt;
 &lt;h2 id="release-pipeline"&gt;Release Pipeline&lt;/h2&gt;
 &lt;p&gt;All of the magic happens in the release pipeline. We can have multiple update channels by creating multiple containers in Azure DevOps (or using different prefixes, whichever you like more) for each channel.&lt;/p&gt;
 &lt;p&gt;&lt;img src="../assets/images/posts/update-sideloaded-uwp-2/channels.png" class="img-fluid" alt="channels" /&gt;&lt;/p&gt;
@@ -30,11 +30,11 @@
 &lt;p&gt;The stages are very similar, here is what each stage has to do:&lt;/p&gt;
 &lt;p&gt;&lt;img src="../assets/images/posts/update-sideloaded-uwp-2/stage.png" class="img-fluid" alt="stage" /&gt;&lt;/p&gt;
 &lt;h3 id="change-index.html-and.installer-urls"&gt;1. Change index.html and .installer urls&lt;/h3&gt;
-&lt;p&gt;Because we now have multiple channels, each channel will have its own url. So we have to change index.html and the .appinstaller file to reflect the channels' URL. This can be done easily via a simple PowerShell script.&lt;/p&gt;
+&lt;p&gt;Because we now have multiple channels, each channel will have its own url. So we have to change &lt;code&gt;index.html&lt;/code&gt; and the &lt;code&gt;.appinstaller&lt;/code&gt; file to reflect the channels' URL. This can be done easily via a simple PowerShell script.&lt;/p&gt;
 &lt;pre&gt;&lt;code class="language-powershell"&gt;Write-Host &amp;quot;Changing urls for beta channel...&amp;quot;
 
 $oldUrl = &amp;quot;Old URL HERE&amp;quot;
-$newUrl = &amp;quot;https://YOUR-STORaGE-ACCOUNT-HERE.blob.core.windows.net/beta&amp;quot;
+$newUrl = &amp;quot;https://YOUR-STORAGE-ACCOUNT-HERE.blob.core.windows.net/beta&amp;quot;
 
 $folder = &amp;quot;$(System.DefaultWorkingDirectory)/BUILD-ARTIFICAT-NAME/drop/AppxPackages&amp;quot;
 
@@ -45,7 +45,7 @@ $installerPath = &amp;quot;$folder/APP-NAME.appinstaller&amp;quot;
 ((Get-Content -path $installerPath -Raw) -replace $oldUrl,$newUrl) | Set-Content -Path $installerPath
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h3 id="delete-old-versions-to-reduce-cost"&gt;2. Delete old versions to reduce cost&lt;/h3&gt;
-&lt;p&gt;Although Azure Blob Storage is very cheap, UWP apps can become very large, ours is about 300 MB when compiled in Relase with both x64 and x86. So in order to make sure we don't store too much data, we will delete the older versions and only leave the last N versions.&lt;/p&gt;
+&lt;p&gt;Although Azure Blob Storage is very cheap, UWP apps can become very large, ours is about 300 MB when compiled in &lt;code&gt;Release&lt;/code&gt; configuration for both &lt;code&gt;x64&lt;/code&gt; and &lt;code&gt;x86&lt;/code&gt; architectures. So in order to make sure we don't store too much data, we will delete the older versions and only leave the last N versions.&lt;/p&gt;
 &lt;p&gt;For this we can use the &lt;a href="https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureCLIV2/Readme.md"&gt;Azure CLI&lt;/a&gt; task. It's similar to a Powershell script, but you're already logged in to your azure subscription. In the script part we can use something like this:&lt;/p&gt;
 &lt;blockquote class="blockquote"&gt;
 &lt;p&gt;Note: Azure CLI added support for PowerShell scripts in v2.&lt;/p&gt;
@@ -85,10 +85,10 @@ Foreach($blob in $ordered)
 Write-Host Done
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h3 id="copy-the-build-artifact-to-channel-container"&gt;3. Copy the build artifact to channel container&lt;/h3&gt;
-&lt;p&gt;We can use the amazingly fast &lt;a href="https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureFileCopyV1/README.md"&gt;AzureBlob File Copy&lt;/a&gt; task to upload the build artifact to azure blob storage. Using it pretty straightforward, you give it a folder to upload and the name of the container as well as the subscription and whatnot and it uploads the specified files in no time.&lt;/p&gt;
+&lt;p&gt;We can use the amazingly fast &lt;a href="https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/AzureFileCopyV1/README.md"&gt;AzureBlob File Copy&lt;/a&gt; task to upload the build artifact to azure blob storage. Using it is straightforward, you give it a folder to upload and the name of the container as well as the subscription and it uploads the specified files in no time.&lt;/p&gt;
 &lt;h3 id="optional-upload-the-uwp-symbols-to-appcenter"&gt;4. (Optional) Upload the UWP symbols to AppCenter&lt;/h3&gt;
-&lt;p&gt;This only needs to be done in the first stage. In order for AppCenter crashes to give you detailed stack traces, it needs the symbols to translate memory addresses to function and class names. You can find more &lt;a href="https://docs.microsoft.com/en-us/appcenter/diagnostics/windows-support#symbolication"&gt;details here.&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;I have used the &lt;a href="https://github.com/microsoft/appcenter-cli"&gt;AppCenter cli&lt;/a&gt; to easily upload the symbols.&lt;/p&gt;
+&lt;p&gt;This only needs to be done in the first stage. In order for AppCenter crashes to give you detailed stack traces, it needs the symbols to translate memory addresses to function and class names. You can find more &lt;a href="https://docs.microsoft.com/en-us/appcenter/diagnostics/windows-support#symbolication"&gt;details here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I have used the &lt;a href="https://github.com/microsoft/appcenter-cli"&gt;appcenter cli&lt;/a&gt; to upload the symbols.&lt;/p&gt;
 &lt;pre&gt;&lt;code class="language-powershell"&gt;# AppCenter UWP symbolication
 # https://docs.microsoft.com/en-us/appcenter/diagnostics/windows-support#symbolication
 
