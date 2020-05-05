@@ -119,16 +119,16 @@ Published on Tuesday, May 5, 2020<br>    </div>
 
 <p>C# Source Generators is a C# 9 feature that lets your generate source code during build. For more information read the <a href="https://devblogs.microsoft.com/dotnet/introducing-c-source-generators/">announcement blog post</a> on .NET blog.</p>
 <blockquote class="blockquote">
-<p>NOTE: If it's not clear, this post is satire. Don't use the code or practices in production.</p>
+<p>NOTE: If it's not clear, this post is satire. Don't use any of the code or suggestions in production.</p>
 </blockquote>
 <p>Have you ever had problems with app speed? Well, the easiest way to speed up your app is to make your methods async. And the easiest way of making your methods async is by using <code>Task.Run</code>.</p>
-<p>For example if we had a method like this:</p>
+<p>For example, if we had a method like this:</p>
 <pre><code class="language-csharp">static void PrintNumber(int number)
 {
     Console.WriteLine(number);
 }
 </code></pre>
-<p>Lets assume that <code>PrintNumber</code> is slow and we want to speed it up, what do we do? We stick it in Task.Run and viola! all of our problems are solved!</p>
+<p>Let's assume that <code>PrintNumber</code> is slow and we want to speed it up, what do we do? We stick it in Task.Run and voila! all of our problems are solved!</p>
 <pre><code class="language-csharp">static Task PrintNumberAsync(int number)
 {
     return Task.Run(() =&gt; PrintNumber(number));
@@ -149,10 +149,10 @@ Published on Tuesday, May 5, 2020<br>    </div>
     }
 }
 </code></pre>
-<p>Notice how <code>Main</code> calls <code>PrintNumberAsync</code> without us needing to define it? That's because there is a source generators that generates the async version of any method that's decorated with the <code>Asyncify</code> attribute.</p>
+<p>Notice how <code>Main</code> calls <code>PrintNumberAsync</code> without us needing to define it? That's because there is a source generator that generates the async version of any method that's decorated with the <code>Asyncify</code> attribute.</p>
 <p>The source generator is very simple but a little verbose, so I don't include the source code here. But it's available on <a href="https://github.com/encrypt0r/FunWithSourceGenerators">GitHub</a>.</p>
-<p>The basic idea is that our source generator asks for any method that has an attribute applied to it. It then filters the methods to include only those that have our attribute applied to it.</p>
-<p>It then groups the methods by class, for each class it creates another partial class that contains the async versions for the specified methods.</p>
+<p>The basic idea is that our source generator asks for any method that has our specific attribute (<code>Asyncify</code>) applied to it.</p>
+<p>It then groups the methods by their class, for each class it creates another partial class that contains the async versions for the specified methods.</p>
 <p>Here is how we generate each method:</p>
 <pre><code class="language-csharp">private void ProcessMethod(StringBuilder source, IMethodSymbol methodSymbol)
 {
@@ -179,7 +179,7 @@ public {staticModifier} {asyncReturnType} {asyncMethodName}({parameters})
 &quot;);
 }
 </code></pre>
-<p>Because C# Source Generators are part of build, we get a lot metadata (like <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.imethodsymbol?view=roslyn-dotnet">IMethodSymbol</a>) about all of the classes, methods, fields, etc. It's like reflection, but in compile time. If you have experience with Analyzers it's very similar because they are both based on Roslyn. But unlike Analyzers, C# Source Generators emit code using strings, not syntax trees. To be honest, I like the string approach. It's a lot more friendly, although it can get hard to maintain for complicated generators.</p>
+<p>Because C# Source Generators are part of build, we get a lot metadata (like <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.imethodsymbol?view=roslyn-dotnet">IMethodSymbol</a>) about all of the classes, methods, fields, etc. It's like reflection, but in compile time. If you have experience with Analyzers it's very similar because they are both based on Roslyn. But unlike Analyzers, C# Source Generators emit code using strings, not syntax tree deltas. To be honest, I like the string approach. It's a lot more friendly. However, it can get hard to maintain for complicated scenarios.</p>
 <p>To make our source generator even more useful, we can modify it so that we can apply the <code>Asyncify</code> attribute on a class and all of the methods of the class get asyncified! I'll leave that as an exercise.</p>
 
 
