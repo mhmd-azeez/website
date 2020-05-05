@@ -8,7 +8,7 @@ Tags:
 
 C# Source Generators is a C# 9 feature that lets your generate source code during build. For more information read the [announcement blog post](https://devblogs.microsoft.com/dotnet/introducing-c-source-generators/) on .NET blog.
 
-> NOTE: If it's not clear, this post is satire. Don't use the code or practices in production.
+> NOTE: If it's not clear, this post is satire. Don't use any of the code or suggestions in production.
 
 Have you ever had problems with app speed? Well, the easiest way to speed up your app is to make your methods async. And the easiest way of making your methods async is by using `Task.Run`.
 
