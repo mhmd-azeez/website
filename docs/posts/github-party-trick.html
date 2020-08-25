@@ -6,7 +6,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 
-        <title>Muhammad Azeez - roslyn</title>
+        <title>Muhammad Azeez - GitHub Party Trick</title>
         <meta name="description" content="A blog about software engineering and beyond!" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -33,9 +33,9 @@
         <meta name="msapplication-tooltip" content="Muhammad Azeez" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="Muhammad Azeez - roslyn" />
+        <meta property="og:title" content="Muhammad Azeez - GitHub Party Trick" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://mazeez.dev/tags/roslyn" />
+        <meta property="og:url" content="https://mazeez.dev/posts/github-party-trick" />
         <!-- TODO: More social graph meta tags -->
 
         <script src="/assets/js/jquery.min.js"> </script> <script
@@ -95,9 +95,17 @@
                 <div class="container">
                         <div class="row">
                                 <div class="col-md-12">
-<div class="site-heading">
-    <h1>roslyn</h1>
-</div>                                    </div>
+
+    
+<div class="post-heading">
+    <h1>GitHub Party Trick</h1>
+    <div class="meta">        
+Published on Tuesday, August 25, 2020<br>    </div>
+        <div class="tags">
+                    <a role="button" href="/tags/github" class="btn btn-default btn-xs">github</a>
+        </div>     
+</div>
+                                </div>
                         </div>
                 </div>
         </header>
@@ -106,50 +114,68 @@
         <div class="container">
                 <div class="row">
                         <div id="content" class="col-md-12">
-                                <div class="container-sm-height">
-    <div class="row row-sm-height">
-        <div class="col-sm-8 right-border col-sm-height">
-            
-        <div class="post-list">
-            <a href="/posts/csharp-yield">
-                <h3 class="post-title">How the C# yield keyword works</h3>
-            </a>
-            <p class="post-meta">Posted on Monday, May 20, 2019</p>      
-        </div>   
+                                
+
+<p>GitHub associates commits with people via email addresses. Each commit is signed with a commit and a name. So when you push a repo to GitHub, it looks for a user with that email address and associates the commit with that user. This allows some cool tricks!</p>
+<p>You can commit as your favorite programmer in your repositories! <a href="https://github.com/encrypt0r/trick/graphs/contributors">Example</a>:</p>
+<p><img src="..%5Cassets%5Cimages%5Cposts%5Cgithub-party-trick%5Ccontributors.png" class="img-fluid" alt="List of contributors contains Rhyan Dhall, Rich Harris, and Linus Torvalds" /></p>
+<p>In a repository, change your email address to their email address:</p>
+<pre><code>git config user.email &quot;email&#64;example.com&quot;
+</code></pre>
+<p>Optional: Change your name to their name too!</p>
+<pre><code>git config user.name &quot;Famous Person&quot;
+</code></pre>
+<p>And now you can commit and push to GitHub. Now GitHub associates the commits with their account!</p>
+<p>Note: The commits don't show up on their profile page. GitHub <a href="https://docs.github.com/en/github/setting-up-and-managing-your-github-profile/why-are-my-contributions-not-showing-up-on-my-profile#commits">has this to say</a> about showing commits on a user's profile:</p>
+<blockquote class="blockquote">
+<p>Commits will appear on your contributions graph if they meet <strong>all</strong> of the following conditions:</p>
+<ul>
+<li>The email address used for the commits is associated with your GitHub account.</li>
+<li>The commits were made in a standalone repository, not a fork.</li>
+<li>The commits were made:
+<ul>
+<li>In the repository's default branch (usually <code>master</code>)</li>
+<li>In the <code>gh-pages</code> branch (for repositories with project sites)</li>
+</ul>
+</li>
+</ul>
+<p>For more information on project sites, see &quot;<a href="https://docs.github.com/en/github/working-with-github-pages/about-github-pages#types-of-github-pages-sites">About GitHub Pages</a>.&quot;</p>
+<p>In addition, <strong>at least one</strong> of the following must be true:</p>
+<ul>
+<li>You are a collaborator on the repository or are a member of the organization that owns the repository.</li>
+<li>You have forked the repository.</li>
+<li>You have opened a pull request or issue in the repository.</li>
+<li>You have starred the repository.</li>
+</ul>
+</blockquote>
+<p><strong>DISCLAIMER:</strong></p>
+<p><img src="https://s.yimg.com/ny/api/res/1.2/27_UvTRiSb4a5C42zgkIeQ--%7EA/YXBwaWQ9aGlnaGxhbmRlcjtzbT0xO3c9NTAwO2g9MjAw/http://media.zenfs.com/en/homerun/feed_manager_auto_publish_494/3da2941d2b6e5249f73bed9bd44fdbf3" class="img-fluid" alt="Identity theft is not a joke~" /></p>
+<p>While we used this as a fun trick, it can be used for nefarious reasons. One way to workaround this issue is to <a href="https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work">cryptographically sign your commits</a>. So that people can be sure that you have made the commits.</p>
 
 
-            <nav>
-                <ul class="pager">
-                    <li class="previous">                
-                    </li>
-                    <li class="next">
-                    </li>
-                </ul>
-            </nav>
-            <hr class="visible-xs-block" />
-        </div>
-		
-        <div class="col-sm-4 col-sm-height">
-                <a role="button" href="/tags/csharp" class="btn btn-default btn-xs">csharp (4)</a>
-                <a role="button" href="/tags/uwp" class="btn btn-default btn-xs">uwp (4)</a>
-                <a role="button" href="/tags/devops" class="btn btn-default btn-xs">devops (3)</a>
-                <a role="button" href="/tags/linux" class="btn btn-default btn-xs">linux (2)</a>
-                <a role="button" href="/tags/orm" class="btn btn-default btn-xs">orm (1)</a>
-                <a role="button" href="/tags/ef" class="btn btn-default btn-xs">ef (1)</a>
-                <a role="button" href="/tags/aspnet" class="btn btn-default btn-xs">aspnet (1)</a>
-                <a role="button" href="/tags/ldd" class="btn btn-default btn-xs">ldd (1)</a>
-                <a role="button" href="/tags/dotnet" class="btn btn-default btn-xs">dotnet (1)</a>
-                <a role="button" href="/tags/navigation" class="btn btn-default btn-xs">navigation (1)</a>
-                <a role="button" href="/tags/career" class="btn btn-default btn-xs">career (1)</a>
-                <a role="button" href="/tags/github" class="btn btn-default btn-xs">github (1)</a>
-                <a role="button" href="/tags/source-generators" class="btn btn-default btn-xs">source-generators (1)</a>
-                <a role="button" href="/tags/roslyn" class="btn btn-primary btn-xs">roslyn (1)</a>
-                <a role="button" href="/tags/corert" class="btn btn-default btn-xs">corert (1)</a>
-                <a role="button" href="/tags/code-signing" class="btn btn-default btn-xs">code-signing (1)</a>
-                <a role="button" href="/tags/iraq" class="btn btn-default btn-xs">iraq (1)</a>
-        </div>
-    </div>
-</div>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'mazeez'; // required: replace example with your forum shortname
+    var disqus_identifier = 'github-party-trick';
+    var disqus_title = 'GitHub Party Trick';
+    var disqus_url = 'https://mazeez.dev/posts/github-party-trick';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
                         </div>
                 </div>
         </div>

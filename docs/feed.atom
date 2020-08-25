@@ -4,9 +4,53 @@
 	<title>Muhammad Azeez</title>
 	<link rel="self" href="https://mazeez.dev/" />
 	<rights>2020</rights>
-	<updated>2020-05-05T00:58:27Z</updated>
+	<updated>2020-08-25T08:16:54Z</updated>
 	<logo>https://mazeez.dev/assets/images/cover.jpg</logo>
 	<subtitle>A blog about software engineering and beyond!</subtitle>
+	<entry>
+		<id>https://mazeez.dev/posts/github-party-trick</id>
+		<title>GitHub Party Trick</title>
+		<link href="https://mazeez.dev/posts/github-party-trick" />
+		<link rel="enclosure" type="image" href="https://mazeez.dev/assets/images/cover.jpg" />
+		<updated>2020-08-25T00:00:00Z</updated>
+		<content>&lt;p&gt;GitHub associates commits with people via email addresses. Each commit is signed with a commit and a name. So when you push a repo to GitHub, it looks for a user with that email address and associates the commit with that user. This allows some cool tricks!&lt;/p&gt;
+&lt;p&gt;You can commit as your favorite programmer in your repositories! &lt;a href="https://github.com/encrypt0r/trick/graphs/contributors"&gt;Example&lt;/a&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;img src="..%5Cassets%5Cimages%5Cposts%5Cgithub-party-trick%5Ccontributors.png" class="img-fluid" alt="List of contributors contains Rhyan Dhall, Rich Harris, and Linus Torvalds" /&gt;&lt;/p&gt;
+&lt;p&gt;In a repository, change your email address to their email address:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git config user.email &amp;quot;email&amp;#64;example.com&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Optional: Change your name to their name too!&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git config user.name &amp;quot;Famous Person&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And now you can commit and push to GitHub. Now GitHub associates the commits with their account!&lt;/p&gt;
+&lt;p&gt;Note: The commits don't show up on their profile page. GitHub &lt;a href="https://docs.github.com/en/github/setting-up-and-managing-your-github-profile/why-are-my-contributions-not-showing-up-on-my-profile#commits"&gt;has this to say&lt;/a&gt; about showing commits on a user's profile:&lt;/p&gt;
+&lt;blockquote class="blockquote"&gt;
+&lt;p&gt;Commits will appear on your contributions graph if they meet &lt;strong&gt;all&lt;/strong&gt; of the following conditions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The email address used for the commits is associated with your GitHub account.&lt;/li&gt;
+&lt;li&gt;The commits were made in a standalone repository, not a fork.&lt;/li&gt;
+&lt;li&gt;The commits were made:
+&lt;ul&gt;
+&lt;li&gt;In the repository's default branch (usually &lt;code&gt;master&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;In the &lt;code&gt;gh-pages&lt;/code&gt; branch (for repositories with project sites)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For more information on project sites, see &amp;quot;&lt;a href="https://docs.github.com/en/github/working-with-github-pages/about-github-pages#types-of-github-pages-sites"&gt;About GitHub Pages&lt;/a&gt;.&amp;quot;&lt;/p&gt;
+&lt;p&gt;In addition, &lt;strong&gt;at least one&lt;/strong&gt; of the following must be true:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You are a collaborator on the repository or are a member of the organization that owns the repository.&lt;/li&gt;
+&lt;li&gt;You have forked the repository.&lt;/li&gt;
+&lt;li&gt;You have opened a pull request or issue in the repository.&lt;/li&gt;
+&lt;li&gt;You have starred the repository.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;DISCLAIMER:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://s.yimg.com/ny/api/res/1.2/27_UvTRiSb4a5C42zgkIeQ--%7EA/YXBwaWQ9aGlnaGxhbmRlcjtzbT0xO3c9NTAwO2g9MjAw/http://media.zenfs.com/en/homerun/feed_manager_auto_publish_494/3da2941d2b6e5249f73bed9bd44fdbf3" class="img-fluid" alt="Identity theft is not a joke~" /&gt;&lt;/p&gt;
+&lt;p&gt;While we used this as a fun trick, it can be used for nefarious reasons. One way to workaround this issue is to &lt;a href="https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work"&gt;cryptographically sign your commits&lt;/a&gt;. So that people can be sure that you have made the commits.&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;GitHub associates commits with people via email addresses. Each commit is signed with a commit and a name. So when you push a repo to GitHub, it looks for a user with that email address and associates the commit with that user. This allows some cool tricks!&lt;/p&gt;</summary>
+	</entry>
 	<entry>
 		<id>https://mazeez.dev/posts/csharp-source-generators</id>
 		<title>Use C# Source Generators to make all of your methods async!</title>
@@ -934,9 +978,9 @@ page.Init(&amp;quot;Hello World&amp;quot;, 42);
 		<summary>&lt;p&gt;By default when navigating a frame to a page, UWP doesn't give you back a page instance. So the only way of passing parameters is to use the &lt;code&gt;parameter&lt;/code&gt; parameter. But having an instance to the page can have many other benefits: For example it allows the child page to have custom events and the parent page can subscribe to them.&lt;/p&gt;</summary>
 	</entry>
 	<entry>
-		<id>https://mazeez.dev/posts/why-you-should-read-on-topics-that-you-might-not-need-right-now%20-%20Copy</id>
+		<id>https://mazeez.dev/posts/why-you-should-read-on-topics-that-you-might-not-need-right-now</id>
 		<title>Why you should read on topics that you might not need right now?</title>
-		<link href="https://mazeez.dev/posts/why-you-should-read-on-topics-that-you-might-not-need-right-now%20-%20Copy" />
+		<link href="https://mazeez.dev/posts/why-you-should-read-on-topics-that-you-might-not-need-right-now" />
 		<link rel="enclosure" type="image" href="https://mazeez.dev/assets/images/cover.jpg" />
 		<updated>2019-05-23T00:00:00Z</updated>
 		<content>&lt;p&gt;I was browsing web once when I stumbled upon an article about &lt;a href="https://github.com/mono/SkiaSharp"&gt;SkiaSharp&lt;/a&gt;. It's a C# wrapper around Google's fast 2D rending engine. I was developing desktop apps in WPF at the time and didn't feel the need to learn a low level library like that.&lt;/p&gt;
