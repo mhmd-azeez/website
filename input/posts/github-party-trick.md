@@ -9,7 +9,7 @@ GitHub associates commits with people via email addresses. Each commit is signed
 
 You can commit as your favorite programmer in your repositories! [Example](https://github.com/encrypt0r/trick/graphs/contributors):
 
-![List of contributors contains Rhyan Dhall, Rich Harris, and Linus Torvalds](..\assets\images\posts\github-party-trick\contributors.png)
+![List of contributors contains Rhyan Dhall, Rich Harris, and Linus Torvalds](../assets/images/posts/github-party-trick/contributors.png)
 
 In a repository, change your email address to their email address:
 
