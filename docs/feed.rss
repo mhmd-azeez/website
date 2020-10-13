@@ -5,8 +5,33 @@
 		<link>https://mazeez.dev/</link>
 		<description>A blog about software engineering and beyond!</description>
 		<copyright>2020</copyright>
-		<pubDate>Tue, 25 Aug 2020 08:20:38 GMT</pubDate>
-		<lastBuildDate>Tue, 25 Aug 2020 08:20:38 GMT</lastBuildDate>
+		<pubDate>Tue, 13 Oct 2020 14:05:12 GMT</pubDate>
+		<lastBuildDate>Tue, 13 Oct 2020 14:05:12 GMT</lastBuildDate>
+		<item>
+			<title>How to include folders as link recursively in csproj files</title>
+			<link>https://mazeez.dev/posts/csproj-include-folders-recursively</link>
+			<description>&lt;p&gt;Suppose we have a folder called &lt;code&gt;dependencies&lt;/code&gt; with this structure:&lt;/p&gt;</description>
+			<enclosure url="https://mazeez.dev/assets/images/cover.jpg" length="0" type="image" />
+			<guid>https://mazeez.dev/posts/csproj-include-folders-recursively</guid>
+			<pubDate>Tue, 13 Oct 2020 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;Suppose we have a folder called &lt;code&gt;dependencies&lt;/code&gt; with this structure:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; - dependencies
+   - child-folder
+     - file.txt
+     - file2.txt
+   - file3.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;If you want to add the entire folder as link and preserve the directory structure, you can use this inside your &lt;code&gt;.csproj&lt;/code&gt; file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;ItemGroup&amp;gt;
+    &amp;lt;None Include=&amp;quot;..\dependencies\**\*&amp;quot;&amp;gt;
+      &amp;lt;Link&amp;gt;dependencies\%(RecursiveDir)/%(FileName)%(Extension)&amp;lt;/Link&amp;gt;
+      &amp;lt;CopyToOutputDirectory&amp;gt;PreserveNewest&amp;lt;/CopyToOutputDirectory&amp;gt;
+    &amp;lt;/None&amp;gt;
+&amp;lt;/ItemGroup&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This will include &lt;code&gt;dependencies&lt;/code&gt; folder inside your project along with all of its child folder and files.&lt;/p&gt;
+</content:encoded>
+		</item>
 		<item>
 			<title>GitHub Party Trick</title>
 			<link>https://mazeez.dev/posts/github-party-trick</link>

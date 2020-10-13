@@ -4,9 +4,34 @@
 	<title>Muhammad Azeez</title>
 	<link rel="self" href="https://mazeez.dev/" />
 	<rights>2020</rights>
-	<updated>2020-08-25T08:20:38Z</updated>
+	<updated>2020-10-13T14:05:12Z</updated>
 	<logo>https://mazeez.dev/assets/images/cover.jpg</logo>
 	<subtitle>A blog about software engineering and beyond!</subtitle>
+	<entry>
+		<id>https://mazeez.dev/posts/csproj-include-folders-recursively</id>
+		<title>How to include folders as link recursively in csproj files</title>
+		<link href="https://mazeez.dev/posts/csproj-include-folders-recursively" />
+		<link rel="enclosure" type="image" href="https://mazeez.dev/assets/images/cover.jpg" />
+		<updated>2020-10-13T00:00:00Z</updated>
+		<content>&lt;p&gt;Suppose we have a folder called &lt;code&gt;dependencies&lt;/code&gt; with this structure:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; - dependencies
+   - child-folder
+     - file.txt
+     - file2.txt
+   - file3.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;If you want to add the entire folder as link and preserve the directory structure, you can use this inside your &lt;code&gt;.csproj&lt;/code&gt; file:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;ItemGroup&amp;gt;
+    &amp;lt;None Include=&amp;quot;..\dependencies\**\*&amp;quot;&amp;gt;
+      &amp;lt;Link&amp;gt;dependencies\%(RecursiveDir)/%(FileName)%(Extension)&amp;lt;/Link&amp;gt;
+      &amp;lt;CopyToOutputDirectory&amp;gt;PreserveNewest&amp;lt;/CopyToOutputDirectory&amp;gt;
+    &amp;lt;/None&amp;gt;
+&amp;lt;/ItemGroup&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This will include &lt;code&gt;dependencies&lt;/code&gt; folder inside your project along with all of its child folder and files.&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;Suppose we have a folder called &lt;code&gt;dependencies&lt;/code&gt; with this structure:&lt;/p&gt;</summary>
+	</entry>
 	<entry>
 		<id>https://mazeez.dev/posts/github-party-trick</id>
 		<title>GitHub Party Trick</title>
