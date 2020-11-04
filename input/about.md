@@ -19,5 +19,5 @@ Title: About Me
 ## Contact Me
 - [Email](mailto:muhammad-azeez@outlook.com)
 - [Twitter](https://twitter.com/mhmd_azeez)
-- [GitHub](https://github.com/encrypt0r)
+- [GitHub](https://github.com/mhmd-azeez)
 - [LinkedIn](https://www.linkedin.com/in/muhammad-azeez/)
