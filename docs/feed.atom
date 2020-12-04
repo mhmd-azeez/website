@@ -4,7 +4,7 @@
 	<title>Muhammad Azeez</title>
 	<link rel="self" href="https://mazeez.dev/" />
 	<rights>2020</rights>
-	<updated>2020-12-04T22:18:18Z</updated>
+	<updated>2020-12-04T22:21:12Z</updated>
 	<logo>https://mazeez.dev/assets/images/cover.jpg</logo>
 	<subtitle>A blog about software engineering and beyond!</subtitle>
 	<entry>
@@ -21,7 +21,7 @@
 &lt;p&gt;&lt;strong&gt;&lt;a href="https://www.hangfire.io/"&gt;Hangfire&lt;/a&gt;&lt;/strong&gt; is a library that helps you do all of that and more very easily. It's very popular and well tested. It's also customizable and supports different kinds of storage mechanisms. And it supports different styles and techniques of background job processing.&lt;/p&gt;
 &lt;img src="../assets/images/posts/background-job-scheduling-using-hangfire/dashboard.jpg" width="800"&gt;
 &lt;h2 id="how-to-use-hangfire"&gt;How to use Hangfire&lt;/h2&gt;
-&lt;p&gt;Although you can host Hangfire in a console application, we are going to host it in an ASP.NET Core app and use SQLite for storage. But you can use MSSQL, PostgreSQL, MySQL and other database engines. The &lt;a href="https://docs.hangfire.io/en/latest/getting-started/aspnet-core-applications.html"&gt;official guide&lt;/a&gt; is very good but here are the steps:&lt;/p&gt;
+&lt;p&gt;We are going to host hangfire in an ASP.NET Core app and use SQLite for storage. You can also use MSSQL, PostgreSQL, MySQL and other database engines and host it in a console app. The &lt;a href="https://docs.hangfire.io/en/latest/getting-started/aspnet-core-applications.html"&gt;official guide&lt;/a&gt; is very good but here are the steps:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;p&gt;Add these Nuget packages*:&lt;/p&gt;
 &lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;PackageReference Include=&amp;quot;Hangfire.Core&amp;quot; Version=&amp;quot;1.7.18&amp;quot; /&amp;gt;

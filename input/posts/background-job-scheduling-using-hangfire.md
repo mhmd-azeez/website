@@ -17,7 +17,7 @@ You can of course use an in-memory model and use ASP.NET Core's [IHostedService]
 
 ## How to use Hangfire
 
-Although you can host Hangfire in a console application, we are going to host it in an ASP.NET Core app and use SQLite for storage. But you can use MSSQL, PostgreSQL, MySQL and other database engines. The [official guide](https://docs.hangfire.io/en/latest/getting-started/aspnet-core-applications.html) is very good but here are the steps:
+We are going to host hangfire in an ASP.NET Core app and use SQLite for storage. You can also use MSSQL, PostgreSQL, MySQL and other database engines and host it in a console app. The [official guide](https://docs.hangfire.io/en/latest/getting-started/aspnet-core-applications.html) is very good but here are the steps:
 
 1. Add these Nuget packages*:
 
