@@ -153,7 +153,6 @@ services.AddHangfireServer();
 </li>
 </ol>
 <p>Now you can run the app and go to <code>/hangfire</code> and see it. But there are no jobs yet.</p>
-<img src="../assets/images/posts/background-job-scheduling-using-hangfire/job.jpg" width="800">
 <h2 id="enqueuing-jobs">Enqueuing Jobs</h2>
 <p>If you want to enqueue a job in a fire-and-forget fashion (i.e. you don't want to wait for the result and you don't care much about when exactly it's going to happen), you do something like this:</p>
 <pre><code>backgroundJobs.Enqueue(() =&gt; Console.WriteLine(&quot;Hello world from Hangfire!&quot;));
@@ -182,6 +181,7 @@ services.AddHangfireServer();
 <p>And this is how you'd enqueue the job:</p>
 <pre><code class="language-csharp">_backgroundJobClient.Enqueue&lt;SendEmailsJob&gt;(job =&gt; job.Execute(5));
 </code></pre>
+<img src="../assets/images/posts/background-job-scheduling-using-hangfire/job.jpg" width="800">
 <h2 id="scheduling-jobs">Scheduling Jobs</h2>
 <p>If you want a job to be executed periodically on a defined schedule, you can write something like this:</p>
 <pre><code class="language-csharp">Hangfire.RecurringJob.AddOrUpdate&lt;SendEmailsJob&gt;(job =&gt; job.Execute(10), cronExpression: &quot;*/5 * * * *&quot;);

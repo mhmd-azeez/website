@@ -53,8 +53,6 @@ Although you can host Hangfire in a console application, we are going to host it
 
 Now you can run the app and go to `/hangfire` and see it. But there are no jobs yet.
 
-<img src="../assets/images/posts/background-job-scheduling-using-hangfire/job.jpg" width="800">
-
 ## Enqueuing Jobs
 
 If you want to enqueue a job in a fire-and-forget fashion (i.e. you don't want to wait for the result and you don't care much about when exactly it's going to happen), you do something like this:
@@ -93,6 +91,8 @@ And this is how you'd enqueue the job:
 ```csharp
 _backgroundJobClient.Enqueue<SendEmailsJob>(job => job.Execute(5));
 ```
+
+<img src="../assets/images/posts/background-job-scheduling-using-hangfire/job.jpg" width="800">
 
 ## Scheduling Jobs
 
