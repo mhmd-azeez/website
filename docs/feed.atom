@@ -4,9 +4,97 @@
 	<title>Muhammad Azeez</title>
 	<link rel="self" href="https://mazeez.dev/" />
 	<rights>2020</rights>
-	<updated>2020-11-04T15:00:11Z</updated>
+	<updated>2020-12-04T22:08:24Z</updated>
 	<logo>https://mazeez.dev/assets/images/cover.jpg</logo>
 	<subtitle>A blog about software engineering and beyond!</subtitle>
+	<entry>
+		<id>https://mazeez.dev/posts/background-job-scheduling-using-hangfire</id>
+		<title>Background Job Scheduling using Hangfire</title>
+		<link href="https://mazeez.dev/posts/background-job-scheduling-using-hangfire" />
+		<link rel="enclosure" type="image" href="https://mazeez.dev/assets/images/cover.jpg" />
+		<updated>2020-12-05T00:00:00Z</updated>
+		<content>&lt;blockquote class="blockquote"&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; This post is part of C# &lt;a href="https://www.csadvent.christmas/"&gt;Advent Calendar 2020&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Sometimes you've tasks that would take too much time to do in the request-response model. For example sending multiple emails. So you have to send the emails asynchronously (i.e. in the background) and returning a response before the jobs are done. Or maybe you want to do some task periodically. For example generating a resource-intensive report at midnight or sending monthly invoices to customers. In short, you want to be able to schedule jobs and be able to track their progress and see their results.&lt;/p&gt;
+&lt;p&gt;You can of course use an in-memory model and use ASP.NET Core's &lt;a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services"&gt;IHostedService&lt;/a&gt;. But then if the application restarts all of the scheduled jobs would be gone. So you need to persist the jobs so that they are not lost. And Maybe you want to have multiple workers (consumers) processing the background jobs and the works might be on different machines. And what about retrying jobs when they fail?&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href="https://www.hangfire.io/"&gt;Hangfire&lt;/a&gt;&lt;/strong&gt; is a library that helps you do all of that and more very easily. It's very popular and well tested. It's also customizable and supports different kinds of storage mechanisms. And it supports different styles and techniques of background job processing.&lt;/p&gt;
+&lt;img src="../assets/images/posts/background-job-scheduling-using-hangfire/dashboard.jpg" width="800"&gt;
+&lt;h2 id="how-to-use-hangfire"&gt;How to use Hangfire&lt;/h2&gt;
+&lt;p&gt;Although you can host Hangfire in a console application, we are going to host it in an ASP.NET Core app and use SQLite for storage. But you can use MSSQL, PostgreSQL, MySQL and other database engines. The &lt;a href="https://docs.hangfire.io/en/latest/getting-started/aspnet-core-applications.html"&gt;official guide&lt;/a&gt; is very good but here are the steps:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Add these Nuget packages*:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-xml"&gt;&amp;lt;PackageReference Include=&amp;quot;Hangfire.Core&amp;quot; Version=&amp;quot;1.7.18&amp;quot; /&amp;gt;
+&amp;lt;PackageReference Include=&amp;quot;Hangfire.AspNetCore&amp;quot; Version=&amp;quot;1.7.18&amp;quot; /&amp;gt;
+&amp;lt;PackageReference Include=&amp;quot;Hangfire.Storage.SQLite&amp;quot; Version=&amp;quot;0.2.4&amp;quot; /&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Add Hangfire to Dependency Container:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;// Add Hangfire services.
+services.AddHangfire(configuration =&amp;gt; configuration
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSQLiteStorage());
+
+// Add the processing server as IHostedService
+services.AddHangfireServer();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Define Hangfire Dashboard route:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;app.UseEndpoints(endpoints =&amp;gt;
+{
+    endpoints.MapRazorPages();
+    endpoints.MapHangfireDashboard();
+});
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Now you can run the app and go to &lt;code&gt;/hangfire&lt;/code&gt; and see it. But there are no jobs yet.&lt;/p&gt;
+&lt;img src="../assets/images/posts/background-job-scheduling-using-hangfire/job.jpg" width="800"&gt;
+&lt;h2 id="enqueuing-jobs"&gt;Enqueuing Jobs&lt;/h2&gt;
+&lt;p&gt;If you want to enqueue a job in a fire-and-forget fashion (i.e. you don't want to wait for the result and you don't care much about when exactly it's going to happen), you do something like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;backgroundJobs.Enqueue(() =&amp;gt; Console.WriteLine(&amp;quot;Hello world from Hangfire!&amp;quot;));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;What if you wanted to something that might require some dependencies. For example you need a connection to the database or access to configurations? Well, then you can create a class for the job and get your dependencies through Dependency Injection:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;public class SendEmailsJob
+{
+    public SendEmailsJob(IConfiguration configuration)
+    {
+        // You can ask for configuration or any other
+        // dependency the job might need via Dependency Injection
+    }
+
+    [JobDisplayName(&amp;quot;Send {0} emails&amp;quot;)]
+    [AutomaticRetry(Attempts = 3)]
+    public async Task Execute(int count)
+    {
+        for (int i = 0; i &amp;lt; count; i++)
+        {
+            await Task.Delay(1000);
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can see we have defined a method called &lt;code&gt;Execute&lt;/code&gt; which accepts a parameter. We have also decorated it with some attributes to control how it's displayed in the Hangfire dashboard or how many times Hangfire would automatically retry the job if it fails.&lt;/p&gt;
+&lt;p&gt;And this is how you'd enqueue the job:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;_backgroundJobClient.Enqueue&amp;lt;SendEmailsJob&amp;gt;(job =&amp;gt; job.Execute(5));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="scheduling-jobs"&gt;Scheduling Jobs&lt;/h2&gt;
+&lt;p&gt;If you want a job to be executed periodically on a defined schedule, you can write something like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;Hangfire.RecurringJob.AddOrUpdate&amp;lt;SendEmailsJob&amp;gt;(job =&amp;gt; job.Execute(10), cronExpression: &amp;quot;*/5 * * * *&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; &lt;code&gt;RecurringJob&lt;/code&gt; is a static class.&lt;/p&gt;
+&lt;p&gt;The job can be a simple expression or a class. And you define the schedule using a Cron Expression. You can construct Cron expressions through sites like &lt;a href="https://crontab.cronhub.io/"&gt;this&lt;/a&gt; and &lt;a href="https://crontab.guru/"&gt;this&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="extensions"&gt;Extensions&lt;/h2&gt;
+&lt;p&gt;Hangfire has a lot of extensions, you can check them out &lt;a href="https://www.hangfire.io/extensions.html"&gt;here&lt;/a&gt;. But my favorite extension is this one. Which lets you output real time logs :)&lt;/p&gt;
+&lt;img src="https://github.com/pieceofsummer/Hangfire.Console/raw/master/dashboard.png" width="600" /&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; The console is not real-time if you use SQLite as the storage engine.&lt;/p&gt;
+&lt;h2 id="source-code"&gt;Source code&lt;/h2&gt;
+&lt;p&gt;I have put a sample application &lt;a href="https://github.com/mhmd-azeez/HangfireDemo"&gt;here &lt;/a&gt; which contains the codes in this article and the rest of the ASP.NET Core app.&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; This post is part of C# &lt;a href="https://www.csadvent.christmas/"&gt;Advent Calendar 2020&lt;/a&gt;.&lt;/p&gt;</summary>
+	</entry>
 	<entry>
 		<id>https://mazeez.dev/posts/csproj-include-folders-recursively</id>
 		<title>How to include folders as link recursively in csproj files</title>
