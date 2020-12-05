@@ -92,8 +92,6 @@ And this is how you'd enqueue the job:
 _backgroundJobClient.Enqueue<SendEmailsJob>(job => job.Execute(5));
 ```
 
-<img src="../assets/images/posts/background-job-scheduling-using-hangfire/job.jpg" width="800">
-
 ## Scheduling Jobs
 
 If you want a job to be executed periodically on a defined schedule, you can write something like this:
@@ -105,6 +103,8 @@ Hangfire.RecurringJob.AddOrUpdate<SendEmailsJob>(job => job.Execute(10), cronExp
 **Note:** `RecurringJob` is a static class.
 
 The job can be a simple expression or a class. And you define the schedule using a Cron Expression. You can construct Cron expressions through sites like [this](https://crontab.cronhub.io/) and [this](https://crontab.guru/).
+
+<img src="../assets/images/posts/background-job-scheduling-using-hangfire/job.jpg" width="800">
 
 ## Extensions
 

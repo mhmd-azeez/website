@@ -181,13 +181,13 @@ services.AddHangfireServer();
 <p>And this is how you'd enqueue the job:</p>
 <pre><code class="language-csharp">_backgroundJobClient.Enqueue&lt;SendEmailsJob&gt;(job =&gt; job.Execute(5));
 </code></pre>
-<img src="../assets/images/posts/background-job-scheduling-using-hangfire/job.jpg" width="800">
 <h2 id="scheduling-jobs">Scheduling Jobs</h2>
 <p>If you want a job to be executed periodically on a defined schedule, you can write something like this:</p>
 <pre><code class="language-csharp">Hangfire.RecurringJob.AddOrUpdate&lt;SendEmailsJob&gt;(job =&gt; job.Execute(10), cronExpression: &quot;*/5 * * * *&quot;);
 </code></pre>
 <p><strong>Note:</strong> <code>RecurringJob</code> is a static class.</p>
 <p>The job can be a simple expression or a class. And you define the schedule using a Cron Expression. You can construct Cron expressions through sites like <a href="https://crontab.cronhub.io/">this</a> and <a href="https://crontab.guru/">this</a>.</p>
+<img src="../assets/images/posts/background-job-scheduling-using-hangfire/job.jpg" width="800">
 <h2 id="extensions">Extensions</h2>
 <p>Hangfire has a lot of extensions, you can check them out <a href="https://www.hangfire.io/extensions.html">here</a>. But my favorite extension is this one. Which lets you output real time logs :)</p>
 <img src="https://github.com/pieceofsummer/Hangfire.Console/raw/master/dashboard.png" width="600" />

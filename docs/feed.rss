@@ -5,8 +5,8 @@
 		<link>https://mazeez.dev/</link>
 		<description>A blog about software engineering and beyond!</description>
 		<copyright>2020</copyright>
-		<pubDate>Fri, 04 Dec 2020 22:21:12 GMT</pubDate>
-		<lastBuildDate>Fri, 04 Dec 2020 22:21:12 GMT</lastBuildDate>
+		<pubDate>Sat, 05 Dec 2020 10:45:52 GMT</pubDate>
+		<lastBuildDate>Sat, 05 Dec 2020 10:45:52 GMT</lastBuildDate>
 		<item>
 			<title>Background Job Scheduling using Hangfire</title>
 			<link>https://mazeez.dev/posts/background-job-scheduling-using-hangfire</link>
@@ -80,13 +80,13 @@ services.AddHangfireServer();
 &lt;p&gt;And this is how you'd enqueue the job:&lt;/p&gt;
 &lt;pre&gt;&lt;code class="language-csharp"&gt;_backgroundJobClient.Enqueue&amp;lt;SendEmailsJob&amp;gt;(job =&amp;gt; job.Execute(5));
 &lt;/code&gt;&lt;/pre&gt;
-&lt;img src="../assets/images/posts/background-job-scheduling-using-hangfire/job.jpg" width="800"&gt;
 &lt;h2 id="scheduling-jobs"&gt;Scheduling Jobs&lt;/h2&gt;
 &lt;p&gt;If you want a job to be executed periodically on a defined schedule, you can write something like this:&lt;/p&gt;
 &lt;pre&gt;&lt;code class="language-csharp"&gt;Hangfire.RecurringJob.AddOrUpdate&amp;lt;SendEmailsJob&amp;gt;(job =&amp;gt; job.Execute(10), cronExpression: &amp;quot;*/5 * * * *&amp;quot;);
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; &lt;code&gt;RecurringJob&lt;/code&gt; is a static class.&lt;/p&gt;
 &lt;p&gt;The job can be a simple expression or a class. And you define the schedule using a Cron Expression. You can construct Cron expressions through sites like &lt;a href="https://crontab.cronhub.io/"&gt;this&lt;/a&gt; and &lt;a href="https://crontab.guru/"&gt;this&lt;/a&gt;.&lt;/p&gt;
+&lt;img src="../assets/images/posts/background-job-scheduling-using-hangfire/job.jpg" width="800"&gt;
 &lt;h2 id="extensions"&gt;Extensions&lt;/h2&gt;
 &lt;p&gt;Hangfire has a lot of extensions, you can check them out &lt;a href="https://www.hangfire.io/extensions.html"&gt;here&lt;/a&gt;. But my favorite extension is this one. Which lets you output real time logs :)&lt;/p&gt;
 &lt;img src="https://github.com/pieceofsummer/Hangfire.Console/raw/master/dashboard.png" width="600" /&gt;
