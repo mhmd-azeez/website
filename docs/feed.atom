@@ -3,10 +3,151 @@
 	<id>https://mazeez.dev/</id>
 	<title>Muhammad Azeez</title>
 	<link rel="self" href="https://mazeez.dev/" />
-	<rights>2020</rights>
-	<updated>2020-12-05T10:45:52Z</updated>
+	<rights>2021</rights>
+	<updated>2021-03-14T20:51:33Z</updated>
 	<logo>https://mazeez.dev/assets/images/cover.jpg</logo>
 	<subtitle>A blog about software engineering and beyond!</subtitle>
+	<entry>
+		<id>https://mazeez.dev/posts/why-i-like-powershell</id>
+		<title>Why I like Powershell as a scripting language</title>
+		<link href="https://mazeez.dev/posts/why-i-like-powershell" />
+		<link rel="enclosure" type="image" href="https://mazeez.dev/assets/images/cover.jpg" />
+		<updated>2021-03-14T00:00:00Z</updated>
+		<content>&lt;p&gt;Every once in a while, I have to write a script to automate a task. Maybe it's part of a CI/CD pipeline, or it's part of my dev workflow. My favorite language for writing scripts is PowerShell. Here is why:&lt;/p&gt;
+&lt;h1 id="powershell-has-an-object-pipeline"&gt;1. Powershell has an object pipeline&lt;/h1&gt;
+&lt;p&gt;When you pass data (or pipe them) from one command to the next, the data is treated as an object, not as a string. Which means the data can have different properties and it retains these properties.&lt;/p&gt;
+&lt;p&gt;This is very powerful and unlocks all kinds of composability scenarios. Commands don't have to be single purpose, they don't have to provide different switches to get different outputs. They give you everything and you can use only the properties you need.&lt;/p&gt;
+&lt;h1 id="you-have-the-full-power-of.net"&gt;2. You have the full power of .NET&lt;/h1&gt;
+&lt;p&gt;Powershell is a first class programming language on .NET. You can do almost everything with Powershell. that you can do with C# or F#.  &lt;a href="https://devblogs.microsoft.com/scripting/create-a-simple-graphical-interface-for-a-powershell-script/"&gt;You can even create GUIs if you want to&lt;/a&gt;. This means that you have access to the coherent and well designed Base Class Library of .NET as well as the entire gallery of &lt;a href="https://www.nuget.org/"&gt;nuget&lt;/a&gt; packages. It also has &lt;a href="https://www.powershellgallery.com/packages"&gt;a lot of modules of it's own&lt;/a&gt;.&lt;/p&gt;
+&lt;h1 id="you-can-use-selectwheregroupby"&gt;3. You can use Select/Where/GroupBy&lt;/h1&gt;
+&lt;p&gt;Because Powershell is built on top of .NET, it has access to .NET's version of map/filter/reduce. They make scripts much more pleasant to write and read. However the names are a bit different from Javascript or other languages:&lt;/p&gt;
+&lt;table class="table"&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;JS Name&lt;/th&gt;
+&lt;th&gt;Powershell&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Filter&lt;/td&gt;
+&lt;td&gt;Where&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Map&lt;/td&gt;
+&lt;td&gt;Select&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Reduce&lt;/td&gt;
+&lt;td&gt;Measure / ForEach&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Reduce&lt;/td&gt;
+&lt;td&gt;GroupBy&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h1 id="its-now-cross-platform-and-open-source"&gt;4. It's now cross-platform and open-source&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://github.com/PowerShell/PowerShell"&gt;Powershell Core&lt;/a&gt; is a cross-platform and open-source version of Powershell built on top of .NET Core maintained by Microsoft.&lt;/p&gt;
+&lt;h1 id="working-with-data-is-easy"&gt;5. Working with Data is easy&lt;/h1&gt;
+&lt;p&gt;You can easily work with &lt;a href="https://adamtheautomator.com/powershell-excel/"&gt;Excel&lt;/a&gt;, &lt;a href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/select-xml"&gt;XML&lt;/a&gt; and &lt;a href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/convertfrom-json"&gt;JSON&lt;/a&gt; data which makes working with APIs much easier.&lt;/p&gt;
+&lt;h1 id="some-cool-examples"&gt;Some cool examples&lt;/h1&gt;
+&lt;p&gt;Here are some cool examples that demonstrate the points above:&lt;/p&gt;
+&lt;h2 id="get-top-3-largest-files-in-a-folder"&gt;Get top 3 largest files in a folder&lt;/h2&gt;
+&lt;pre&gt;&lt;code class="language-powershell"&gt;Get-Childitem 'C:\Windows\System32' | 
+    Where Length -lt (100 * 1024 * 1024) | # Only files that are larger than (-lt) 100 MB
+    Sort -Descending -Property Length | # Sort files by their length ascending
+    Select -First 3 Name, Length # Only select name and length properties (projection)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="calling-a-rest-api"&gt;Calling a REST API&lt;/h2&gt;
+&lt;p&gt;In this example we call a JSON REST API and print a property&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-powershell"&gt;$uri = 'https://cat-fact.herokuapp.com/facts/random' # random cat fact API
+$fact = Invoke-RestMethod -Uri $uri
+Write-Host $fact.text
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Output:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Cats make about 100 different sounds. Dogs make only about 10.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="export-all-process-information-as-an-excel-sheet"&gt;Export all process information as an excel sheet&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;Get-Process | Select-Object Company, Name, Handles | Export-Excel
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Result:&lt;/p&gt;
+&lt;table class="table"&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Company&lt;/th&gt;
+&lt;th&gt;Name&lt;/th&gt;
+&lt;th&gt;Handles&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Microsoft Corporation&lt;/td&gt;
+&lt;td&gt;Calculator&lt;/td&gt;
+&lt;td&gt;537&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Google LLC&lt;/td&gt;
+&lt;td&gt;chrome&lt;/td&gt;
+&lt;td&gt;449&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;...&lt;/td&gt;
+&lt;td&gt;...&lt;/td&gt;
+&lt;td&gt;...&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;blockquote class="blockquote"&gt;
+&lt;p&gt;Note: You'll have to install &lt;a href="https://github.com/dfinke/ImportExcel"&gt;ImportExcel&lt;/a&gt; module for this example to work.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="importing-data-from-excel"&gt;Importing data from excel&lt;/h2&gt;
+&lt;p&gt;Consider this excel sheet:&lt;/p&gt;
+&lt;table class="table"&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;strong&gt;City&lt;/strong&gt;&lt;/th&gt;
+&lt;th&gt;&lt;strong&gt;Population&lt;/strong&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Erbil&lt;/td&gt;
+&lt;td&gt;1500000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Sulaymani&lt;/td&gt;
+&lt;td&gt;739182&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Duhok&lt;/td&gt;
+&lt;td&gt;1293000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Kirkuk&lt;/td&gt;
+&lt;td&gt;1598000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Halabja&lt;/td&gt;
+&lt;td&gt;245700&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;pre&gt;&lt;code class="language-powershell"&gt;# Get the average poluation of cities in Kurdistan:
+Import-Excel 'F:\cities.xlsx' | Measure -Average -Property population | Select -Property Average
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote class="blockquote"&gt;
+&lt;p&gt;Note: You'll have to install &lt;a href="https://github.com/dfinke/ImportExcel"&gt;ImportExcel&lt;/a&gt; module for this example to work.&lt;/p&gt;
+&lt;p&gt;Note 2: Data is from Wikipedia.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Ouput:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1075176.4
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;While my preferred scripting language is Powershell, I strongly believe everyone should use whatever tools/languages they are productive in. There is no best language. Everyone has different preferences and that's okay.&lt;/p&gt;
+&lt;p&gt;If you're using Powershell on Windows, I suggset you read &lt;a href="https://www.hanselman.com/blog/taking-your-powershell-prompt-to-the-next-level-with-windows-terminal-and-oh-my-posh-3"&gt;this post&lt;/a&gt; to make your experience even better.&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;Every once in a while, I have to write a script to automate a task. Maybe it's part of a CI/CD pipeline, or it's part of my dev workflow. My favorite language for writing scripts is PowerShell. Here is why:&lt;/p&gt;</summary>
+	</entry>
 	<entry>
 		<id>https://mazeez.dev/posts/background-job-scheduling-using-hangfire</id>
 		<title>Background Job Scheduling using Hangfire</title>

@@ -6,7 +6,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 
-        <title>Muhammad Azeez</title>
+        <title>Muhammad Azeez - Why I like Powershell as a scripting language</title>
         <meta name="description" content="A blog about software engineering and beyond!" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -33,9 +33,9 @@
         <meta name="msapplication-tooltip" content="Muhammad Azeez" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="Muhammad Azeez" />
+        <meta property="og:title" content="Muhammad Azeez - Why I like Powershell as a scripting language" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://mazeez.dev/" />
+        <meta property="og:url" content="https://mazeez.dev/posts/why-i-like-powershell" />
         <!-- TODO: More social graph meta tags -->
 
         <script src="/assets/js/jquery.min.js"> </script> <script
@@ -95,9 +95,16 @@
                         <div class="row">
                                 <div class="col-md-12">
 
-    <div class="site-heading">
-        <h1>A blog about software engineering and beyond!</h1>
-    </div>
+    
+<div class="post-heading">
+    <h1>Why I like Powershell as a scripting language</h1>
+    <div class="meta">        
+Published on Sunday, March 14, 2021<br>    </div>
+        <div class="tags">
+                    <a role="button" href="/tags/automation" class="btn btn-default btn-xs">automation</a>
+                    <a role="button" href="/tags/powershell" class="btn btn-default btn-xs">powershell</a>
+        </div>     
+</div>
                                 </div>
                         </div>
                 </div>
@@ -108,74 +115,164 @@
                 <div class="row">
                         <div id="content" class="col-md-12">
                                 
-<div class="row">
-    <div class="col-sm-8 right-border">
-                <div class="post-preview">
-                    <a href="/posts/why-i-like-powershell">
-                        <h2 class="post-title">Why I like Powershell as a scripting language</h2>
-                    </a>
-                    <p class="post-meta">Posted on Sunday, March 14, 2021</p>
-<p>Every once in a while, I have to write a script to automate a task. Maybe it's part of a CI/CD pipeline, or it's part of my dev workflow. My favorite language for writing scripts is PowerShell. Here is why:</p>                </div>       
-                    <hr /> 
-                <div class="post-preview">
-                    <a href="/posts/background-job-scheduling-using-hangfire">
-                        <h2 class="post-title">Background Job Scheduling using Hangfire</h2>
-                    </a>
-                    <p class="post-meta">Posted on Saturday, December 5, 2020</p>
-<p><strong>Note:</strong> This post is part of C# <a href="https://www.csadvent.christmas/">Advent Calendar 2020</a>.</p>                </div>       
-                    <hr /> 
-                <div class="post-preview">
-                    <a href="/posts/csproj-include-folders-recursively">
-                        <h2 class="post-title">How to include folders as link recursively in csproj files</h2>
-                    </a>
-                    <p class="post-meta">Posted on Tuesday, October 13, 2020</p>
-<p>Suppose we have a folder called <code>dependencies</code> with this structure:</p>                </div>       
-                    <ul class="pager">
-                <li class="next">
-                    <a href="/posts">All posts</a>
-                </li>
-            </ul>
-    </div>
-    <div class="col-sm-4 sidebar">
-        <hr class="visible-xs-block" />
 
-            <h5>Tags</h5>
-            <div>
-                    <a role="button" href="/tags/csharp" class="btn btn-default btn-sm"> csharp (5)</a>
-                    <a role="button" href="/tags/uwp" class="btn btn-default btn-sm"> uwp (4)</a>
-                    <a role="button" href="/tags/devops" class="btn btn-default btn-sm"> devops (3)</a>
-                    <a role="button" href="/tags/dotnet" class="btn btn-default btn-sm"> dotnet (2)</a>
-                    <a role="button" href="/tags/linux" class="btn btn-default btn-sm"> linux (2)</a>
-                    <a role="button" href="/tags/orm" class="btn btn-default btn-sm"> orm (1)</a>
-                    <a role="button" href="/tags/navigation" class="btn btn-default btn-sm"> navigation (1)</a>
-                    <a role="button" href="/tags/ldd" class="btn btn-default btn-sm"> ldd (1)</a>
-                    <a role="button" href="/tags/ef" class="btn btn-default btn-sm"> ef (1)</a>
-                    <a role="button" href="/tags/powershell" class="btn btn-default btn-sm"> powershell (1)</a>
-            </div>
-            <ul class="pager">
-                <li class="next">
-                    <a href="/tags">View All Tags &rarr;</a>
-                </li>
-            </ul>
+<p>Every once in a while, I have to write a script to automate a task. Maybe it's part of a CI/CD pipeline, or it's part of my dev workflow. My favorite language for writing scripts is PowerShell. Here is why:</p>
+<h1 id="powershell-has-an-object-pipeline">1. Powershell has an object pipeline</h1>
+<p>When you pass data (or pipe them) from one command to the next, the data is treated as an object, not as a string. Which means the data can have different properties and it retains these properties.</p>
+<p>This is very powerful and unlocks all kinds of composability scenarios. Commands don't have to be single purpose, they don't have to provide different switches to get different outputs. They give you everything and you can use only the properties you need.</p>
+<h1 id="you-have-the-full-power-of.net">2. You have the full power of .NET</h1>
+<p>Powershell is a first class programming language on .NET. You can do almost everything with Powershell. that you can do with C# or F#.  <a href="https://devblogs.microsoft.com/scripting/create-a-simple-graphical-interface-for-a-powershell-script/">You can even create GUIs if you want to</a>. This means that you have access to the coherent and well designed Base Class Library of .NET as well as the entire gallery of <a href="https://www.nuget.org/">nuget</a> packages. It also has <a href="https://www.powershellgallery.com/packages">a lot of modules of it's own</a>.</p>
+<h1 id="you-can-use-selectwheregroupby">3. You can use Select/Where/GroupBy</h1>
+<p>Because Powershell is built on top of .NET, it has access to .NET's version of map/filter/reduce. They make scripts much more pleasant to write and read. However the names are a bit different from Javascript or other languages:</p>
+<table class="table">
+<thead>
+<tr>
+<th>JS Name</th>
+<th>Powershell</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Filter</td>
+<td>Where</td>
+</tr>
+<tr>
+<td>Map</td>
+<td>Select</td>
+</tr>
+<tr>
+<td>Reduce</td>
+<td>Measure / ForEach</td>
+</tr>
+<tr>
+<td>Reduce</td>
+<td>GroupBy</td>
+</tr>
+</tbody>
+</table>
+<h1 id="its-now-cross-platform-and-open-source">4. It's now cross-platform and open-source</h1>
+<p><a href="https://github.com/PowerShell/PowerShell">Powershell Core</a> is a cross-platform and open-source version of Powershell built on top of .NET Core maintained by Microsoft.</p>
+<h1 id="working-with-data-is-easy">5. Working with Data is easy</h1>
+<p>You can easily work with <a href="https://adamtheautomator.com/powershell-excel/">Excel</a>, <a href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/select-xml">XML</a> and <a href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/convertfrom-json">JSON</a> data which makes working with APIs much easier.</p>
+<h1 id="some-cool-examples">Some cool examples</h1>
+<p>Here are some cool examples that demonstrate the points above:</p>
+<h2 id="get-top-3-largest-files-in-a-folder">Get top 3 largest files in a folder</h2>
+<pre><code class="language-powershell">Get-Childitem 'C:\Windows\System32' | 
+    Where Length -lt (100 * 1024 * 1024) | # Only files that are larger than (-lt) 100 MB
+    Sort -Descending -Property Length | # Sort files by their length ascending
+    Select -First 3 Name, Length # Only select name and length properties (projection)
+</code></pre>
+<h2 id="calling-a-rest-api">Calling a REST API</h2>
+<p>In this example we call a JSON REST API and print a property</p>
+<pre><code class="language-powershell">$uri = 'https://cat-fact.herokuapp.com/facts/random' # random cat fact API
+$fact = Invoke-RestMethod -Uri $uri
+Write-Host $fact.text
+</code></pre>
+<p>Output:</p>
+<pre><code>Cats make about 100 different sounds. Dogs make only about 10.
+</code></pre>
+<h2 id="export-all-process-information-as-an-excel-sheet">Export all process information as an excel sheet</h2>
+<pre><code>Get-Process | Select-Object Company, Name, Handles | Export-Excel
+</code></pre>
+<p>Result:</p>
+<table class="table">
+<thead>
+<tr>
+<th>Company</th>
+<th>Name</th>
+<th>Handles</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Microsoft Corporation</td>
+<td>Calculator</td>
+<td>537</td>
+</tr>
+<tr>
+<td>Google LLC</td>
+<td>chrome</td>
+<td>449</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+</tbody>
+</table>
+<blockquote class="blockquote">
+<p>Note: You'll have to install <a href="https://github.com/dfinke/ImportExcel">ImportExcel</a> module for this example to work.</p>
+</blockquote>
+<h2 id="importing-data-from-excel">Importing data from excel</h2>
+<p>Consider this excel sheet:</p>
+<table class="table">
+<thead>
+<tr>
+<th><strong>City</strong></th>
+<th><strong>Population</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Erbil</td>
+<td>1500000</td>
+</tr>
+<tr>
+<td>Sulaymani</td>
+<td>739182</td>
+</tr>
+<tr>
+<td>Duhok</td>
+<td>1293000</td>
+</tr>
+<tr>
+<td>Kirkuk</td>
+<td>1598000</td>
+</tr>
+<tr>
+<td>Halabja</td>
+<td>245700</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-powershell"># Get the average poluation of cities in Kurdistan:
+Import-Excel 'F:\cities.xlsx' | Measure -Average -Property population | Select -Property Average
+</code></pre>
+<blockquote class="blockquote">
+<p>Note: You'll have to install <a href="https://github.com/dfinke/ImportExcel">ImportExcel</a> module for this example to work.</p>
+<p>Note 2: Data is from Wikipedia.</p>
+</blockquote>
+<p>Ouput:</p>
+<pre><code>1075176.4
+</code></pre>
+<p>While my preferred scripting language is Powershell, I strongly believe everyone should use whatever tools/languages they are productive in. There is no best language. Everyone has different preferences and that's okay.</p>
+<p>If you're using Powershell on Windows, I suggset you read <a href="https://www.hanselman.com/blog/taking-your-powershell-prompt-to-the-next-level-with-windows-terminal-and-oh-my-posh-3">this post</a> to make your experience even better.</p>
 
-            <hr />
-            <h5>Older Posts</h5>
-            <ul class="list-unstyled">
-                    <li><a href="/posts/github-party-trick">GitHub Party Trick</a></li>
-                    <li><a href="/posts/csharp-source-generators">Use C# Source Generators to make all of your methods async!</a></li>
-                    <li><a href="/posts/update-sideloaded-uwp-2">Enabling automatic updates for sideloaded UWP apps: Multiple update channels</a></li>
-                    <li><a href="/posts/code-signing-certificate-iraq">Getting a code signing certificate for a company in Iraq</a></li>
-            </ul>
-                <ul class="pager">
-                    <li class="next">
-                        <a href="/posts">Archive &rarr;</a>
-                    </li>
-                </ul>
 
-        
-    </div> 
-</div>
-
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'mazeez'; // required: replace example with your forum shortname
+    var disqus_identifier = 'why-i-like-powershell';
+    var disqus_title = 'Why I like Powershell as a scripting language';
+    var disqus_url = 'https://mazeez.dev/posts/why-i-like-powershell';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
                         </div>
                 </div>
         </div>
