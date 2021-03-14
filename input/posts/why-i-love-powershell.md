@@ -1,4 +1,4 @@
-Title: Why I like Powershell as a scripting language
+Title: Why I love Powershell as a scripting language
 Published: 03/14/2021
 Tags:
 

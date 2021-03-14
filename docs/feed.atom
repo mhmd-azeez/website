@@ -4,13 +4,13 @@
 	<title>Muhammad Azeez</title>
 	<link rel="self" href="https://mazeez.dev/" />
 	<rights>2021</rights>
-	<updated>2021-03-14T20:51:33Z</updated>
+	<updated>2021-03-14T21:05:18Z</updated>
 	<logo>https://mazeez.dev/assets/images/cover.jpg</logo>
 	<subtitle>A blog about software engineering and beyond!</subtitle>
 	<entry>
-		<id>https://mazeez.dev/posts/why-i-like-powershell</id>
-		<title>Why I like Powershell as a scripting language</title>
-		<link href="https://mazeez.dev/posts/why-i-like-powershell" />
+		<id>https://mazeez.dev/posts/why-i-love-powershell</id>
+		<title>Why I love Powershell as a scripting language</title>
+		<link href="https://mazeez.dev/posts/why-i-love-powershell" />
 		<link rel="enclosure" type="image" href="https://mazeez.dev/assets/images/cover.jpg" />
 		<updated>2021-03-14T00:00:00Z</updated>
 		<content>&lt;p&gt;Every once in a while, I have to write a script to automate a task. Maybe it's part of a CI/CD pipeline, or it's part of my dev workflow. My favorite language for writing scripts is PowerShell. Here is why:&lt;/p&gt;

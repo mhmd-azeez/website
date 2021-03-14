@@ -5,14 +5,14 @@
 		<link>https://mazeez.dev/</link>
 		<description>A blog about software engineering and beyond!</description>
 		<copyright>2021</copyright>
-		<pubDate>Sun, 14 Mar 2021 20:51:33 GMT</pubDate>
-		<lastBuildDate>Sun, 14 Mar 2021 20:51:33 GMT</lastBuildDate>
+		<pubDate>Sun, 14 Mar 2021 21:05:18 GMT</pubDate>
+		<lastBuildDate>Sun, 14 Mar 2021 21:05:18 GMT</lastBuildDate>
 		<item>
-			<title>Why I like Powershell as a scripting language</title>
-			<link>https://mazeez.dev/posts/why-i-like-powershell</link>
+			<title>Why I love Powershell as a scripting language</title>
+			<link>https://mazeez.dev/posts/why-i-love-powershell</link>
 			<description>&lt;p&gt;Every once in a while, I have to write a script to automate a task. Maybe it's part of a CI/CD pipeline, or it's part of my dev workflow. My favorite language for writing scripts is PowerShell. Here is why:&lt;/p&gt;</description>
 			<enclosure url="https://mazeez.dev/assets/images/cover.jpg" length="0" type="image" />
-			<guid>https://mazeez.dev/posts/why-i-like-powershell</guid>
+			<guid>https://mazeez.dev/posts/why-i-love-powershell</guid>
 			<pubDate>Sun, 14 Mar 2021 00:00:00 GMT</pubDate>
 			<content:encoded>&lt;p&gt;Every once in a while, I have to write a script to automate a task. Maybe it's part of a CI/CD pipeline, or it's part of my dev workflow. My favorite language for writing scripts is PowerShell. Here is why:&lt;/p&gt;
 &lt;h1 id="powershell-has-an-object-pipeline"&gt;1. Powershell has an object pipeline&lt;/h1&gt;
