@@ -60,7 +60,7 @@ $fact = Invoke-RestMethod -Uri $uri
 Write-Host $fact.text
 ```
 
-Output:
+### Output:
 
 ```
 Cats make about 100 different sounds. Dogs make only about 10.
@@ -68,11 +68,11 @@ Cats make about 100 different sounds. Dogs make only about 10.
 
 ## Export all process information as an excel sheet
 
-```
+```powershell
 Get-Process | Select-Object Company, Name, Handles | Export-Excel
 ```
 
-Result: 
+### Result: 
 
 | Company               | Name       | Handles |
 | --------------------- | ---------- | ------- |
@@ -103,7 +103,7 @@ Import-Excel 'F:\cities.xlsx' | Measure -Average -Property population | Select -
 >
 > Note 2: Data is from Wikipedia.
 
-Ouput:
+### Ouput:
 
 ```
 1075176.4

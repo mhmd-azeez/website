@@ -5,8 +5,8 @@
 		<link>https://mazeez.dev/</link>
 		<description>A blog about software engineering and beyond!</description>
 		<copyright>2021</copyright>
-		<pubDate>Sun, 14 Mar 2021 21:05:18 GMT</pubDate>
-		<lastBuildDate>Sun, 14 Mar 2021 21:05:18 GMT</lastBuildDate>
+		<pubDate>Sun, 14 Mar 2021 21:19:47 GMT</pubDate>
+		<lastBuildDate>Sun, 14 Mar 2021 21:19:47 GMT</lastBuildDate>
 		<item>
 			<title>Why I love Powershell as a scripting language</title>
 			<link>https://mazeez.dev/posts/why-i-love-powershell</link>
@@ -66,13 +66,13 @@
 $fact = Invoke-RestMethod -Uri $uri
 Write-Host $fact.text
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Output:&lt;/p&gt;
+&lt;h3 id="output"&gt;Output:&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;Cats make about 100 different sounds. Dogs make only about 10.
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id="export-all-process-information-as-an-excel-sheet"&gt;Export all process information as an excel sheet&lt;/h2&gt;
-&lt;pre&gt;&lt;code&gt;Get-Process | Select-Object Company, Name, Handles | Export-Excel
+&lt;pre&gt;&lt;code class="language-powershell"&gt;Get-Process | Select-Object Company, Name, Handles | Export-Excel
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Result:&lt;/p&gt;
+&lt;h3 id="result"&gt;Result:&lt;/h3&gt;
 &lt;table class="table"&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -141,7 +141,7 @@ Import-Excel 'F:\cities.xlsx' | Measure -Average -Property population | Select -
 &lt;p&gt;Note: You'll have to install &lt;a href="https://github.com/dfinke/ImportExcel"&gt;ImportExcel&lt;/a&gt; module for this example to work.&lt;/p&gt;
 &lt;p&gt;Note 2: Data is from Wikipedia.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;Ouput:&lt;/p&gt;
+&lt;h3 id="ouput"&gt;Ouput:&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;1075176.4
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;While my preferred scripting language is Powershell, I strongly believe everyone should use whatever tools/languages they are productive in. There is no best language. Everyone has different preferences and that's okay.&lt;/p&gt;

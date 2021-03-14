@@ -168,13 +168,13 @@ Published on Sunday, March 14, 2021<br>    </div>
 $fact = Invoke-RestMethod -Uri $uri
 Write-Host $fact.text
 </code></pre>
-<p>Output:</p>
+<h3 id="output">Output:</h3>
 <pre><code>Cats make about 100 different sounds. Dogs make only about 10.
 </code></pre>
 <h2 id="export-all-process-information-as-an-excel-sheet">Export all process information as an excel sheet</h2>
-<pre><code>Get-Process | Select-Object Company, Name, Handles | Export-Excel
+<pre><code class="language-powershell">Get-Process | Select-Object Company, Name, Handles | Export-Excel
 </code></pre>
-<p>Result:</p>
+<h3 id="result">Result:</h3>
 <table class="table">
 <thead>
 <tr>
@@ -243,7 +243,7 @@ Import-Excel 'F:\cities.xlsx' | Measure -Average -Property population | Select -
 <p>Note: You'll have to install <a href="https://github.com/dfinke/ImportExcel">ImportExcel</a> module for this example to work.</p>
 <p>Note 2: Data is from Wikipedia.</p>
 </blockquote>
-<p>Ouput:</p>
+<h3 id="ouput">Ouput:</h3>
 <pre><code>1075176.4
 </code></pre>
 <p>While my preferred scripting language is Powershell, I strongly believe everyone should use whatever tools/languages they are productive in. There is no best language. Everyone has different preferences and that's okay.</p>
