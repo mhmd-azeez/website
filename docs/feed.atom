@@ -4,7 +4,7 @@
 	<title>Muhammad Azeez</title>
 	<link rel="self" href="https://mazeez.dev/" />
 	<rights>2021</rights>
-	<updated>2021-03-15T21:21:56Z</updated>
+	<updated>2021-03-15T21:29:13Z</updated>
 	<logo>https://mazeez.dev/assets/images/cover.jpg</logo>
 	<subtitle>A blog about software engineering and beyond!</subtitle>
 	<entry>
@@ -55,16 +55,16 @@
 &lt;p&gt;Here are some cool examples that demonstrate the points above:&lt;/p&gt;
 &lt;h2 id="get-top-3-largest-files-in-a-folder"&gt;Get top 3 largest files in a folder&lt;/h2&gt;
 &lt;pre&gt;&lt;code class="language-powershell"&gt;Get-Childitem 'C:\Windows\System32' | 
-    Where Length -lt (100MB) | # Only files that are larger than (-lt) 100 MB
+    Where Length -gt (10MB) | # Only files that are greater than (-gt) 100 MB
     Sort -Descending -Property Length | # Sort files by their length ascending
     Select -First 3 Name, Length # Only select name and length properties (projection)
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h3 id="output"&gt;Output&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;Name                   Length
-----                   ------
-nvcompiler.dll       40444864
-WindowsCodecsRaw.dll 32612880
-edgehtml.dll         26273280
+&lt;pre&gt;&lt;code&gt;Name                    Length
+----                    ------
+MRT.exe              131005360
+nvcompiler.dll        40444864
+WindowsCodecsRaw.dll  32612880
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id="calling-a-rest-api"&gt;Calling a REST API&lt;/h2&gt;
 &lt;p&gt;In this example we call a JSON REST API and print a property&lt;/p&gt;

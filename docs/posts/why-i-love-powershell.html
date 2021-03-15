@@ -158,16 +158,16 @@ Published on Sunday, March 14, 2021<br>    </div>
 <p>Here are some cool examples that demonstrate the points above:</p>
 <h2 id="get-top-3-largest-files-in-a-folder">Get top 3 largest files in a folder</h2>
 <pre><code class="language-powershell">Get-Childitem 'C:\Windows\System32' | 
-    Where Length -lt (100MB) | # Only files that are larger than (-lt) 100 MB
+    Where Length -gt (10MB) | # Only files that are greater than (-gt) 100 MB
     Sort -Descending -Property Length | # Sort files by their length ascending
     Select -First 3 Name, Length # Only select name and length properties (projection)
 </code></pre>
 <h3 id="output">Output</h3>
-<pre><code>Name                   Length
-----                   ------
-nvcompiler.dll       40444864
-WindowsCodecsRaw.dll 32612880
-edgehtml.dll         26273280
+<pre><code>Name                    Length
+----                    ------
+MRT.exe              131005360
+nvcompiler.dll        40444864
+WindowsCodecsRaw.dll  32612880
 </code></pre>
 <h2 id="calling-a-rest-api">Calling a REST API</h2>
 <p>In this example we call a JSON REST API and print a property</p>

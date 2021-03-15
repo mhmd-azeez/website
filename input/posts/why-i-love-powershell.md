@@ -45,7 +45,7 @@ Here are some cool examples that demonstrate the points above:
 
 ```powershell
 Get-Childitem 'C:\Windows\System32' | 
-    Where Length -lt (100MB) | # Only files that are larger than (-lt) 100 MB
+    Where Length -gt (10MB) | # Only files that are greater than (-gt) 100 MB
     Sort -Descending -Property Length | # Sort files by their length ascending
     Select -First 3 Name, Length # Only select name and length properties (projection)
 ```
@@ -53,11 +53,11 @@ Get-Childitem 'C:\Windows\System32' |
 ### Output
 
 ```
-Name                   Length
-----                   ------
-nvcompiler.dll       40444864
-WindowsCodecsRaw.dll 32612880
-edgehtml.dll         26273280
+Name                    Length
+----                    ------
+MRT.exe              131005360
+nvcompiler.dll        40444864
+WindowsCodecsRaw.dll  32612880
 ```
 
 ## Calling a REST API
