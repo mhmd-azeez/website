@@ -5,8 +5,8 @@
 		<link>https://mazeez.dev/</link>
 		<description>A blog about software engineering and beyond!</description>
 		<copyright>2021</copyright>
-		<pubDate>Sun, 14 Mar 2021 21:19:47 GMT</pubDate>
-		<lastBuildDate>Sun, 14 Mar 2021 21:19:47 GMT</lastBuildDate>
+		<pubDate>Mon, 15 Mar 2021 21:21:56 GMT</pubDate>
+		<lastBuildDate>Mon, 15 Mar 2021 21:21:56 GMT</lastBuildDate>
 		<item>
 			<title>Why I love Powershell as a scripting language</title>
 			<link>https://mazeez.dev/posts/why-i-love-powershell</link>
@@ -56,9 +56,16 @@
 &lt;p&gt;Here are some cool examples that demonstrate the points above:&lt;/p&gt;
 &lt;h2 id="get-top-3-largest-files-in-a-folder"&gt;Get top 3 largest files in a folder&lt;/h2&gt;
 &lt;pre&gt;&lt;code class="language-powershell"&gt;Get-Childitem 'C:\Windows\System32' | 
-    Where Length -lt (100 * 1024 * 1024) | # Only files that are larger than (-lt) 100 MB
+    Where Length -lt (100MB) | # Only files that are larger than (-lt) 100 MB
     Sort -Descending -Property Length | # Sort files by their length ascending
     Select -First 3 Name, Length # Only select name and length properties (projection)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="output"&gt;Output&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;Name                   Length
+----                   ------
+nvcompiler.dll       40444864
+WindowsCodecsRaw.dll 32612880
+edgehtml.dll         26273280
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id="calling-a-rest-api"&gt;Calling a REST API&lt;/h2&gt;
 &lt;p&gt;In this example we call a JSON REST API and print a property&lt;/p&gt;
@@ -66,7 +73,7 @@
 $fact = Invoke-RestMethod -Uri $uri
 Write-Host $fact.text
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id="output"&gt;Output:&lt;/h3&gt;
+&lt;h3 id="output-1"&gt;Output:&lt;/h3&gt;
 &lt;pre&gt;&lt;code&gt;Cats make about 100 different sounds. Dogs make only about 10.
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id="export-all-process-information-as-an-excel-sheet"&gt;Export all process information as an excel sheet&lt;/h2&gt;
@@ -145,7 +152,7 @@ Import-Excel 'F:\cities.xlsx' | Measure -Average -Property population | Select -
 &lt;pre&gt;&lt;code&gt;1075176.4
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;While my preferred scripting language is Powershell, I strongly believe everyone should use whatever tools/languages they are productive in. There is no best language. Everyone has different preferences and that's okay.&lt;/p&gt;
-&lt;p&gt;If you're using Powershell on Windows, I suggset you read &lt;a href="https://www.hanselman.com/blog/taking-your-powershell-prompt-to-the-next-level-with-windows-terminal-and-oh-my-posh-3"&gt;this post&lt;/a&gt; to make your experience even better.&lt;/p&gt;
+&lt;p&gt;If you're using Powershell on Windows, I suggest you read &lt;a href="https://www.hanselman.com/blog/taking-your-powershell-prompt-to-the-next-level-with-windows-terminal-and-oh-my-posh-3"&gt;this post&lt;/a&gt; to make your experience even better.&lt;/p&gt;
 </content:encoded>
 		</item>
 		<item>

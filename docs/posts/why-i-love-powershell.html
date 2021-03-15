@@ -158,9 +158,16 @@ Published on Sunday, March 14, 2021<br>    </div>
 <p>Here are some cool examples that demonstrate the points above:</p>
 <h2 id="get-top-3-largest-files-in-a-folder">Get top 3 largest files in a folder</h2>
 <pre><code class="language-powershell">Get-Childitem 'C:\Windows\System32' | 
-    Where Length -lt (100 * 1024 * 1024) | # Only files that are larger than (-lt) 100 MB
+    Where Length -lt (100MB) | # Only files that are larger than (-lt) 100 MB
     Sort -Descending -Property Length | # Sort files by their length ascending
     Select -First 3 Name, Length # Only select name and length properties (projection)
+</code></pre>
+<h3 id="output">Output</h3>
+<pre><code>Name                   Length
+----                   ------
+nvcompiler.dll       40444864
+WindowsCodecsRaw.dll 32612880
+edgehtml.dll         26273280
 </code></pre>
 <h2 id="calling-a-rest-api">Calling a REST API</h2>
 <p>In this example we call a JSON REST API and print a property</p>
@@ -168,7 +175,7 @@ Published on Sunday, March 14, 2021<br>    </div>
 $fact = Invoke-RestMethod -Uri $uri
 Write-Host $fact.text
 </code></pre>
-<h3 id="output">Output:</h3>
+<h3 id="output-1">Output:</h3>
 <pre><code>Cats make about 100 different sounds. Dogs make only about 10.
 </code></pre>
 <h2 id="export-all-process-information-as-an-excel-sheet">Export all process information as an excel sheet</h2>
@@ -247,7 +254,7 @@ Import-Excel 'F:\cities.xlsx' | Measure -Average -Property population | Select -
 <pre><code>1075176.4
 </code></pre>
 <p>While my preferred scripting language is Powershell, I strongly believe everyone should use whatever tools/languages they are productive in. There is no best language. Everyone has different preferences and that's okay.</p>
-<p>If you're using Powershell on Windows, I suggset you read <a href="https://www.hanselman.com/blog/taking-your-powershell-prompt-to-the-next-level-with-windows-terminal-and-oh-my-posh-3">this post</a> to make your experience even better.</p>
+<p>If you're using Powershell on Windows, I suggest you read <a href="https://www.hanselman.com/blog/taking-your-powershell-prompt-to-the-next-level-with-windows-terminal-and-oh-my-posh-3">this post</a> to make your experience even better.</p>
 
 
 <div id="disqus_thread"></div>

@@ -45,9 +45,19 @@ Here are some cool examples that demonstrate the points above:
 
 ```powershell
 Get-Childitem 'C:\Windows\System32' | 
-    Where Length -lt (100 * 1024 * 1024) | # Only files that are larger than (-lt) 100 MB
+    Where Length -lt (100MB) | # Only files that are larger than (-lt) 100 MB
     Sort -Descending -Property Length | # Sort files by their length ascending
     Select -First 3 Name, Length # Only select name and length properties (projection)
+```
+
+### Output
+
+```
+Name                   Length
+----                   ------
+nvcompiler.dll       40444864
+WindowsCodecsRaw.dll 32612880
+edgehtml.dll         26273280
 ```
 
 ## Calling a REST API
@@ -111,4 +121,4 @@ Import-Excel 'F:\cities.xlsx' | Measure -Average -Property population | Select -
 
 While my preferred scripting language is Powershell, I strongly believe everyone should use whatever tools/languages they are productive in. There is no best language. Everyone has different preferences and that's okay.
 
-If you're using Powershell on Windows, I suggset you read [this post](https://www.hanselman.com/blog/taking-your-powershell-prompt-to-the-next-level-with-windows-terminal-and-oh-my-posh-3) to make your experience even better.
+If you're using Powershell on Windows, I suggest you read [this post](https://www.hanselman.com/blog/taking-your-powershell-prompt-to-the-next-level-with-windows-terminal-and-oh-my-posh-3) to make your experience even better.
