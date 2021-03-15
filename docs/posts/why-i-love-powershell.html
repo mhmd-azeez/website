@@ -158,7 +158,7 @@ Published on Sunday, March 14, 2021<br>    </div>
 <p>Here are some cool examples that demonstrate the points above:</p>
 <h2 id="get-top-3-largest-files-in-a-folder">Get top 3 largest files in a folder</h2>
 <pre><code class="language-powershell">Get-Childitem 'C:\Windows\System32' | 
-    Where Length -gt (10MB) | # Only files that are greater than (-gt) 100 MB
+    Where Length -gt (10MB) | # Only files that are greater than (-gt) 10 MB (MB is a constant in PS!)
     Sort -Descending -Property Length | # Sort files by their length ascending
     Select -First 3 Name, Length # Only select name and length properties (projection)
 </code></pre>

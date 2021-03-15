@@ -45,7 +45,7 @@ Here are some cool examples that demonstrate the points above:
 
 ```powershell
 Get-Childitem 'C:\Windows\System32' | 
-    Where Length -gt (10MB) | # Only files that are greater than (-gt) 100 MB
+    Where Length -gt (10MB) | # Only files that are greater than (-gt) 10 MB (MB is a constant in PS!)
     Sort -Descending -Property Length | # Sort files by their length ascending
     Select -First 3 Name, Length # Only select name and length properties (projection)
 ```

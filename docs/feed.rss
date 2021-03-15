@@ -5,8 +5,8 @@
 		<link>https://mazeez.dev/</link>
 		<description>A blog about software engineering and beyond!</description>
 		<copyright>2021</copyright>
-		<pubDate>Mon, 15 Mar 2021 21:29:13 GMT</pubDate>
-		<lastBuildDate>Mon, 15 Mar 2021 21:29:13 GMT</lastBuildDate>
+		<pubDate>Mon, 15 Mar 2021 21:32:04 GMT</pubDate>
+		<lastBuildDate>Mon, 15 Mar 2021 21:32:04 GMT</lastBuildDate>
 		<item>
 			<title>Why I love Powershell as a scripting language</title>
 			<link>https://mazeez.dev/posts/why-i-love-powershell</link>
@@ -56,7 +56,7 @@
 &lt;p&gt;Here are some cool examples that demonstrate the points above:&lt;/p&gt;
 &lt;h2 id="get-top-3-largest-files-in-a-folder"&gt;Get top 3 largest files in a folder&lt;/h2&gt;
 &lt;pre&gt;&lt;code class="language-powershell"&gt;Get-Childitem 'C:\Windows\System32' | 
-    Where Length -gt (10MB) | # Only files that are greater than (-gt) 100 MB
+    Where Length -gt (10MB) | # Only files that are greater than (-gt) 10 MB (MB is a constant in PS!)
     Sort -Descending -Property Length | # Sort files by their length ascending
     Select -First 3 Name, Length # Only select name and length properties (projection)
 &lt;/code&gt;&lt;/pre&gt;
