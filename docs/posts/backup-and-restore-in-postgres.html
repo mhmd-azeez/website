@@ -6,7 +6,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 
-        <title>Muhammad Azeez - csharp</title>
+        <title>Muhammad Azeez - Backing up and restoring databases in Postgres</title>
         <meta name="description" content="A blog about software engineering and beyond!" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -33,9 +33,9 @@
         <meta name="msapplication-tooltip" content="Muhammad Azeez" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="Muhammad Azeez - csharp" />
+        <meta property="og:title" content="Muhammad Azeez - Backing up and restoring databases in Postgres" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://mazeez.dev/tags/csharp" />
+        <meta property="og:url" content="https://mazeez.dev/posts/backup-and-restore-in-postgres" />
         <!-- TODO: More social graph meta tags -->
 
         <script src="/assets/js/jquery.min.js"> </script> <script
@@ -94,9 +94,20 @@
                 <div class="container">
                         <div class="row">
                                 <div class="col-md-12">
-<div class="site-heading">
-    <h1>csharp</h1>
-</div>                                    </div>
+
+    
+<div class="post-heading">
+    <h1>Backing up and restoring databases in Postgres</h1>
+    <div class="meta">        
+Published on Thursday, April 1, 2021<br>    </div>
+        <div class="tags">
+                    <a role="button" href="/tags/pg_dump" class="btn btn-default btn-xs">pg_dump</a>
+                    <a role="button" href="/tags/pg_restore" class="btn btn-default btn-xs">pg_restore</a>
+                    <a role="button" href="/tags/postgresql" class="btn btn-default btn-xs">postgresql</a>
+                    <a role="button" href="/tags/psql" class="btn btn-default btn-xs">psql</a>
+        </div>     
+</div>
+                                </div>
                         </div>
                 </div>
         </header>
@@ -105,81 +116,105 @@
         <div class="container">
                 <div class="row">
                         <div id="content" class="col-md-12">
-                                <div class="container-sm-height">
-    <div class="row row-sm-height">
-        <div class="col-sm-8 right-border col-sm-height">
-            
-        <div class="post-list">
-            <a href="/posts/csproj-include-folders-recursively">
-                <h3 class="post-title">How to include folders as link recursively in csproj files</h3>
-            </a>
-            <p class="post-meta">Posted on Tuesday, October 13, 2020</p>      
-        </div>   
-        <div class="post-list">
-            <a href="/posts/csharp-source-generators">
-                <h3 class="post-title">Use C# Source Generators to make all of your methods async!</h3>
-            </a>
-            <p class="post-meta">Posted on Tuesday, May 5, 2020</p>      
-        </div>   
-        <div class="post-list">
-            <a href="/posts/how-orms-work">
-                <h3 class="post-title">How do Object Relational Mappers (like Entity Framework) work?</h3>
-            </a>
-            <p class="post-meta">Posted on Saturday, December 21, 2019</p>      
-        </div>   
-        <div class="post-list">
-            <a href="/posts/csharp-yield">
-                <h3 class="post-title">How the C# yield keyword works</h3>
-            </a>
-            <p class="post-meta">Posted on Monday, May 20, 2019</p>      
-        </div>   
-        <div class="post-list">
-            <a href="/posts/writing-native-libraries-in-csharp">
-                <h3 class="post-title">Writing Native Libraries in C# and using them in other languages</h3>
-            </a>
-            <p class="post-meta">Posted on Friday, May 3, 2019</p>      
-        </div>   
+                                
+
+<p>To get a dump of a database you can use <code>pg_dump</code> or <code>pg_dumpall</code> for dumping an entire cluster. It <a href="https://www.postgresql.org/docs/9.1/app-pgdump.html">supports 4 formats</a>:</p>
+<table class="table">
+<thead>
+<tr>
+<th>Format</th>
+<th>Description</th>
+<th>Restore via</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>plain</code></td>
+<td>Output a plain-text SQL script file (the default).</td>
+<td><code>psql</code></td>
+</tr>
+<tr>
+<td><code>custom</code></td>
+<td>Output a custom-format archive suitable for input into pg_restore. Together with the directory output format, this is the most flexible output format in that it allows manual selection and reordering of archived items during restore. This format is also compressed by default.</td>
+<td><code>pg_restore</code></td>
+</tr>
+<tr>
+<td><code>directory</code></td>
+<td>Output a directory-format archive suitable for input into pg_restore. This will create a directory with one file for each table and blob being dumped, plus a so-called Table of Contents file describing the dumped objects in a machine-readable format that pg_restore can read. A directory format archive can be manipulated with standard Unix tools; for example, files in an uncompressed archive can be compressed with the gzip tool. This format is compressed by default.</td>
+<td><code>pg_restore</code></td>
+</tr>
+<tr>
+<td><code>tar</code></td>
+<td>Output a <code>tar</code>-format archive suitable for input into pg_restore. The tar format is compatible with the directory format: extracting a tar-format archive produces a valid directory-format archive. However, the tar format does not support compression. Also, when using tar format the relative order of table data items cannot be changed during restore.</td>
+<td><code>pg_restore</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="how-to-backup-a-database">How to backup a database</h3>
+<h4 id="custom-format">Custom Format</h4>
+<pre><code class="language-bash">pg_dump -U postgres --encoding utf8 -F c -f sample-db.dump sample-db
+</code></pre>
+<p>This creates a dump of <code>sample-db</code> in <code>custom</code> format and names the file <code>sample-db.dump</code>.</p>
+<h4 id="plain-format">Plain Format</h4>
+<pre><code class="language-bash">pg_dump -U postgres --encoding utf8 -F p -f stoplist.sql stoplist
+</code></pre>
+<p>This creates a dump of <code>sample-db</code> in <code>custom</code> format and names the file <code>sample-db.sql</code>.</p>
+<h3 id="how-to-restore-a-database-dump">How to restore a database dump</h3>
+<p>First create an empty database to restore the dump to.</p>
+<pre><code class="language-bash"># Create a new database using template0 called restored-db. We use template0 is empty and it doesn't conflict with the schemas and tables in the dump.
+createdb -U postgres restored-db --template=template0
+</code></pre>
+<h4 id="custom-format-1">Custom Format</h4>
+<pre><code class="language-bash"># Restore the database using pg_restore. As you can see, the name of the restored database doesn't have to match the name of the original database.
+pg_restore -U postgres -d restored-db &lt; ./sample-db.dump
+</code></pre>
+<blockquote class="blockquote">
+<p><strong>Note:</strong> In Powershell the <code>&lt;</code> operator doesn't work. So you'll have to use <code>cmd</code> on Windows.</p>
+</blockquote>
+<h4 id="plain-format-1">Plain Format</h4>
+<pre><code class="language-bash"># Restore the database using psql. As you can see, the name of the restored database doesn't have to match the name of the original database.
+psql -U postgres -d restored-db &lt; ./sample-db.sql
+</code></pre>
+<blockquote class="blockquote">
+<p><strong>Note:</strong> In Powershell the <code>&lt;</code> operator doesn't work. So you'll have to use <code>cmd</code> on Windows.</p>
+</blockquote>
+<h3 id="errors-you-might-come-across">Errors you might come across:</h3>
+<pre><code>pg_restore: [archiver] found unexpected block id (x) when reading data -- expected y
+</code></pre>
+<pre><code>pg_restore: error unrecognized data block type
+</code></pre>
+<p>This might mean the dump is corrupted. One possible reason is the database contained Unicode data and the dump was not encoded in utf8. Use <code>--encoding utf8</code> when running <code>pg_dump</code> to fix that.</p>
+<pre><code>pg_restore: [archiver] did not find magic string in file header
+</code></pre>
+<p>This happens if you run <code>pg_restore</code> with <code>--format=c</code> on a <code>plain</code> format dump. Use <code>psql</code> to restore it instead.</p>
+<pre><code>pg_restore: [archiver] input file does not appear to be a valid archive
+</code></pre>
+<p>This happens if you try to restore a <code>plain</code> format dump using <code>pg_restore</code>. Use <code>psql</code> to restore it instead.</p>
 
 
-            <nav>
-                <ul class="pager">
-                    <li class="previous">                
-                    </li>
-                    <li class="next">
-                    </li>
-                </ul>
-            </nav>
-            <hr class="visible-xs-block" />
-        </div>
-		
-        <div class="col-sm-4 col-sm-height">
-                <a role="button" href="/tags/csharp" class="btn btn-primary btn-xs">csharp (5)</a>
-                <a role="button" href="/tags/uwp" class="btn btn-default btn-xs">uwp (4)</a>
-                <a role="button" href="/tags/devops" class="btn btn-default btn-xs">devops (3)</a>
-                <a role="button" href="/tags/linux" class="btn btn-default btn-xs">linux (2)</a>
-                <a role="button" href="/tags/dotnet" class="btn btn-default btn-xs">dotnet (2)</a>
-                <a role="button" href="/tags/orm" class="btn btn-default btn-xs">orm (1)</a>
-                <a role="button" href="/tags/ef" class="btn btn-default btn-xs">ef (1)</a>
-                <a role="button" href="/tags/navigation" class="btn btn-default btn-xs">navigation (1)</a>
-                <a role="button" href="/tags/psql" class="btn btn-default btn-xs">psql (1)</a>
-                <a role="button" href="/tags/powershell" class="btn btn-default btn-xs">powershell (1)</a>
-                <a role="button" href="/tags/automation" class="btn btn-default btn-xs">automation (1)</a>
-                <a role="button" href="/tags/github" class="btn btn-default btn-xs">github (1)</a>
-                <a role="button" href="/tags/source-generators" class="btn btn-default btn-xs">source-generators (1)</a>
-                <a role="button" href="/tags/aspnet" class="btn btn-default btn-xs">aspnet (1)</a>
-                <a role="button" href="/tags/ldd" class="btn btn-default btn-xs">ldd (1)</a>
-                <a role="button" href="/tags/career" class="btn btn-default btn-xs">career (1)</a>
-                <a role="button" href="/tags/roslyn" class="btn btn-default btn-xs">roslyn (1)</a>
-                <a role="button" href="/tags/corert" class="btn btn-default btn-xs">corert (1)</a>
-                <a role="button" href="/tags/code-signing" class="btn btn-default btn-xs">code-signing (1)</a>
-                <a role="button" href="/tags/iraq" class="btn btn-default btn-xs">iraq (1)</a>
-                <a role="button" href="/tags/hangfire" class="btn btn-default btn-xs">hangfire (1)</a>
-                <a role="button" href="/tags/postgresql" class="btn btn-default btn-xs">postgresql (1)</a>
-                <a role="button" href="/tags/pg_dump" class="btn btn-default btn-xs">pg_dump (1)</a>
-                <a role="button" href="/tags/pg_restore" class="btn btn-default btn-xs">pg_restore (1)</a>
-        </div>
-    </div>
-</div>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'mazeez'; // required: replace example with your forum shortname
+    var disqus_identifier = 'backup-and-restore-in-postgres';
+    var disqus_title = 'Backing up and restoring databases in Postgres';
+    var disqus_url = 'https://mazeez.dev/posts/backup-and-restore-in-postgres';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
                         </div>
                 </div>
         </div>

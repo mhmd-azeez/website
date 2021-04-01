@@ -6,8 +6,8 @@ pre {
     overflow: auto;
     word-wrap: normal;
     word-break: normal;
-    margin-bottom: 20px;
     background: transparent;
+    margin-bottom: 10px;
     font-size: inherit;
 }
 
@@ -19,6 +19,6 @@ pre code{
     overflow: auto;
     font-size: 14px;
     word-wrap: normal;
+    margin-bottom: 0px;
     word-break: normal;
-    margin-bottom: 20px;
 }
