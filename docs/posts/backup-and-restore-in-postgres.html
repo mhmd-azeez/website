@@ -151,45 +151,44 @@ Published on Thursday, April 1, 2021<br>    </div>
 </tbody>
 </table>
 <h3 id="how-to-backup-a-database">How to backup a database</h3>
-<h4 id="custom-format">Custom Format</h4>
+<p>To create a dump of <code>sample-db</code> in <code>custom</code> format and save it to <code>sample-db.dump</code>:</p>
 <pre><code class="language-bash">pg_dump -U postgres --encoding utf8 -F c -f sample-db.dump sample-db
 </code></pre>
-<p>This creates a dump of <code>sample-db</code> in <code>custom</code> format and names the file <code>sample-db.dump</code>.</p>
-<h4 id="plain-format">Plain Format</h4>
+<p>To create a dump of <code>sample-db</code> in <code>plain</code> format and save it to <code>sample-db.sql</code>:</p>
 <pre><code class="language-bash">pg_dump -U postgres --encoding utf8 -F p -f stoplist.sql stoplist
 </code></pre>
-<p>This creates a dump of <code>sample-db</code> in <code>custom</code> format and names the file <code>sample-db.sql</code>.</p>
 <h3 id="how-to-restore-a-database-dump">How to restore a database dump</h3>
 <p>First create an empty database to restore the dump to.</p>
-<pre><code class="language-bash"># Create a new database using template0 called restored-db. We use template0 is empty and it doesn't conflict with the schemas and tables in the dump.
+<pre><code class="language-bash"># We use template0 is empty and it doesn't conflict with the schemas and tables in the dump.
 createdb -U postgres restored-db --template=template0
 </code></pre>
-<h4 id="custom-format-1">Custom Format</h4>
-<pre><code class="language-bash"># Restore the database using pg_restore. As you can see, the name of the restored database doesn't have to match the name of the original database.
-pg_restore -U postgres -d restored-db &lt; ./sample-db.dump
+<p>Restore <code>custom</code>, <code>directory</code>, and <code>tar</code> format dumps using <code>pg_restore</code>:</p>
+<pre><code class="language-bash">pg_restore -U postgres -d restored-db &lt; ./sample-db.dump
 </code></pre>
-<blockquote class="blockquote">
-<p><strong>Note:</strong> In Powershell the <code>&lt;</code> operator doesn't work. So you'll have to use <code>cmd</code> on Windows.</p>
-</blockquote>
-<h4 id="plain-format-1">Plain Format</h4>
-<pre><code class="language-bash"># Restore the database using psql. As you can see, the name of the restored database doesn't have to match the name of the original database.
-psql -U postgres -d restored-db &lt; ./sample-db.sql
+<p>Restore <code>plain</code> format dumps using <code>psql</code>:</p>
+<pre><code class="language-bash">psql -U postgres -d restored-db &lt; ./sample-db.sql
 </code></pre>
 <blockquote class="blockquote">
 <p><strong>Note:</strong> In Powershell the <code>&lt;</code> operator doesn't work. So you'll have to use <code>cmd</code> on Windows.</p>
 </blockquote>
 <h3 id="errors-you-might-come-across">Errors you might come across:</h3>
+<ol>
+<li>Currupted dumps</li>
+</ol>
 <pre><code>pg_restore: [archiver] found unexpected block id (x) when reading data -- expected y
 </code></pre>
 <pre><code>pg_restore: error unrecognized data block type
 </code></pre>
 <p>This might mean the dump is corrupted. One possible reason is the database contained Unicode data and the dump was not encoded in utf8. Use <code>--encoding utf8</code> when running <code>pg_dump</code> to fix that.</p>
+<ol start="2">
+<li>Restoring <code>plain</code> format dumps using <code>pg_restore</code>:</li>
+</ol>
 <pre><code>pg_restore: [archiver] did not find magic string in file header
 </code></pre>
-<p>This happens if you run <code>pg_restore</code> with <code>--format=c</code> on a <code>plain</code> format dump. Use <code>psql</code> to restore it instead.</p>
 <pre><code>pg_restore: [archiver] input file does not appear to be a valid archive
 </code></pre>
-<p>This happens if you try to restore a <code>plain</code> format dump using <code>pg_restore</code>. Use <code>psql</code> to restore it instead.</p>
+<p>This happens if you run <code>pg_restore</code> on a <code>plain</code> format dump. Use <code>psql</code> to restore it instead.</p>
+<p>If you have any other tips/tricks, please write the down in the comments!</p>
 
 
 <div id="disqus_thread"></div>

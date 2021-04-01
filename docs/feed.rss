@@ -5,8 +5,8 @@
 		<link>https://mazeez.dev/</link>
 		<description>A blog about software engineering and beyond!</description>
 		<copyright>2021</copyright>
-		<pubDate>Thu, 01 Apr 2021 13:05:56 GMT</pubDate>
-		<lastBuildDate>Thu, 01 Apr 2021 13:05:56 GMT</lastBuildDate>
+		<pubDate>Thu, 01 Apr 2021 13:16:30 GMT</pubDate>
+		<lastBuildDate>Thu, 01 Apr 2021 13:16:30 GMT</lastBuildDate>
 		<item>
 			<title>Backing up and restoring databases in Postgres</title>
 			<link>https://mazeez.dev/posts/backup-and-restore-in-postgres</link>
@@ -47,45 +47,44 @@
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h3 id="how-to-backup-a-database"&gt;How to backup a database&lt;/h3&gt;
-&lt;h4 id="custom-format"&gt;Custom Format&lt;/h4&gt;
+&lt;p&gt;To create a dump of &lt;code&gt;sample-db&lt;/code&gt; in &lt;code&gt;custom&lt;/code&gt; format and save it to &lt;code&gt;sample-db.dump&lt;/code&gt;:&lt;/p&gt;
 &lt;pre&gt;&lt;code class="language-bash"&gt;pg_dump -U postgres --encoding utf8 -F c -f sample-db.dump sample-db
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This creates a dump of &lt;code&gt;sample-db&lt;/code&gt; in &lt;code&gt;custom&lt;/code&gt; format and names the file &lt;code&gt;sample-db.dump&lt;/code&gt;.&lt;/p&gt;
-&lt;h4 id="plain-format"&gt;Plain Format&lt;/h4&gt;
+&lt;p&gt;To create a dump of &lt;code&gt;sample-db&lt;/code&gt; in &lt;code&gt;plain&lt;/code&gt; format and save it to &lt;code&gt;sample-db.sql&lt;/code&gt;:&lt;/p&gt;
 &lt;pre&gt;&lt;code class="language-bash"&gt;pg_dump -U postgres --encoding utf8 -F p -f stoplist.sql stoplist
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This creates a dump of &lt;code&gt;sample-db&lt;/code&gt; in &lt;code&gt;custom&lt;/code&gt; format and names the file &lt;code&gt;sample-db.sql&lt;/code&gt;.&lt;/p&gt;
 &lt;h3 id="how-to-restore-a-database-dump"&gt;How to restore a database dump&lt;/h3&gt;
 &lt;p&gt;First create an empty database to restore the dump to.&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;# Create a new database using template0 called restored-db. We use template0 is empty and it doesn't conflict with the schemas and tables in the dump.
+&lt;pre&gt;&lt;code class="language-bash"&gt;# We use template0 is empty and it doesn't conflict with the schemas and tables in the dump.
 createdb -U postgres restored-db --template=template0
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h4 id="custom-format-1"&gt;Custom Format&lt;/h4&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;# Restore the database using pg_restore. As you can see, the name of the restored database doesn't have to match the name of the original database.
-pg_restore -U postgres -d restored-db &amp;lt; ./sample-db.dump
+&lt;p&gt;Restore &lt;code&gt;custom&lt;/code&gt;, &lt;code&gt;directory&lt;/code&gt;, and &lt;code&gt;tar&lt;/code&gt; format dumps using &lt;code&gt;pg_restore&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;pg_restore -U postgres -d restored-db &amp;lt; ./sample-db.dump
 &lt;/code&gt;&lt;/pre&gt;
-&lt;blockquote class="blockquote"&gt;
-&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; In Powershell the &lt;code&gt;&amp;lt;&lt;/code&gt; operator doesn't work. So you'll have to use &lt;code&gt;cmd&lt;/code&gt; on Windows.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h4 id="plain-format-1"&gt;Plain Format&lt;/h4&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;# Restore the database using psql. As you can see, the name of the restored database doesn't have to match the name of the original database.
-psql -U postgres -d restored-db &amp;lt; ./sample-db.sql
+&lt;p&gt;Restore &lt;code&gt;plain&lt;/code&gt; format dumps using &lt;code&gt;psql&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;psql -U postgres -d restored-db &amp;lt; ./sample-db.sql
 &lt;/code&gt;&lt;/pre&gt;
 &lt;blockquote class="blockquote"&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; In Powershell the &lt;code&gt;&amp;lt;&lt;/code&gt; operator doesn't work. So you'll have to use &lt;code&gt;cmd&lt;/code&gt; on Windows.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h3 id="errors-you-might-come-across"&gt;Errors you might come across:&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Currupted dumps&lt;/li&gt;
+&lt;/ol&gt;
 &lt;pre&gt;&lt;code&gt;pg_restore: [archiver] found unexpected block id (x) when reading data -- expected y
 &lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;pg_restore: error unrecognized data block type
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;This might mean the dump is corrupted. One possible reason is the database contained Unicode data and the dump was not encoded in utf8. Use &lt;code&gt;--encoding utf8&lt;/code&gt; when running &lt;code&gt;pg_dump&lt;/code&gt; to fix that.&lt;/p&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;Restoring &lt;code&gt;plain&lt;/code&gt; format dumps using &lt;code&gt;pg_restore&lt;/code&gt;:&lt;/li&gt;
+&lt;/ol&gt;
 &lt;pre&gt;&lt;code&gt;pg_restore: [archiver] did not find magic string in file header
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This happens if you run &lt;code&gt;pg_restore&lt;/code&gt; with &lt;code&gt;--format=c&lt;/code&gt; on a &lt;code&gt;plain&lt;/code&gt; format dump. Use &lt;code&gt;psql&lt;/code&gt; to restore it instead.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;pg_restore: [archiver] input file does not appear to be a valid archive
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This happens if you try to restore a &lt;code&gt;plain&lt;/code&gt; format dump using &lt;code&gt;pg_restore&lt;/code&gt;. Use &lt;code&gt;psql&lt;/code&gt; to restore it instead.&lt;/p&gt;
+&lt;p&gt;This happens if you run &lt;code&gt;pg_restore&lt;/code&gt; on a &lt;code&gt;plain&lt;/code&gt; format dump. Use &lt;code&gt;psql&lt;/code&gt; to restore it instead.&lt;/p&gt;
+&lt;p&gt;If you have any other tips/tricks, please write the down in the comments!&lt;/p&gt;
 </content:encoded>
 		</item>
 		<item>

@@ -19,43 +19,34 @@ To get a dump of a database you can use `pg_dump` or `pg_dumpall` for dumping an
 
 ### How to backup a database
 
-#### Custom Format
+To create a dump of `sample-db` in `custom` format and save it to `sample-db.dump`:
 
 ```bash
 pg_dump -U postgres --encoding utf8 -F c -f sample-db.dump sample-db
 ```
 
-This creates a dump of `sample-db` in `custom` format and names the file `sample-db.dump`.
-
-#### Plain Format
-
+To create a dump of `sample-db` in `plain` format and save it to `sample-db.sql`:
 ```bash
 pg_dump -U postgres --encoding utf8 -F p -f stoplist.sql stoplist
 ```
-This creates a dump of `sample-db` in `custom` format and names the file `sample-db.sql`.
-
 ### How to restore a database dump
 
 First create an empty database to restore the dump to.
 
 ```bash
-# Create a new database using template0 called restored-db. We use template0 is empty and it doesn't conflict with the schemas and tables in the dump.
+# We use template0 is empty and it doesn't conflict with the schemas and tables in the dump.
 createdb -U postgres restored-db --template=template0
 ```
 
-#### Custom Format
+Restore `custom`, `directory`, and `tar` format dumps using `pg_restore`:
 
 ```bash
-# Restore the database using pg_restore. As you can see, the name of the restored database doesn't have to match the name of the original database.
 pg_restore -U postgres -d restored-db < ./sample-db.dump
 ```
 
-> **Note:** In Powershell the `<` operator doesn't work. So you'll have to use `cmd` on Windows.
-
-#### Plain Format
+Restore `plain` format dumps using `psql`:
 
 ```bash
-# Restore the database using psql. As you can see, the name of the restored database doesn't have to match the name of the original database.
 psql -U postgres -d restored-db < ./sample-db.sql
 ```
 
@@ -63,6 +54,7 @@ psql -U postgres -d restored-db < ./sample-db.sql
 
 ### Errors you might come across:
 
+1. Currupted dumps
 ```
 pg_restore: [archiver] found unexpected block id (x) when reading data -- expected y
 ```
@@ -73,14 +65,15 @@ pg_restore: error unrecognized data block type
 
 This might mean the dump is corrupted. One possible reason is the database contained Unicode data and the dump was not encoded in utf8. Use `--encoding utf8` when running `pg_dump` to fix that.
 
+2. Restoring `plain` format dumps using `pg_restore`:
 ```
 pg_restore: [archiver] did not find magic string in file header
 ```
-
-This happens if you run `pg_restore` with `--format=c` on a `plain` format dump. Use `psql` to restore it instead.
 
 ```
 pg_restore: [archiver] input file does not appear to be a valid archive
 ```
 
-This happens if you try to restore a `plain` format dump using `pg_restore`. Use `psql` to restore it instead.
+This happens if you run `pg_restore` on a `plain` format dump. Use `psql` to restore it instead.
+
+If you have any other tips/tricks, please write the down in the comments!
