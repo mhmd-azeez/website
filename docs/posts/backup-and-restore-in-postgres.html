@@ -159,7 +159,7 @@ Published on Thursday, April 1, 2021<br>    </div>
 </code></pre>
 <h3 id="how-to-restore-a-database-dump">How to restore a database dump</h3>
 <p>First create an empty database to restore the dump to.</p>
-<pre><code class="language-bash"># We use template0 is empty and it doesn't conflict with the schemas and tables in the dump.
+<pre><code class="language-bash"># We use template0 because it's is empty and it doesn't conflict with the schemas and tables in the dump.
 createdb -U postgres restored-db --template=template0
 </code></pre>
 <p>Restore <code>custom</code>, <code>directory</code>, and <code>tar</code> format dumps using <code>pg_restore</code>:</p>
@@ -173,7 +173,7 @@ createdb -U postgres restored-db --template=template0
 </blockquote>
 <h3 id="errors-you-might-come-across">Errors you might come across:</h3>
 <ol>
-<li>Currupted dumps</li>
+<li>Corrupted dumps</li>
 </ol>
 <pre><code>pg_restore: [archiver] found unexpected block id (x) when reading data -- expected y
 </code></pre>

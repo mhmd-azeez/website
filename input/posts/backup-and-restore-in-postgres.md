@@ -34,7 +34,7 @@ pg_dump -U postgres --encoding utf8 -F p -f stoplist.sql stoplist
 First create an empty database to restore the dump to.
 
 ```bash
-# We use template0 is empty and it doesn't conflict with the schemas and tables in the dump.
+# We use template0 because it's is empty and it doesn't conflict with the schemas and tables in the dump.
 createdb -U postgres restored-db --template=template0
 ```
 
@@ -54,7 +54,7 @@ psql -U postgres -d restored-db < ./sample-db.sql
 
 ### Errors you might come across:
 
-1. Currupted dumps
+1. Corrupted dumps
 ```
 pg_restore: [archiver] found unexpected block id (x) when reading data -- expected y
 ```

@@ -4,7 +4,7 @@
 	<title>Muhammad Azeez</title>
 	<link rel="self" href="https://mazeez.dev/" />
 	<rights>2021</rights>
-	<updated>2021-04-01T13:16:30Z</updated>
+	<updated>2021-04-01T15:35:58Z</updated>
 	<logo>https://mazeez.dev/assets/images/cover.jpg</logo>
 	<subtitle>A blog about software engineering and beyond!</subtitle>
 	<entry>
@@ -54,7 +54,7 @@
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h3 id="how-to-restore-a-database-dump"&gt;How to restore a database dump&lt;/h3&gt;
 &lt;p&gt;First create an empty database to restore the dump to.&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-bash"&gt;# We use template0 is empty and it doesn't conflict with the schemas and tables in the dump.
+&lt;pre&gt;&lt;code class="language-bash"&gt;# We use template0 because it's is empty and it doesn't conflict with the schemas and tables in the dump.
 createdb -U postgres restored-db --template=template0
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Restore &lt;code&gt;custom&lt;/code&gt;, &lt;code&gt;directory&lt;/code&gt;, and &lt;code&gt;tar&lt;/code&gt; format dumps using &lt;code&gt;pg_restore&lt;/code&gt;:&lt;/p&gt;
@@ -68,7 +68,7 @@ createdb -U postgres restored-db --template=template0
 &lt;/blockquote&gt;
 &lt;h3 id="errors-you-might-come-across"&gt;Errors you might come across:&lt;/h3&gt;
 &lt;ol&gt;
-&lt;li&gt;Currupted dumps&lt;/li&gt;
+&lt;li&gt;Corrupted dumps&lt;/li&gt;
 &lt;/ol&gt;
 &lt;pre&gt;&lt;code&gt;pg_restore: [archiver] found unexpected block id (x) when reading data -- expected y
 &lt;/code&gt;&lt;/pre&gt;
