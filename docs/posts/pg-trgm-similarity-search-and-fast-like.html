@@ -1,0 +1,339 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+
+        <title>Muhammad Azeez - String similarity search and fast LIKE operator using pg_trgm</title>
+        <meta name="description" content="A blog about software engineering and beyond!" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link type="application/rss+xml" rel="alternate" title="Muhammad Azeez"
+                href="/feed.rss" />
+                <link type="application/atom+xml" rel="alternate" title="Muhammad Azeez"
+                href="/feed.atom" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+        <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="/assets/css/highlight.css" rel="stylesheet">
+        <link href="/assets/css/clean-blog.css" rel="stylesheet" />
+        <link href="/assets/css/master.css" rel="stylesheet" />
+        <link href="/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet'
+                type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+                rel='stylesheet' type='text/css'>
+        <link href="/assets/css/override.css" rel="stylesheet" />
+
+
+        <meta name="application-name" content="Muhammad Azeez" />
+        <meta name="msapplication-tooltip" content="Muhammad Azeez" />
+        <meta name="msapplication-starturl" content="/" />
+
+        <meta property="og:title" content="Muhammad Azeez - String similarity search and fast LIKE operator using pg_trgm" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://mazeez.dev/posts/pg-trgm-similarity-search-and-fast-like" />
+        <!-- TODO: More social graph meta tags -->
+
+        <script src="/assets/js/jquery.min.js"> </script> <script
+                src="/assets/js/bootstrap.min.js"> </script> <script
+                src="/assets/js/highlight.pack.js"> </script> <script
+                src="/assets/js/clean-blog.js"> </script> <script
+                src="/assets/js/d3.v3.min.js"> </script> <script
+                src="/assets/js/trianglify.min.js"> </script> <script
+                src="/assets/js/Please-compressed.js"> </script> <script
+                src="/assets/js/background-check.min.js"> </script> <!-- HTML5 Shim and Respond.js
+                IE8 support of HTML5 elements and media queries -->
+                <!-- WARNING: Respond.js doesn't work if you view the page via file:// 
+                -->
+        <!--[if lt IE 9]>
+                <script src="/assets/js/html5shiv.js"></script>
+                <script src="/assets/js/respond.min.js"></script>
+        <![endif]-->
+
+        
+
+
+</head>
+
+<body>
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+                <div class="container-fluid">
+                        <!-- Brand and toggle get grouped for better mobile display -->
+                        <div class="navbar-header page-scroll">
+                                <button type="button" class="navbar-toggle" data-toggle="collapse"
+                                        data-target="#navbar-collapse">
+                                        <span class="sr-only">Toggle navigation</span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                </button>
+                                <a class="navbar-brand" href="/">Muhammad Azeez
+                                        </a> </div> <!-- Collect the nav links, forms, and other content for toggling
+                                        -->
+                                        <div class="collapse navbar-collapse" id="navbar-collapse">
+                                                <ul class="nav navbar-nav navbar-right">
+                                                                <li><a href="/posts">Archive</a></li>
+        <li><a href="/tags">Tags</a></li>
+        <li><a href="/about">About Me</a></li>
+
+                                                </ul>
+                                        </div>
+                                        <!-- /.navbar-collapse -->
+                        </div>
+                        <!-- /.container -->
+        </nav>
+
+        <!-- Page Header -->
+        <header class="intro-header" id="intro-header" style="background-image: url(&quot;/assets/images/cover.jpg&quot;)">
+                <div class="container">
+                        <div class="row">
+                                <div class="col-md-12">
+
+    
+<div class="post-heading">
+    <h1>String similarity search and fast LIKE operator using pg_trgm</h1>
+    <div class="meta">        
+Published on Thursday, April 1, 2021<br>    </div>
+        <div class="tags">
+                    <a role="button" href="/tags/pg_trgm" class="btn btn-default btn-xs">pg_trgm</a>
+                    <a role="button" href="/tags/postgresql" class="btn btn-default btn-xs">postgresql</a>
+        </div>     
+</div>
+                                </div>
+                        </div>
+                </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="container">
+                <div class="row">
+                        <div id="content" class="col-md-12">
+                                
+
+<p>SQL supports wildcard search on strings using <code>LIKE</code> operator which accepts <code>%</code> and <code>_</code> wildcards. The problem with <code>LIKE</code> is it's not very fast if you have a lot of rows and the query is <a href="https://en.wikipedia.org/wiki/Sargable">non-sargable</a>. And in some cases you need to provide fuzzy search capabilities where the results don't have to exactly match the query.</p>
+<p>PostgreSQL has the <a href="https://www.postgresql.org/docs/9.6/pgtrgm.html"><code>pg_trgm</code> extension</a> that solves both problems:</p>
+<ul>
+<li>It has <code>gin</code> and <code>gist</code> indexes for speeding up <code>LIKE</code> and other string operators</li>
+<li>It has <code>similarity</code> function and <code>%</code> operator for string similarity search using trigrams.</li>
+</ul>
+<p>Let's assume we have this table:</p>
+<pre><code class="language-sql">CREATE TABLE persons (
+	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
+	forenames varchar(100) NOT NULL,
+	surname varchar(100) NOT NULL,
+	forenames_normalized varchar(100) NOT NULL,
+	surname_normalized varchar(100) NOT NULL,
+	CONSTRAINT persons_pk PRIMARY KEY (id)
+);
+</code></pre>
+<p><strong>Note:</strong> Normalized columns are lowercase versions of the normal columns and special characters are removed. You can also remove character accents. This is to make the search experience better for the user as they don't have to type in the exact case and punctuations.</p>
+<p>I inserted 10M rows of fake data generated by <a href="https://github.com/bchavez/Bogus">Bogus</a> into the table. You can <a href="http://github.com/mhmd-azeez/PgTrgm">download the dump here</a>.</p>
+<p>If we run a <code>LIKE</code> query on it:</p>
+<pre><code class="language-sql">select * from persons p 
+where surname_normalized like '%tche%' and forenames_normalized like '%nde%'
+</code></pre>
+<p>On my laptop it takes PostgreSQL about a second to return the results:</p>
+<pre><code class="language-sql">Gather  (cost=1000.00..142174.75 rows=10 width=30) (actual time=9.719..639.460 rows=75 loops=1)
+  Workers Planned: 2
+  Workers Launched: 2
+  -&gt;  Parallel Seq Scan on persons p  (cost=0.00..141173.75 rows=4 width=30) (actual time=3.425..605.240 rows=25 loops=3)
+        Filter: (((surname_normalized)::text ~~ '%tche%'::text) AND ((forenames_normalized)::text ~~ '%nde%'::text))
+        Rows Removed by Filter: 3333308
+Planning Time: 0.097 ms
+Execution Time: 639.494 ms
+</code></pre>
+<p>It seems like all of rows rows are scanned in the table. To speed things up, first we need to enable the <code>pg_trgm</code> extension on the database:</p>
+<pre><code class="language-sql">create extension if not exists pg_trgm;
+</code></pre>
+<p>Then we can use the <code>gin</code> index on the normalized columns:</p>
+<pre><code class="language-sql">create index if not exists idx_gin_persons_on_names on persons using gin (forenames_normalized gin_trgm_ops, surname_normalized gin_trgm_ops)
+</code></pre>
+<p><strong>Note:</strong> <code>gin</code> index and <code>gin_trgm_ops</code> operator are part of <code>pg_trgm</code>.</p>
+<p>Adding the <code>gin</code> index took about a minute on my laptop for 10M rows.</p>
+<p>Now let's see if the results have improved:</p>
+<pre><code class="language-sql">Bitmap Heap Scan on persons p  (cost=54.20..3692.46 rows=995 width=30) (actual time=4.011..4.066 rows=75 loops=1)
+  Recheck Cond: (((forenames_normalized)::text ~~ '%nde%'::text) AND ((surname_normalized)::text ~~ '%tche%'::text))
+  Heap Blocks: exact=75
+  -&gt;  Bitmap Index Scan on idx_gin_persons_on_names  (cost=0.00..53.95 rows=995 width=0) (actual time=3.999..3.999 rows=75 loops=1)
+        Index Cond: (((forenames_normalized)::text ~~ '%nde%'::text) AND ((surname_normalized)::text ~~ '%tche%'::text))
+Planning Time: 0.092 ms
+Execution Time: 4.120 ms
+</code></pre>
+<p>Instead of <code>639.494 ms</code> for execution time, now it only takes <code>4.1 ms</code>! That's because instead of sequentially scanning all of the rows in the document, it scanned the <code>gin</code> index.</p>
+<p>Great, now let's take a look at how to do fuzzy search:</p>
+<p>Let's say we are trying to find someone with forename(s) of <code>anderson</code> and surname of <code>mitchell</code>:</p>
+<pre><code class="language-sql">select id, forenames, surname, ((similarity('mitchel', surname_normalized) + similarity('andersen', forenames_normalized)) / 2) as score from persons p
+order by score desc
+limit 10
+</code></pre>
+<p>This query takes about 58 seconds to complete. The <code>similarity</code> function is expensive, so we have to try not to use it as much as possible. For that, we can use the similarity operator (<code>%</code>) to filter out the rows that are below a certain threshold. By default the threshold is 70% similarity (<code>0.3</code>) but you can change that using <code>set_limit</code>. Now let's use it:</p>
+<pre><code class="language-sql">select id, forenames, surname, ((similarity('mitchel', surname_normalized) + similarity('andersen', forenames_normalized)) / 2) as score from persons p
+where forenames_normalized % 'andersen' and surname_normalized % 'mitchel'
+order by score desc
+limit 10
+</code></pre>
+<p>Now it takes about <code>100ms</code> on my laptop. A huge improvement over 58 seconds :)</p>
+<h2 id="edge-cases">Edge Cases</h2>
+<p><code>pg_trgm</code> uses tri-grams for indexing. It means that each string is broken into all possible 3 letter components. For example <code>mitchel</code>'s trigrams are: <code>mit</code>,<code>itc</code>,<code>tch</code>,<code>che</code>,<code>hel</code> and <code>michelle</code>'s trigrams are: <code>mic</code>,<code>ich</code>,<code>che</code>,<code>hel</code>,<code>ell</code>,<code>lle</code>. They share 2 trigrams so the similarity of <code>mitchel</code> with <code>michelle</code> is 30%.</p>
+<p>This approach is not useful for words that are less than 3 letters. As you can't form any trigrams. So this query:</p>
+<pre><code class="language-sql">select * from persons p 
+where surname_normalized like '%he%' and forenames_normalized like '%de%'
+</code></pre>
+<p>Takes the same amount of time on both the indexed table and the non-indexed table because PostgreSQL does sequential scan for both of them:</p>
+<pre><code class="language-sql">Gather  (cost=1000.00..147095.90 rows=49229 width=30) (actual time=1.169..655.329 rows=21216 loops=1)
+  Workers Planned: 2
+  Workers Launched: 2
+  -&gt;  Parallel Seq Scan on persons p  (cost=0.00..141173.00 rows=20512 width=30) (actual time=0.397..583.521 rows=7072 loops=3)
+        Filter: (((surname_normalized)::text ~~ '%he%'::text) AND ((forenames_normalized)::text ~~ '%de%'::text))
+        Rows Removed by Filter: 3326261
+Planning Time: 0.105 ms
+Execution Time: 655.974 ms
+</code></pre>
+<p>There can be cases where the index makes things slower. So please test it for your own use case and weight the trade-offs. Also keep in mind that inserts and updates take longer with the index.</p>
+<h2 id="benchmarks">Benchmarks</h2>
+<p>I wrote some very simple benchmarks using <a href="https://github.com/dotnet/BenchmarkDotNet">BenchmarkDotNet</a> and here is the results:</p>
+<pre><code>// * Summary *
+
+BenchmarkDotNet=v0.12.1, OS=Windows 10.0.19041.928 (2004/?/20H1)
+Intel Core i7-8550U CPU 1.80GHz (Kaby Lake R), 1 CPU, 8 logical and 4 physical cores
+.NET Core SDK=5.0.201
+  [Host]     : .NET Core 5.0.4 (CoreCLR 5.0.421.11614, CoreFX 5.0.421.11614), X64 RyuJIT
+  DefaultJob : .NET Core 5.0.4 (CoreCLR 5.0.421.11614, CoreFX 5.0.421.11614), X64 RyuJIT
+
+
+|            Method    |         Mean |      Error |     StdDev |     Median |
+|---------------------:|-------------:|-----------:|-----------:|-----------:|
+|    LikeOnGinIndex    |     5.398 ms |  0.7167 ms |   2.113 ms |   4.170 ms |
+|              Like    | 1,035.140 ms | 55.0098 ms | 158.716 ms | 991.495 ms |
+| SimilarityOnGinIndex |   137.339 ms | 14.7610 ms |  43.523 ms | 114.342 ms |
+</code></pre>
+<p><strong>Note</strong>: Please download the database dump and code on <a href="http://github.com/mhmd-azeez/PgTrgm">GitHub</a>.</p>
+
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'mazeez'; // required: replace example with your forum shortname
+    var disqus_identifier = 'pg-trgm-similarity-search-and-fast-like';
+    var disqus_title = 'String similarity search and fast LIKE operator using pg_trgm';
+    var disqus_url = 'https://mazeez.dev/posts/pg-trgm-similarity-search-and-fast-like';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+                        </div>
+                </div>
+        </div>
+
+        <hr>
+
+        <!-- Footer -->
+        <footer>
+                <ul class="list-inline text-center">
+                        <li>
+                                <a href="https://twitter.com/mhmd_azeez">
+                                        <span class="fa-stack fa-lg">
+                                                <i class="fa fa-circle fa-stack-2x"></i>
+                                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                </a>
+                        </li>
+
+                        <li>
+                                <a href="https://github.com/mhmd-azeez">
+                                        <span class="fa-stack fa-lg">
+                                                <i class="fa fa-circle fa-stack-2x"></i>
+                                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                </a>
+                        </li>
+
+                        
+                        <li>
+                                <a href="mailto:muhammad-azeez@outlook.com">
+                                        <span class="fa-stack fa-lg">
+                                                <i class="fa fa-circle fa-stack-2x"></i>
+                                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                </a>
+                        </li>
+
+                        
+                        <li>
+                                <a href="https://www.linkedin.com/in/muhammad-azeez/">
+                                        <span class="fa-stack fa-lg">
+                                                <i class="fa fa-circle fa-stack-2x"></i>
+                                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                </a>
+                        </li>
+                </ul>
+
+                <div class="container">
+        <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="copyright text-muted">
+                        Copyright © 2021
+                        <br />
+                            <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
+                        |
+                            <a href="/feed.atom"><i class="fa fa-rss"></i> Atom Feed</a>
+                        <br />
+                        <strong><a href="https://wyam.io">Generated by Wyam</a></strong>
+                    </p>
+                </div>
+        </div>
+</div>
+
+        </footer>
+
+        
+        <script>
+                hljs.initHighlightingOnLoad();
+                hljs.configure({
+                        languages: []
+                });
+        </script>
+
+
+        <script>
+                BackgroundCheck.init({
+                        targets: '.intro-header,.navbar',
+                        images: '.intro-header'
+                });
+        </script>
+
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-141113720-1"></script>
+        <script>
+                window.dataLayer = window.dataLayer || [];
+
+                function gtag() {
+                        dataLayer.push(arguments);
+                }
+                gtag('js', new Date());
+
+                gtag('config', 'UA-141113720-1');
+        </script>
+
+</body>
+
+</html>
