@@ -1,5 +1,5 @@
 Title: String similarity search and fast LIKE operator using pg_trgm
-Published: 04/01/2021
+Published: 05/12/2021
 Tags:
 
  - postgresql
