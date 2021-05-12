@@ -90,7 +90,7 @@ order by score desc
 limit 10
 ```
 
-This query takes about 58 seconds to complete. The `similarity` function is expensive, so we have to try not to use it as much as possible. For that, we can use the similarity operator (`%`) to filter out the rows that are below a certain threshold. By default the threshold is 70% similarity (`0.3`) but you can change that using `set_limit`. Now let's use it:
+This query takes about 58 seconds to complete. The `similarity` function is expensive, so we have to try not to use it as much as possible. For that, we can use the similarity operator (`%`) to filter out the rows that are below a certain threshold. By default the threshold is 30% similarity (`0.3`) but you can change that using `set_limit`. Now let's use it:
 
 ```sql
 select id, forenames, surname, ((similarity('mitchel', surname_normalized) + similarity('andersen', forenames_normalized)) / 2) as score from persons p
@@ -125,7 +125,7 @@ Planning Time: 0.105 ms
 Execution Time: 655.974 ms
 ```
 
-There can be cases where the index makes things slower. So please test it for your own use case and weight the trade-offs. Also keep in mind that inserts and updates take longer with the index.
+There can be cases where the index makes things slower. So please test it for your own use case and weight the trade-offs. Also keep in mind that [inserts and updates take longer with the index](https://iamsafts.com/posts/postgres-gin-performance/).
 
 ## Benchmarks
 

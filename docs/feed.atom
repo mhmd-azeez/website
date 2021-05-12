@@ -4,7 +4,7 @@
 	<title>Muhammad Azeez</title>
 	<link rel="self" href="https://mazeez.dev/" />
 	<rights>2021</rights>
-	<updated>2021-05-11T21:07:27Z</updated>
+	<updated>2021-05-12T09:52:19Z</updated>
 	<logo>https://mazeez.dev/assets/images/cover.jpg</logo>
 	<subtitle>A blog about software engineering and beyond!</subtitle>
 	<entry>
@@ -69,7 +69,7 @@ Execution Time: 4.120 ms
 order by score desc
 limit 10
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This query takes about 58 seconds to complete. The &lt;code&gt;similarity&lt;/code&gt; function is expensive, so we have to try not to use it as much as possible. For that, we can use the similarity operator (&lt;code&gt;%&lt;/code&gt;) to filter out the rows that are below a certain threshold. By default the threshold is 70% similarity (&lt;code&gt;0.3&lt;/code&gt;) but you can change that using &lt;code&gt;set_limit&lt;/code&gt;. Now let's use it:&lt;/p&gt;
+&lt;p&gt;This query takes about 58 seconds to complete. The &lt;code&gt;similarity&lt;/code&gt; function is expensive, so we have to try not to use it as much as possible. For that, we can use the similarity operator (&lt;code&gt;%&lt;/code&gt;) to filter out the rows that are below a certain threshold. By default the threshold is 30% similarity (&lt;code&gt;0.3&lt;/code&gt;) but you can change that using &lt;code&gt;set_limit&lt;/code&gt;. Now let's use it:&lt;/p&gt;
 &lt;pre&gt;&lt;code class="language-sql"&gt;select id, forenames, surname, ((similarity('mitchel', surname_normalized) + similarity('andersen', forenames_normalized)) / 2) as score from persons p
 where forenames_normalized % 'andersen' and surname_normalized % 'mitchel'
 order by score desc
@@ -92,7 +92,7 @@ where surname_normalized like '%he%' and forenames_normalized like '%de%'
 Planning Time: 0.105 ms
 Execution Time: 655.974 ms
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;There can be cases where the index makes things slower. So please test it for your own use case and weight the trade-offs. Also keep in mind that inserts and updates take longer with the index.&lt;/p&gt;
+&lt;p&gt;There can be cases where the index makes things slower. So please test it for your own use case and weight the trade-offs. Also keep in mind that &lt;a href="https://iamsafts.com/posts/postgres-gin-performance/"&gt;inserts and updates take longer with the index&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="benchmarks"&gt;Benchmarks&lt;/h2&gt;
 &lt;p&gt;I wrote some very simple benchmarks using &lt;a href="https://github.com/dotnet/BenchmarkDotNet"&gt;BenchmarkDotNet&lt;/a&gt; and here is the results:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;// * Summary *

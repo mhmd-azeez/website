@@ -172,7 +172,7 @@ Execution Time: 4.120 ms
 order by score desc
 limit 10
 </code></pre>
-<p>This query takes about 58 seconds to complete. The <code>similarity</code> function is expensive, so we have to try not to use it as much as possible. For that, we can use the similarity operator (<code>%</code>) to filter out the rows that are below a certain threshold. By default the threshold is 70% similarity (<code>0.3</code>) but you can change that using <code>set_limit</code>. Now let's use it:</p>
+<p>This query takes about 58 seconds to complete. The <code>similarity</code> function is expensive, so we have to try not to use it as much as possible. For that, we can use the similarity operator (<code>%</code>) to filter out the rows that are below a certain threshold. By default the threshold is 30% similarity (<code>0.3</code>) but you can change that using <code>set_limit</code>. Now let's use it:</p>
 <pre><code class="language-sql">select id, forenames, surname, ((similarity('mitchel', surname_normalized) + similarity('andersen', forenames_normalized)) / 2) as score from persons p
 where forenames_normalized % 'andersen' and surname_normalized % 'mitchel'
 order by score desc
@@ -195,7 +195,7 @@ where surname_normalized like '%he%' and forenames_normalized like '%de%'
 Planning Time: 0.105 ms
 Execution Time: 655.974 ms
 </code></pre>
-<p>There can be cases where the index makes things slower. So please test it for your own use case and weight the trade-offs. Also keep in mind that inserts and updates take longer with the index.</p>
+<p>There can be cases where the index makes things slower. So please test it for your own use case and weight the trade-offs. Also keep in mind that <a href="https://iamsafts.com/posts/postgres-gin-performance/">inserts and updates take longer with the index</a>.</p>
 <h2 id="benchmarks">Benchmarks</h2>
 <p>I wrote some very simple benchmarks using <a href="https://github.com/dotnet/BenchmarkDotNet">BenchmarkDotNet</a> and here is the results:</p>
 <pre><code>// * Summary *
