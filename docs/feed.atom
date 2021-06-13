@@ -4,7 +4,7 @@
 	<title>Muhammad Azeez</title>
 	<link rel="self" href="https://mazeez.dev/" />
 	<rights>2021</rights>
-	<updated>2021-06-13T20:57:38Z</updated>
+	<updated>2021-06-13T21:21:19Z</updated>
 	<logo>https://mazeez.dev/assets/images/cover.jpg</logo>
 	<subtitle>A blog about software engineering and beyond!</subtitle>
 	<entry>
@@ -180,11 +180,18 @@ namespace MyCoolApi.Controllers
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://docs.microsoft.com/en-us/aspnet/core/security/cross-site-scripting"&gt;Prevent Cross-Site Scripting (XSS) in ASP.NET Core&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
+&lt;h2 id="api-versioning"&gt;15. API Versioning&lt;/h2&gt;
+&lt;p&gt;Versioning your APIs allow you to maintain backward compatibility when making breaking changes. You can maintaing multiple versions at the same time and then deprecate versions over time.&lt;/p&gt;
+&lt;h3 id="more-information-11"&gt;More Information&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://exceptionnotfound.net/overview-of-api-versioning-in-asp-net-core-3-0/"&gt;Overview of API Versioning in ASP.NET Core 3.0+&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 &lt;hr /&gt;
 &lt;p&gt;Updates:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Fixed ordering&lt;/li&gt;
 &lt;li&gt;Added 13 (Auth) and 14 (Security). Special thanks to &lt;a href="https://www.reddit.com/user/Matti-Koopa"&gt;Matti-Koopa&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Added 15 (API Versioning)&lt;/li&gt;
 &lt;/ul&gt;
 </content>
 		<summary>&lt;p&gt;Building modern APIs require a lot of things to make them reliable, observable, and scalable. In no particular order, here are some of them that help you build better APIs:&lt;/p&gt;</summary>

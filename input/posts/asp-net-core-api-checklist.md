@@ -202,7 +202,13 @@ Cross-Site Scripting (XSS) is a security vulnerability which enables an attacker
 
 - [Prevent Cross-Site Scripting (XSS) in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/cross-site-scripting)
 
+## 15. API Versioning
 
+Versioning your APIs allow you to maintain backward compatibility when making breaking changes. You can maintaing multiple versions at the same time and then deprecate versions over time.
+
+### More Information
+
+- [Overview of API Versioning in ASP.NET Core 3.0+](https://exceptionnotfound.net/overview-of-api-versioning-in-asp-net-core-3-0/)
 
 ---
 
@@ -210,3 +216,4 @@ Updates:
 
 - Fixed ordering
 - Added 13 (Auth) and 14 (Security). Special thanks to [Matti-Koopa](https://www.reddit.com/user/Matti-Koopa).
+- Added 15 (API Versioning)
