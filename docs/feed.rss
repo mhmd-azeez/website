@@ -5,8 +5,139 @@
 		<link>https://mazeez.dev/</link>
 		<description>A blog about software engineering and beyond!</description>
 		<copyright>2021</copyright>
-		<pubDate>Wed, 12 May 2021 09:52:19 GMT</pubDate>
-		<lastBuildDate>Wed, 12 May 2021 09:52:19 GMT</lastBuildDate>
+		<pubDate>Sun, 13 Jun 2021 19:50:45 GMT</pubDate>
+		<lastBuildDate>Sun, 13 Jun 2021 19:50:45 GMT</lastBuildDate>
+		<item>
+			<title>ASP.NET Core API Checklist</title>
+			<link>https://mazeez.dev/posts/asp-net-core-api-checklist</link>
+			<description>&lt;p&gt;Building modern APIs require a lot of things to make them reliable, observable, and scalable. In no particular order, here are some of them that help you build better APIs:&lt;/p&gt;</description>
+			<enclosure url="https://mazeez.dev/assets/images/cover.jpg" length="0" type="image" />
+			<guid>https://mazeez.dev/posts/asp-net-core-api-checklist</guid>
+			<pubDate>Sun, 13 Jun 2021 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;Building modern APIs require a lot of things to make them reliable, observable, and scalable. In no particular order, here are some of them that help you build better APIs:&lt;/p&gt;
+&lt;h2 id="healthchecks"&gt;1. Healthchecks&lt;/h2&gt;
+&lt;p&gt;Healthchecks are important in making sure that we know when anything happens to our APIs. We can setup dashboards to monitor them and setup alerting to let us know when one of the APIs is unhealthy. They are also important when deploying your apps to kubernetes. Kubernetes can monitor healthchecks of your APIs and automatically try to kill the unhealthy instances and create new instances to take their place.&lt;/p&gt;
+&lt;p&gt;There are two kinds of healthchecks:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Liveliness:&lt;/strong&gt; indicates if your API has crashed and must be restarted.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Readiness:&lt;/strong&gt; indicates if your API has been intialized and is ready for processing requests. When launching a new instance of an API, it might need some time to intialize dependencies and load data to be ready.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="more-information"&gt;More Information:&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks"&gt;MS Docs - Health checks in ASP.NET Core&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.youtube.com/watch?v=Kbfto6Y2xdw"&gt;IAmTimCorey - Intro to Health Checks in .NET Core&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="logging"&gt;2. Logging&lt;/h2&gt;
+&lt;p&gt;Logging provides valuable information when trying to debug unexpected behavior. But too much logging can significantly slow down our APIs. For that reason we can set the logging level to &lt;code&gt;Warning&lt;/code&gt; in production and only lower it when we need to.&lt;/p&gt;
+&lt;p&gt;By default ASP.NET Core provides an abstraction layer for logging that supports &lt;a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-5.0#log-message-template"&gt;Structured Logging&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;A very popular logging library that many people use with ASP.NET Core is &lt;a href="https://serilog.net/"&gt;Serilog&lt;/a&gt;. Serilog has more &lt;a href="https://github.com/serilog/serilog/wiki/Provided-Sinks"&gt;Sinks&lt;/a&gt; than the default ASP.NET Core loggging abstraction and can easily be integrated with ASP.NET Core.&lt;/p&gt;
+&lt;h3 id="more-information-1"&gt;More information:&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging"&gt;MS Docs - Logging in .NET Core and ASP.NET Core&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.youtube.com/watch?v=_iryZxv8Rxw"&gt;IAmTimCorey - C# Logging with Serilog and Seq - Structured Logging Made Easy&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="observability"&gt;3. Observability&lt;/h2&gt;
+&lt;p&gt;This includes a few things:
+2. Performance monitoring (P99, P95, P50)
+3. Metrics: Specific counters you or your business cares about
+4. Tracing: Being able to see the entire lifecycle of each request from frontend to API to data source.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://opentelemetry.io/"&gt;OpenTelemetry&lt;/a&gt; is an open standard for doing all of the above and &lt;a href="https://devblogs.microsoft.com/aspnet/observability-asp-net-core-apps/"&gt;ASP.NET Core supports it&lt;/a&gt;. The good news is, if you use OpenTelemetry, there is a rich ecosystem of tools and services that you can integrate with.&lt;/p&gt;
+&lt;p&gt;All of the major cloud providers have services that you can use to view the captured data.&lt;/p&gt;
+&lt;h2 id="error-reporting"&gt;4. Error reporting&lt;/h2&gt;
+&lt;p&gt;There are tools specifically for capturing, storing and showing exceptions that have been raised in your APIs. They the exceptions by their type and location and show how many times they have occurred. Some tools include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://sentry.io"&gt;Sentry&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://rollbar.com/"&gt;Rollbar&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://raygun.com/"&gt;Raygun&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="status-endpoint"&gt;5. Status Endpoint&lt;/h2&gt;
+&lt;p&gt;It's also good to have a status endpoint in your API that shows the name of the API, version of the API and when was it started. This can be used to create a dashboard showing all of the different services and their versions. Something like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+using System;
+using System.Diagnostics;
+
+namespace MyCoolApi.Controllers
+{
+    public class StatusResponse
+    {
+        public string Name { get; set; }
+        public string Version { get; set; }
+        public DateTime StartTime { get; set; }
+        public string Host { get; set; }
+    }
+
+    [ApiController]
+    [Route(&amp;quot;status&amp;quot;)]
+    public class StatusController
+    {
+        [HttpGet]
+        public StatusResponse Get()
+        {
+            var version = typeof(Startup).Assembly.GetName().Version;
+
+            return new StatusResponse
+            {
+                Name = &amp;quot;my-cool-api&amp;quot;,
+                Version = $&amp;quot;{version.Major}.{version.Minor}.{version.Build}&amp;quot;,
+                StartTime = Process.GetCurrentProcess().StartTime,
+                Host = Environment.MachineName
+            };
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="http-resiliency"&gt;6. Http Resiliency&lt;/h2&gt;
+&lt;p&gt;Although it's generally preferred for your APIs to communicate with other APIs using asynchronous messaging, sometimes you need to call other APIs using HTTP calls.&lt;/p&gt;
+&lt;p&gt;We need to bake in some level of resiliency by automatically retrying transient failures. This can easily be done by using something like &lt;a href="https://github.com/App-vNext/Polly"&gt;Polly&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="more-information-2"&gt;More information:&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/implement-http-call-retries-exponential-backoff-polly"&gt;Implement HTTP call retries with exponential backoff with IHttpClientFactory and Polly policies&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://app.pluralsight.com/library/courses/polly-fault-tolerant-web-service-requests"&gt;Bryan Hogan - Fault Tolerant Web Service Requests with Polly&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="statelessness-and-containerization"&gt;7. Statelessness and Containerization&lt;/h2&gt;
+&lt;p&gt;Containers are a great way to make sure your APIs can be easily scaled out and deployed to multiple environments in a repeatable manner. However to make sure you can get the most out of containerization you should try to make sure your APIs are stateless.&lt;/p&gt;
+&lt;p&gt;Being stateless means that they don't hold any critical data in memory. For caching you can use a centralized caching technology like &lt;a href="https://redis.io/"&gt;Redis&lt;/a&gt; instead. This way you can start as many instances as you need without worrying about having stale cached data or data duplication.&lt;/p&gt;
+&lt;p&gt;You must also be careful about background jobs. You must make sure the different instances don't process background jobs multiple times. And for message queues, you have to implement the &lt;a href="https://docs.microsoft.com/en-us/azure/architecture/patterns/competing-consumers"&gt;Competing Consumers&lt;/a&gt; pattern which some message buses support natively.&lt;/p&gt;
+&lt;h3 id="more-information-3"&gt;More information:&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.microsoft.com/en-us/dotnet/core/docker/build-container"&gt;MS Docs - Tutorial: Containerize a .NET Core app&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.hangfire.io/"&gt;Hangfire&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.quartz-scheduler.net/"&gt;Quartz.NET&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://docs.microsoft.com/en-us/azure/architecture/patterns/competing-consumers"&gt;MS Docs - Competing Consumers&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="openapi-spec-swagger"&gt;9. OpenAPI Spec / Swagger&lt;/h2&gt;
+&lt;p&gt;Documenting your APIs is very important. Swagger integrates with ASP.NET Core and automatically finds all of the routes (Controller actions) and shows them in a beautiful dashboard that you can customize.&lt;/p&gt;
+&lt;h3 id="more-information-4"&gt;More information:&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="(https://docs.microsoft.com/en-us/aspnet/core/tutorials/web-api-help-pages-using-swagger?view=aspnetcore-5.0)"&gt;MS Docs - ASP.NET Core web API documentation with Swagger / OpenAPI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.pluralsight.com/courses/aspdotnet-core-api-openapi-swagger"&gt;Kevin Dockx - Documenting an ASP.NET Core API with OpenAPI / Swagger&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="configuration-and-options"&gt;11. Configuration and Options&lt;/h2&gt;
+&lt;p&gt;ASP.NET Core has an extensible configuration mechanism. It can pull configurations from json files, environment variables and command line arguments. You can also provide custom sources for configuration. It also provide ways to easily fetch the configurations in a type-safe manner. it also provides an easy mechanism to &lt;a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-5.0#options-validation"&gt;validate the configuration sections&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="more-information-5"&gt;More information:&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options"&gt;MS Docs - Options Pattern in ASP.NET Core&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://app.pluralsight.com/library/courses/dotnet-core-aspnet-core-configuration-options/"&gt;Steve Gordon - Using Configuration and Options in .NET Core and ASP.NET Core Apps&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="integration-and-unit-tests"&gt;12. Integration and Unit Tests&lt;/h2&gt;
+&lt;p&gt;ASP.NET Core has made it easy to write Unit tests by making the whole framework DI friendly. It has also made Integration tests easy by &lt;a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.testing.webapplicationfactory-1"&gt;&lt;code&gt;WebApplicationFactory&lt;/code&gt;&lt;/a&gt; Having automated tests saves a lot of time and makes your APIs more robust. And when writing integration tests, try to use the same database technology that you use for production. If you're using Postgres in production, don't use Sqlite or In-Memory DB Providers for integration tests.&lt;/p&gt;
+&lt;h3 id="more-information-6"&gt;More information:&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests"&gt;MS Docs - Integration tests in ASP.NET Core&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://app.pluralsight.com/library/courses/integration-testing-asp-dot-net-core-applications-best-practices/table-of-contents"&gt;Steve Gordon - Integration Testing ASP.NET Core Applications: Best Practices&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="build-beautiful-rest-apis"&gt;13. Build beautiful REST APIs&lt;/h2&gt;
+&lt;p&gt;If you're building REST APIs, there are some conventions that make your APIs more pleasant and intuitive to use.&lt;/p&gt;
+&lt;h3 id="more-information-7"&gt;More information:&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://stackoverflow.blog/2020/03/02/best-practices-for-rest-api-design/"&gt;Stackoverflow Blog - Best practices for REST API design&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content:encoded>
+		</item>
 		<item>
 			<title>String similarity search and fast LIKE operator using pg_trgm</title>
 			<link>https://mazeez.dev/posts/pg-trgm-similarity-search-and-fast-like</link>
