@@ -5,8 +5,8 @@
 		<link>https://mazeez.dev/</link>
 		<description>A blog about software engineering and beyond!</description>
 		<copyright>2021</copyright>
-		<pubDate>Sun, 13 Jun 2021 19:50:45 GMT</pubDate>
-		<lastBuildDate>Sun, 13 Jun 2021 19:50:45 GMT</lastBuildDate>
+		<pubDate>Sun, 13 Jun 2021 20:24:19 GMT</pubDate>
+		<lastBuildDate>Sun, 13 Jun 2021 20:24:19 GMT</lastBuildDate>
 		<item>
 			<title>ASP.NET Core API Checklist</title>
 			<link>https://mazeez.dev/posts/asp-net-core-api-checklist</link>
@@ -116,21 +116,21 @@ namespace MyCoolApi.Controllers
 &lt;li&gt;&lt;a href="(https://docs.microsoft.com/en-us/aspnet/core/tutorials/web-api-help-pages-using-swagger?view=aspnetcore-5.0)"&gt;MS Docs - ASP.NET Core web API documentation with Swagger / OpenAPI&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://www.pluralsight.com/courses/aspdotnet-core-api-openapi-swagger"&gt;Kevin Dockx - Documenting an ASP.NET Core API with OpenAPI / Swagger&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id="configuration-and-options"&gt;11. Configuration and Options&lt;/h2&gt;
+&lt;h2 id="configuration-and-options"&gt;10. Configuration and Options&lt;/h2&gt;
 &lt;p&gt;ASP.NET Core has an extensible configuration mechanism. It can pull configurations from json files, environment variables and command line arguments. You can also provide custom sources for configuration. It also provide ways to easily fetch the configurations in a type-safe manner. it also provides an easy mechanism to &lt;a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-5.0#options-validation"&gt;validate the configuration sections&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id="more-information-5"&gt;More information:&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options"&gt;MS Docs - Options Pattern in ASP.NET Core&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://app.pluralsight.com/library/courses/dotnet-core-aspnet-core-configuration-options/"&gt;Steve Gordon - Using Configuration and Options in .NET Core and ASP.NET Core Apps&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id="integration-and-unit-tests"&gt;12. Integration and Unit Tests&lt;/h2&gt;
+&lt;h2 id="integration-and-unit-tests"&gt;11. Integration and Unit Tests&lt;/h2&gt;
 &lt;p&gt;ASP.NET Core has made it easy to write Unit tests by making the whole framework DI friendly. It has also made Integration tests easy by &lt;a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.testing.webapplicationfactory-1"&gt;&lt;code&gt;WebApplicationFactory&lt;/code&gt;&lt;/a&gt; Having automated tests saves a lot of time and makes your APIs more robust. And when writing integration tests, try to use the same database technology that you use for production. If you're using Postgres in production, don't use Sqlite or In-Memory DB Providers for integration tests.&lt;/p&gt;
 &lt;h3 id="more-information-6"&gt;More information:&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests"&gt;MS Docs - Integration tests in ASP.NET Core&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://app.pluralsight.com/library/courses/integration-testing-asp-dot-net-core-applications-best-practices/table-of-contents"&gt;Steve Gordon - Integration Testing ASP.NET Core Applications: Best Practices&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id="build-beautiful-rest-apis"&gt;13. Build beautiful REST APIs&lt;/h2&gt;
+&lt;h2 id="build-beautiful-rest-apis"&gt;12. Build beautiful REST APIs&lt;/h2&gt;
 &lt;p&gt;If you're building REST APIs, there are some conventions that make your APIs more pleasant and intuitive to use.&lt;/p&gt;
 &lt;h3 id="more-information-7"&gt;More information:&lt;/h3&gt;
 &lt;ul&gt;

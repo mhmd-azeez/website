@@ -124,7 +124,7 @@ Documenting your APIs is very important. Swagger integrates with ASP.NET Core an
  - [MS Docs - ASP.NET Core web API documentation with Swagger / OpenAPI]((https://docs.microsoft.com/en-us/aspnet/core/tutorials/web-api-help-pages-using-swagger?view=aspnetcore-5.0))
  - [Kevin Dockx - Documenting an ASP.NET Core API with OpenAPI / Swagger](https://www.pluralsight.com/courses/aspdotnet-core-api-openapi-swagger)
 
-## 11. Configuration and Options
+## 10. Configuration and Options
 
 ASP.NET Core has an extensible configuration mechanism. It can pull configurations from json files, environment variables and command line arguments. You can also provide custom sources for configuration. It also provide ways to easily fetch the configurations in a type-safe manner. it also provides an easy mechanism to [validate the configuration sections](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-5.0#options-validation).
 
@@ -133,7 +133,7 @@ ASP.NET Core has an extensible configuration mechanism. It can pull configuratio
 - [MS Docs - Options Pattern in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options)
 - [Steve Gordon - Using Configuration and Options in .NET Core and ASP.NET Core Apps](https://app.pluralsight.com/library/courses/dotnet-core-aspnet-core-configuration-options/)
 
-## 12. Integration and Unit Tests
+## 11. Integration and Unit Tests
 
 ASP.NET Core has made it easy to write Unit tests by making the whole framework DI friendly. It has also made Integration tests easy by [`WebApplicationFactory`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.testing.webapplicationfactory-1) Having automated tests saves a lot of time and makes your APIs more robust. And when writing integration tests, try to use the same database technology that you use for production. If you're using Postgres in production, don't use Sqlite or In-Memory DB Providers for integration tests.
 
@@ -142,10 +142,11 @@ ASP.NET Core has made it easy to write Unit tests by making the whole framework 
 - [MS Docs - Integration tests in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests)
 - [Steve Gordon - Integration Testing ASP.NET Core Applications: Best Practices](https://app.pluralsight.com/library/courses/integration-testing-asp-dot-net-core-applications-best-practices/table-of-contents)
 
-## 13. Build beautiful REST APIs
+## 12. Build beautiful REST APIs
 
 If you're building REST APIs, there are some conventions that make your APIs more pleasant and intuitive to use.
 
 ### More information:
 
 - [Stackoverflow Blog - Best practices for REST API design](https://stackoverflow.blog/2020/03/02/best-practices-for-rest-api-design/)
+
