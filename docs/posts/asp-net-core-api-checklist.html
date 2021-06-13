@@ -237,6 +237,57 @@ namespace MyCoolApi.Controllers
 <ul>
 <li><a href="https://stackoverflow.blog/2020/03/02/best-practices-for-rest-api-design/">Stackoverflow Blog - Best practices for REST API design</a></li>
 </ul>
+<h2 id="authentication-and-authorization">13. Authentication and Authorization</h2>
+<p>Authentication is the process of identifying a user and authorization is knowing and enforcing what each user can and can't do.  The most popular standards for authentication is OpenIDConnect which is an authentication layer on top of OAuth 2.</p>
+<p>There are some popular Identity Providers that you can easily integrate with your API:</p>
+<ul>
+<li><a href="https://auth0.com/">Auth0</a></li>
+<li><a href="https://www.okta.com/">Okta</a></li>
+<li><a href="https://fusionauth.io/">FusionAuth</a></li>
+</ul>
+<p>And there are some open source Identity and Access Management servers that you can run on-prem:</p>
+<ul>
+<li><a href="https://www.keycloak.org/">Keycloak</a></li>
+<li><a href="https://gluu.org/">Gluu</a></li>
+</ul>
+<p>And there are some libraries that you can use to build your own OIDC server:</p>
+<ul>
+<li><a href="https://duendesoftware.com/">IdentityServer</a></li>
+<li><a href="https://github.com/openiddict/openiddict-core">OpenIddict</a></li>
+</ul>
+<h3 id="more-information-8">More information</h3>
+<ul>
+<li><a href="https://app.pluralsight.com/library/courses/securing-aspnet-core-3-oauth2-openid-connect">Kevin Dockx - Securing ASP.NET Core 3 with OAuth2 and OpenID Connect</a></li>
+<li><a href="https://app.pluralsight.com/library/courses/securing-microservices-asp-dot-net-core">Kevin Dockx - Securing Microservices in ASP.NET Core</a></li>
+</ul>
+<h2 id="security">14. Security</h2>
+<h3 id="cors">14.1 CORS</h3>
+<p>Cross-Origin Resource Sharing allows frontends to call your API even if they are not on the same domain as the API. By default in ASP.NET Core CORS is disabled.</p>
+<h4 id="more-information-9">More information</h4>
+<ul>
+<li><a href="https://docs.microsoft.com/en-us/aspnet/core/security/cors">MS Docs - Enable Cross-Origin Requests (CORS) in ASP.NET Core</a></li>
+</ul>
+<h3 id="https-enforcing">14.2 HTTPS Enforcing</h3>
+<p>For this there are two scenarios:</p>
+<ul>
+<li>You're using Kestrel on edge: Then you have to make sure it's only listening to and respond over HTTPS.</li>
+<li>You've put ASP.NET Core behind a reverse proxy: Then you generally terminate HTTPS on the proxy and it's the proxy's job to enforce HTTPS.</li>
+</ul>
+<h4 id="more-information-10">More Information</h4>
+<ul>
+<li><a href="https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl">MS Docs - Enforce HTTPS in ASP.NET Core</a></li>
+</ul>
+<h3 id="cross-site-scripting-xss">14.3 Cross-Site Scripting (XSS)</h3>
+<p>Cross-Site Scripting (XSS) is a security vulnerability which enables an attacker to place client side scripts (usually JavaScript) into web pagesMore Information. You can prevent it by sanitizing inputs from the user.</p>
+<ul>
+<li><a href="https://docs.microsoft.com/en-us/aspnet/core/security/cross-site-scripting">Prevent Cross-Site Scripting (XSS) in ASP.NET Core</a></li>
+</ul>
+<hr />
+<p>Updates:</p>
+<ul>
+<li>Fixed ordering</li>
+<li>Added 13 (Auth) and 14 (Security). Special thanks to <a href="https://www.reddit.com/user/Matti-Koopa">Matti-Koopa</a>.</li>
+</ul>
 
 
 <div id="disqus_thread"></div>

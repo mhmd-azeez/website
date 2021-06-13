@@ -5,8 +5,8 @@
 		<link>https://mazeez.dev/</link>
 		<description>A blog about software engineering and beyond!</description>
 		<copyright>2021</copyright>
-		<pubDate>Sun, 13 Jun 2021 20:24:19 GMT</pubDate>
-		<lastBuildDate>Sun, 13 Jun 2021 20:24:19 GMT</lastBuildDate>
+		<pubDate>Sun, 13 Jun 2021 20:57:38 GMT</pubDate>
+		<lastBuildDate>Sun, 13 Jun 2021 20:57:38 GMT</lastBuildDate>
 		<item>
 			<title>ASP.NET Core API Checklist</title>
 			<link>https://mazeez.dev/posts/asp-net-core-api-checklist</link>
@@ -135,6 +135,57 @@ namespace MyCoolApi.Controllers
 &lt;h3 id="more-information-7"&gt;More information:&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://stackoverflow.blog/2020/03/02/best-practices-for-rest-api-design/"&gt;Stackoverflow Blog - Best practices for REST API design&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="authentication-and-authorization"&gt;13. Authentication and Authorization&lt;/h2&gt;
+&lt;p&gt;Authentication is the process of identifying a user and authorization is knowing and enforcing what each user can and can't do.  The most popular standards for authentication is OpenIDConnect which is an authentication layer on top of OAuth 2.&lt;/p&gt;
+&lt;p&gt;There are some popular Identity Providers that you can easily integrate with your API:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://auth0.com/"&gt;Auth0&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.okta.com/"&gt;Okta&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://fusionauth.io/"&gt;FusionAuth&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;And there are some open source Identity and Access Management servers that you can run on-prem:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.keycloak.org/"&gt;Keycloak&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://gluu.org/"&gt;Gluu&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;And there are some libraries that you can use to build your own OIDC server:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://duendesoftware.com/"&gt;IdentityServer&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/openiddict/openiddict-core"&gt;OpenIddict&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="more-information-8"&gt;More information&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://app.pluralsight.com/library/courses/securing-aspnet-core-3-oauth2-openid-connect"&gt;Kevin Dockx - Securing ASP.NET Core 3 with OAuth2 and OpenID Connect&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://app.pluralsight.com/library/courses/securing-microservices-asp-dot-net-core"&gt;Kevin Dockx - Securing Microservices in ASP.NET Core&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="security"&gt;14. Security&lt;/h2&gt;
+&lt;h3 id="cors"&gt;14.1 CORS&lt;/h3&gt;
+&lt;p&gt;Cross-Origin Resource Sharing allows frontends to call your API even if they are not on the same domain as the API. By default in ASP.NET Core CORS is disabled.&lt;/p&gt;
+&lt;h4 id="more-information-9"&gt;More information&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.microsoft.com/en-us/aspnet/core/security/cors"&gt;MS Docs - Enable Cross-Origin Requests (CORS) in ASP.NET Core&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="https-enforcing"&gt;14.2 HTTPS Enforcing&lt;/h3&gt;
+&lt;p&gt;For this there are two scenarios:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You're using Kestrel on edge: Then you have to make sure it's only listening to and respond over HTTPS.&lt;/li&gt;
+&lt;li&gt;You've put ASP.NET Core behind a reverse proxy: Then you generally terminate HTTPS on the proxy and it's the proxy's job to enforce HTTPS.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="more-information-10"&gt;More Information&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl"&gt;MS Docs - Enforce HTTPS in ASP.NET Core&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="cross-site-scripting-xss"&gt;14.3 Cross-Site Scripting (XSS)&lt;/h3&gt;
+&lt;p&gt;Cross-Site Scripting (XSS) is a security vulnerability which enables an attacker to place client side scripts (usually JavaScript) into web pagesMore Information. You can prevent it by sanitizing inputs from the user.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.microsoft.com/en-us/aspnet/core/security/cross-site-scripting"&gt;Prevent Cross-Site Scripting (XSS) in ASP.NET Core&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr /&gt;
+&lt;p&gt;Updates:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Fixed ordering&lt;/li&gt;
+&lt;li&gt;Added 13 (Auth) and 14 (Security). Special thanks to &lt;a href="https://www.reddit.com/user/Matti-Koopa"&gt;Matti-Koopa&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 </content:encoded>
 		</item>

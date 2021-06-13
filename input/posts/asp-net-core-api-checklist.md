@@ -150,3 +150,63 @@ If you're building REST APIs, there are some conventions that make your APIs mor
 
 - [Stackoverflow Blog - Best practices for REST API design](https://stackoverflow.blog/2020/03/02/best-practices-for-rest-api-design/)
 
+## 13. Authentication and Authorization
+
+Authentication is the process of identifying a user and authorization is knowing and enforcing what each user can and can't do.  The most popular standards for authentication is OpenIDConnect which is an authentication layer on top of OAuth 2.
+
+There are some popular Identity Providers that you can easily integrate with your API:
+
+- [Auth0](https://auth0.com/)
+- [Okta](https://www.okta.com/)
+- [FusionAuth](https://fusionauth.io/)
+
+And there are some open source Identity and Access Management servers that you can run on-prem:
+
+- [Keycloak](https://www.keycloak.org/)
+- [Gluu](https://gluu.org/)
+
+And there are some libraries that you can use to build your own OIDC server:
+
+- [IdentityServer](https://duendesoftware.com/)
+- [OpenIddict](https://github.com/openiddict/openiddict-core)
+
+### More information
+
+- [Kevin Dockx - Securing ASP.NET Core 3 with OAuth2 and OpenID Connect](https://app.pluralsight.com/library/courses/securing-aspnet-core-3-oauth2-openid-connect)
+- [Kevin Dockx - Securing Microservices in ASP.NET Core](https://app.pluralsight.com/library/courses/securing-microservices-asp-dot-net-core)
+
+## 14. Security
+
+### 14.1 CORS
+
+Cross-Origin Resource Sharing allows frontends to call your API even if they are not on the same domain as the API. By default in ASP.NET Core CORS is disabled.
+
+#### More information
+
+- [MS Docs - Enable Cross-Origin Requests (CORS) in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/cors)
+
+### 14.2 HTTPS Enforcing
+
+For this there are two scenarios:
+
+- You're using Kestrel on edge: Then you have to make sure it's only listening to and respond over HTTPS.
+- You've put ASP.NET Core behind a reverse proxy: Then you generally terminate HTTPS on the proxy and it's the proxy's job to enforce HTTPS.
+
+#### More Information
+
+- [MS Docs - Enforce HTTPS in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl)
+
+### 14.3 Cross-Site Scripting (XSS)
+
+Cross-Site Scripting (XSS) is a security vulnerability which enables an attacker to place client side scripts (usually JavaScript) into web pagesMore Information. You can prevent it by sanitizing inputs from the user.
+
+- [Prevent Cross-Site Scripting (XSS) in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/cross-site-scripting)
+
+
+
+---
+
+Updates:
+
+- Fixed ordering
+- Added 13 (Auth) and 14 (Security). Special thanks to [Matti-Koopa](https://www.reddit.com/user/Matti-Koopa).
