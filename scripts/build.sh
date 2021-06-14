@@ -5,4 +5,4 @@ chmod +x ./dotnet-install.sh
 ./dotnet-install.sh -Channel 2.1
 
 dotnet tool install -g Wyam.Tool --framework netcoreapp2.1
-wyam --output $BASEDIR/../docs
+dotnet ~/.dotnet/tools/wyam --output $BASEDIR/../docs
