@@ -4,5 +4,5 @@ wget https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh
 chmod +x ./dotnet-install.sh
 ./dotnet-install.sh -Channel 2.1
 
-dotnet tool install -g Wyam.Tool
+dotnet tool install -g Wyam.Tool --framework netcoreapp2.1
 wyam --output $BASEDIR/../docs
