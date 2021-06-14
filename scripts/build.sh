@@ -5,4 +5,4 @@ chmod +x ./dotnet-install.sh
 ./dotnet-install.sh
 
 dotnet tool install -g Wyam.Tool
-dotnet wyam --output $BASEDIR/../docs
+wyam --output $BASEDIR/../docs
