@@ -149,6 +149,7 @@ If you're building REST APIs, there are some conventions that make your APIs mor
 ### More information:
 
 - [Stackoverflow Blog - Best practices for REST API design](https://stackoverflow.blog/2020/03/02/best-practices-for-rest-api-design/)
+- [Martin Fowler - Richardson Maturity Model](https://martinfowler.com/articles/richardsonMaturityModel.html)
 
 ## 13. Authentication and Authorization
 
