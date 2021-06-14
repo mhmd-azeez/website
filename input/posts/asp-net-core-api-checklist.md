@@ -4,6 +4,9 @@ Tags:
 
  - aspnet
 ---
+
+> **Note:** If you have any other points in mind, you can send me [a PR here](https://github.com/mhmd-azeez/website/blob/master/input/posts/asp-net-core-api-checklist.md).
+
 Building modern APIs require a lot of things to make them reliable, observable, and scalable. In no particular order, here are some of them that help you build better APIs:
 
 ## 1. Healthchecks
