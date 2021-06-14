@@ -1,1 +1,0 @@
-wyam --output docs --watch
