@@ -1,12 +1,6 @@
 BASEDIR=$(dirname "$0")
 
-wget https://packages.microsoft.com/config/ubuntu/21.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-dpkg -i packages-microsoft-prod.deb
-
-apt-get update; \
-apt-get install -y apt-transport-https && \
-apt-get update && \
-apt-get install -y dotnet-sdk-2.1
+wget https://download.visualstudio.microsoft.com/download/pr/66483281-5453-4504-9686-f72d1fd357f7/0de98386ca1709bde2b5f2f7df4c80da/aspnetcore-runtime-2.1.28-linux-x64.tar.gz dotnet
 
 dotnet tool install -g Wyam.Tool
 ~/.dotnet/tools/wyam --output $BASEDIR/../docs
