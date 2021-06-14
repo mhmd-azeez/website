@@ -7,4 +7,4 @@ chmod +x ./dotnet-install.sh
 wget https://github.com/Wyamio/Wyam/releases/download/v2.2.9/Wyam-v2.2.9.zip
 unzip Wyam-v2.2.9.zip -d wyam
 
-dotnet ./wyam/wyam.dll --output $BASEDIR/../docs
+dotnet ./wyam/Wyam.dll --output $BASEDIR/../docs
