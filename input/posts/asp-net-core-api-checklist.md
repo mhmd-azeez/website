@@ -5,9 +5,9 @@ Tags:
  - aspnet
 ---
 
-> **Note:** If you have any other points in mind, you can send me [a PR here](https://github.com/mhmd-azeez/website/blob/master/input/posts/asp-net-core-api-checklist.md).
-
 Building modern APIs require a lot of things to make them reliable, observable, and scalable. In no particular order, here are some of them that help you build better APIs:
+
+> **Note:** If you have any other points in mind, you can send me [a PR here](https://github.com/mhmd-azeez/website/blob/master/input/posts/asp-net-core-api-checklist.md).
 
 ## 1. Healthchecks
 Healthchecks are important in making sure that we know when anything happens to our APIs. We can setup dashboards to monitor them and setup alerting to let us know when one of the APIs is unhealthy. They are also important when deploying your apps to kubernetes. Kubernetes can monitor healthchecks of your APIs and automatically try to kill the unhealthy instances and create new instances to take their place.
