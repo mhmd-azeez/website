@@ -1,5 +1,7 @@
 Title: Why my console app gets stuck
+
 Published: 08/09/2021
+
 Tags:
  - console
  - windows
