@@ -10,6 +10,6 @@ wget -q https://github.com/Wyamio/Wyam/releases/download/v2.2.9/Wyam-v2.2.9.zip
 unzip -q Wyam-v2.2.9.zip -d wyam
 
 echo "Builiding website..."
-dotnet ./wyam/Wyam.dll --output $BASEDIR/../docs > /dev/null 2>&1 # Run Wyam quitely
+dotnet ./wyam/Wyam.dll --output $BASEDIR/../docs # > /dev/null 2>&1 # Run Wyam quitely
 
 echo "Done :)"
