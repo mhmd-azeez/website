@@ -1,5 +1,5 @@
-Title: Why my console app freezes randomly and I need to press a key for it to continue
-Published: 09/08/2021
+Title: Why my console app gets stuck
+Published: 08/09/2021
 Tags:
  - console
  - windows
