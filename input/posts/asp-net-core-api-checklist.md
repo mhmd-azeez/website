@@ -134,7 +134,7 @@ ASP.NET Core has an extensible configuration mechanism. It can pull configuratio
 ### More information:
 
 - [MS Docs - Options Pattern in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options)
-- [Steve Gordon - Using Configuration and Options in .NET Core and ASP.NET Core Apps](https://app.pluralsight.com/library/courses/dotnet-core-aspnet-core-configuration-options/)
+- [Steve Gordon - Using Configuration and Options in .NET Core and ASP.NET Core Apps](https://www.pluralsight.com/courses/dotnet-core-aspnet-core-configuration-options/)
 
 ## 11. Integration and Unit Tests
 
