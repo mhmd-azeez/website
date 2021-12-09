@@ -7,6 +7,9 @@ Tags:
  - testing
 ---
 
+> This post is my annual contribution to the 2021 [C# Advent Calendar](https://www.csadvent.christmas/). Please check out all the great posts from our wonderful community!
+
+
 Many systems require sending emails to notify users. And testing these notifications manually is a pain. So it's one of the best use cases for integration testing. First, let's create strongly typed model for our `Welcome` email:
 
 ```cs
