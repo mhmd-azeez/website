@@ -1,5 +1,5 @@
 Title: Testing Email Templates in ASP.NET Core
-Published: 12/10/2021
+Published: 12/9/2021
 Tags:
 
  - aspnet
