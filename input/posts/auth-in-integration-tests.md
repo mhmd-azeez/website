@@ -147,3 +147,5 @@ public class SimpleTest : IClassFixture<WebAppFactory>
 ```
 
 And that's it! With a few lines of code, you now have a flexible mock authentication scheme that you can use in your tests. You can also customize it to match your needs.
+
+You can download the source code on [GitHub](https://github.com/mhmd-azeez/IntegrationTestAuth).
