@@ -24,3 +24,9 @@ And this is the result:
 Without `unicode-bidi:plaintext`:
 
 <script async src="//jsfiddle.net/mhmd_azeez/hmL9s6a7/embed/html,result/"></script>
+
+**Update:** Setting `dir="auto"` attribute on the `<textarea>` has the same effect:
+
+```html
+<textarea dir="auto"></textarea>
+```
