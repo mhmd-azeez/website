@@ -27,7 +27,7 @@ It will ask you several questions, consult your S3 providers docs for more infor
 
 ```bash
 DIR=$(dirname "${BASH_SOURCE[0]}")
-DB_NAME=bixwene
+DB_NAME=my_db
 DUMP_PATH="$DIR/$DB_NAME_$(date +"%Y-%m-%d@%H-%M").dump"
 
 # DUMP the database
