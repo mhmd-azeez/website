@@ -32,6 +32,7 @@ During the interview process, it's good to consider these points:
 - Working hours. Do they want you to follow a specific working schedule? Or can you work flexibly? Or maybe something in between. I asked my current company to work on Sundays and take Fridays off. So that I can spend Fridays with my family. The point is, you can talk to them about your preferences and try to find a good common ground.
 - Are they willing to go through some hoops to pay you? A lot of the services that companies use to pay their employees don't work for Iraq. So they have to be willing to make an exception for you.
 - Management's attitude towards working remotely.
+- Optional: Visa Sponsorship. If you're interested, some companies are willing to sponsor you for a work visa in order to go and live in their country.
 
 In terms of employment, you'll probably be hired as a "subcontractor". Which means you won't become an official employee and that's because of Tax reasons. If they make you an employee it complicates their taxes and they will have to open an office in Iraq. I am okay with that even though it means you don't get some of the benefits like health insurance. But make sure there is a contract between you and your potential employer, because you'll need it for opening a bank account and also it lowers your chance of getting scammed.
 
