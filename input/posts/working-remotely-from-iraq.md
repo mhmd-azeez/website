@@ -68,7 +68,7 @@ The transfer fee depends on the sending bank, the receiving bank, and the interm
 You have a lot of options when it comes to working remotely:
 
 - Working from home: You can invest in building a home office for yourself. I tried this option first and it didn't work out for me. After a couple of months I was gaining weight and my social life was next to zero.
-- Co-working spaces: There are several co-working spaces in Iraq. And they provide your with a desk, a Wifi, and some common area.
+- Co-working spaces: There are several co-working spaces in Iraq. And they provide your with a desk, a Wifi, and some common area. You pay them monthly or daily. You can go work there for a day and see if it suits you. My problem was I couldn't do my meetings which was a deal breaker. Especially because in the beginning you'll have a lot of meetings to onboard you.
 - Renting an office: I am not sure if individuals can rent an office in Iraq. Because they ask you for your company papers or you have to be a member of some specific syndicates (Lawyers for example).
 - Cafes: I haven't tried this option.
 
@@ -76,5 +76,5 @@ Overall, you can experiment with different options and see which one fits your n
 
 I wish you luck in your journey and don't hestitate to reach out if you have any questions. However, when asking questions please follow these simple guidelines:
 
-- https://nohello.net/en/
-- Be specific and give me some context. Each person's situation is different.+
+- https://nohello.net/
+- Be specific and give me some context. Each person's situation is different.
