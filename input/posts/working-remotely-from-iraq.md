@@ -7,7 +7,7 @@ Tags:
 
 I have been working remotely for a European company since the beginning of the year. I have been through a lot of ups and downs since then, I want to document some of the insights I learned.
 
-Working remotely is getting more and more common place right now in Iraq. I have several friends who work for companies in Europe and other places. They make from 12k/year all the way up to 100k/year and possibly even more. Most of the pre-requisites of working remotely are available in Iraq and Kurdistan, even though they are not as convenient as one might hope, so I think more software developers should consider it as an option.
+Working remotely among the tech community is getting more and more common right now in Iraq. I have several friends who work for companies in Europe and other places. They make from 12k/year all the way up to 100k/year and possibly even more. Most of the pre-requisites of working remotely are available in Iraq and Kurdistan, even though they are not as convenient as one might hope, so I think more software developers should consider it as an option.
 
 ## Finding a remote job
 
