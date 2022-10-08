@@ -33,12 +33,15 @@ During the interview process, it's good to consider these points:
 - Are they willing to go through some hoops to pay you? A lot of the services that companies use to pay their employees don't work for Iraq. So they have to be willing to make an exception for you.
 - Management's attitude towards working remotely.
 
+In terms of employment, you'll probably be hired as a "subcontractor". Which means you won't become an official employee and that's because of Tax reasons. If they make you an employee it complicates their taxes and they will have to open an office in Iraq. I am okay with that even though it means you don't get some of the benefits like health insurance. But make sure there is a contract between you and your potential employer, because you'll need it for opening a bank account and also it lowers your chance of getting scammed.
+
 ## Getting Paid
 
 Unfortunately most payment services (PayPal, Wise, etc) don't work for Iraq. These are some of the available options:
 
 1. Bank transfer: The most reliable option in my experience.
 2. Money transfer services like Western Union: They have limits on the transfer amount and if based on what I have heard, you get flagged if you use them regularly.
+2. Crypto currencies: I don't like them so I haven't tried them..
 
 I personally use Bank Transfer so I am going to focus on that here. From experience the reliable options in Erbil are:
 
