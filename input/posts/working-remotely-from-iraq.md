@@ -1,5 +1,5 @@
 Title: Working remotely from Iraq as a Software Developer
-Published: 08/25/2020
+Published: 10/08/2022
 Tags:
 
  - career
@@ -31,7 +31,7 @@ During the interview process, it's good to consider these points:
 
 - Working time. Do they want you to follow a specific working schedule? Or can you work flexibly? Or maybe something in between. I asked my current company to work on Sundays and take Fridays off. So that I can spend Fridays with my family. The point is, you can talk to them about your preferences and try to find a good common ground.
 - Are they willing to go through some hoops to pay you? A lot of the services that companies use to pay their employees don't work for Iraq. So they have to be willing to make an exception for you.
-- Management's viewpoint and attitude towards working remotely.
+- Management's attitude towards working remotely.
 
 ## Getting Paid
 
@@ -77,4 +77,4 @@ Overall, you can experiment with different options and see which one fits your n
 I wish you luck in your journey and don't hestitate to reach out if you have any questions. However, when asking questions please follow these simple guidelines:
 
 - https://nohello.net/en/
-- Be specific and give me some context. Each person's situation is different.
+- Be specific and give me some context. Each person's situation is different.+
