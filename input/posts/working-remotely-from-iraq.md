@@ -50,7 +50,7 @@ I personally use Bank Transfer so I am going to focus on that here. From experie
 
 - https://www.bbacbank.com: Doesn't open personal accounts anymore
 - https://www.byblosbank.com
-- https://nbi.iq: I had a very experience with them and they didn't open an account for me in the end. But a friend of mine use them for receiving his salary and it seems to work for him. If you did decide to go with them visit their 60m branch, not their 100m branch.
+- https://nbi.iq: I had a very negative experience with them and they didn't open an account for me in the end. But a friend of mine use them for receiving his salary and it seems to work for him. If you did decide to go with them visit their 60m branch, not their 100m branch.
 
 Opening a bank account requires:
 
