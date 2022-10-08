@@ -31,7 +31,7 @@ Go search through the above websites and see which tech stacks and positions hav
 
 During the interview process, it's good to consider these points:
 
-- Working hours. Do they want you to follow a specific working schedule? Or can you work flexibly? Or maybe something in between. I asked my current company to work on Sundays and take Fridays off. So that I can spend Fridays with my family. The point is, you can talk to them about your preferences and try to find a good common ground.
+- Working hours. Do they want you to follow a specific working schedule? Or can you work flexibly? Or maybe something in between. I asked my current company to work on Sundays and take Fridays off so that I can spend Fridays with my family. The point is, you can talk to them about your preferences and try to find a good common ground.
 - Are they willing to go through some hoops to pay you? A lot of the services that companies use to pay their employees don't work for Iraq. So they have to be willing to make an exception for you.
 - Management's attitude towards working remotely.
 - Optional: Visa Sponsorship. If you're interested, some companies are willing to sponsor you for a work visa in order to go and live in their country.
