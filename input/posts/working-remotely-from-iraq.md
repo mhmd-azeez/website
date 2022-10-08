@@ -7,17 +7,17 @@ Tags:
 
 I have been working remotely for a European company since the beginning of the year. I have been through a lot of ups and downs since then, I want to document some of the insights I learned.
 
-Working remotely is getting more and more common place right now in Iraq. I have several friends who work for companies in Europe and other places. They make from 12k/year all the way up to 100k/year and possibly even more. Most of the pre-requisites of working remotely are available, even though they are not as convenient as one might hope, so I think more software developers should consider it as an option.
+Working remotely is getting more and more common place right now in Iraq. I have several friends who work for companies in Europe and other places. They make from 12k/year all the way up to 100k/year and possibly even more. Most of the pre-requisites of working remotely are available in Iraq and Kurdistan, even though they are not as convenient as one might hope, so I think more software developers should consider it as an option.
 
 ## Finding a remote job
 
 The first step of working remotely, is to find a job opportunity that's a good fit for you. Things that would help you get a job are:
 
 - The most important requirement is being good at what you do. Whether you're a Software Developer, A DevOps Engineer, A QA Engineer, A Product Owner, etc. Being able to show how you benefit your potential employers helps you a lot.
-- English language. Your English should be good enough to conduct your day to day tasks without problems. Communication is really important in remote jobs and sometimes more difficult that on-site jobs. Having a good English language level is very helpful.
+- English language. Your English should be good enough to conduct your day to day tasks without problems. Communication is really important in remote jobs and sometimes more difficult than on-site jobs. Having a good English language level is very helpful.
 - Try to participate in online communities, contribute to open source projects, and make friends online. I have gotten all of my jobs (including my current one) through friends. While LinkedIn is known for professional networking, don't ignore Twitter and GitHub.
 
-When looking for job opportunities, try to focus on Europe. Because US companies are much more hesitant about hiring from Iraq and they have complicated tax requirements. Also, Europe's timezone is very close to Iraq's timezone, so you don't have to sacrifice your social life. But take that as a guideline not a rule, there are always exceptions.
+When looking for job opportunities, try to focus on Europe. Because US companies are much more hesitant about hiring from Iraq and they have complicated tax requirements. Also, Europe's time zone is very close to Iraq's time zone, so you don't have to sacrifice your social life. But take that as a guideline not a rule, there are always exceptions. I know people who have joined companies from other parts of the world too.
 
 Where to find a remote job:
 
@@ -29,7 +29,7 @@ Go search through the above websites and see which tech stacks and positions hav
 
 During the interview process, it's good to consider these points:
 
-- Working time. Do they want you to follow a specific working schedule? Or can you work flexibly? Or maybe something in between. I asked my current company to work on Sundays and take Fridays off. So that I can spend Fridays with my family. The point is, you can talk to them about your preferences and try to find a good common ground.
+- Working hours. Do they want you to follow a specific working schedule? Or can you work flexibly? Or maybe something in between. I asked my current company to work on Sundays and take Fridays off. So that I can spend Fridays with my family. The point is, you can talk to them about your preferences and try to find a good common ground.
 - Are they willing to go through some hoops to pay you? A lot of the services that companies use to pay their employees don't work for Iraq. So they have to be willing to make an exception for you.
 - Management's attitude towards working remotely.
 
