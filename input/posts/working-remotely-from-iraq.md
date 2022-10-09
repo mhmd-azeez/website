@@ -15,7 +15,7 @@ Working remotely among the tech community is getting more and more common right 
 
 The first step of working remotely, is to find a job opportunity that's a good fit for you. Things that would help you get a job are:
 
-- The most important requirement is being good at what you do. Whether you're a Software Developer, A DevOps Engineer, A QA Engineer, A Product Owner, etc. Being able to show how you benefit your potential employers helps you a lot.
+- The most important requirement is being good at what you do. Whether you're a Software Developer, A DevOps Engineer, A QA Engineer, A Product Owner, etc. Being able to show how you benefit your potential employers helps you a lot. But don't let your imposter syndrome stop you from achieving your goals. Never filter yourself out of opportunities in life.
 - English language. Your English should be good enough to conduct your day to day tasks without problems. Communication is really important in remote jobs and sometimes more difficult than on-site jobs. Having a good English language level is very helpful.
 - Try to participate in online communities, contribute to open source projects, and make friends online. I have gotten all of my jobs (including my current one) through friends. While LinkedIn is known for professional networking, don't ignore Twitter and GitHub.
 
