@@ -1,0 +1,22 @@
+Title: How to Fix Wrong IP Address in Lynx Dev Server
+Published: 09/03/2025
+Tags:
+
+ - lynx
+---
+
+## Problem
+When running rspeedy dev in the Lynx mobile framework, it sometimes picks the wrong network interface IP, making device testing difficult.
+  
+## Solution
+Edit your lynx.config.ts file to specify the correct IP address:
+
+```ts
+import { defineConfig } from '@lynx-js/rspeedy'
+
+export default defineConfig({
+  server: {
+    host: '192.168.1.179', // Set your preferred IP here
+  }
+})
+```
