@@ -12,6 +12,8 @@ unzip -q Wyam-v2.2.9.zip -d wyam
 mkdir -p $BASEDIR/../docs
 
 echo "Builiding website..."
-dotnet ./wyam/Wyam.dll --output $BASEDIR/../docs # > /dev/null 2>&1 # Run Wyam quitely
+dotnet ./wyam/Wyam.dll --output $BASEDIR/../docs
 
 echo "Done :)"
+
+ls -la $BASEDIR/../docs
