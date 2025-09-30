@@ -354,14 +354,5 @@ P.S: I don't really remember what `n` stands for in `treen` anymore. Must have m
 
 Update 1: I realized using a function would be better than an alias, as you can still use the glob filtering and -I param. The old alias was:
 ```bash
-treen() {
-    local ignore='node_modules|__pycache__|*.pyc|.git|.next|dist|build|
-    coverage|.cache|.venv|venv|bin|obj|packages|.vs|*.user|*.suo'
-    local args=(-I "$ignore")
-    if [ $# -gt 0 ]; then
-        args+=(-P "$1" --prune)
-        shift
-    fi
-    command tree "${args[@]}" "$@"
-}
+alias treen='tree -I "node_modules|__pycache__|*.pyc|.git|.next|dist|build|coverage|.cache|.venv|venv|bin|obj|packages|.vs|*.user|*.suo"'
 ```
