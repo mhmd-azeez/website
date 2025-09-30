@@ -9,8 +9,19 @@ While Linux does have the `tree` command, if you're doing programming, you proba
 
 ```bash
 # tree alias that excludes common directories
-alias treen='tree -I "node_modules|__pycache__|*.pyc|.git|.next|dist|build|coverage|.cache|.venv|venv|bin|obj|packages|.vs|*.user|*.suo"'
+treen() {
+    local ignore='node_modules|__pycache__|*.pyc|.git|.next|dist|build|
+    coverage|.cache|.venv|venv|bin|obj|packages|.vs|*.user|*.suo'
+    local args=(-I "$ignore")
+    if [ $# -gt 0 ]; then
+        args+=(-P "$1" --prune)
+        shift
+    fi
+    command tree "${args[@]}" "$@"
+}
 ```
+
+You can use it like so: `treen **/*.ts`
 
 Example:
 
@@ -340,3 +351,17 @@ With `tree`:
 ```
 
 P.S: I don't really remember what `n` stands for in `treen` anymore. Must have meant something when I first wrote the alias
+
+Update 1: I realized using a function would be better than an alias, as you can still use the glob filtering and -I param. The old alias was:
+```bash
+treen() {
+    local ignore='node_modules|__pycache__|*.pyc|.git|.next|dist|build|
+    coverage|.cache|.venv|venv|bin|obj|packages|.vs|*.user|*.suo'
+    local args=(-I "$ignore")
+    if [ $# -gt 0 ]; then
+        args+=(-P "$1" --prune)
+        shift
+    fi
+    command tree "${args[@]}" "$@"
+}
+```
