@@ -8,11 +8,13 @@ tags:
   - hetzner
 ---
 
-PlanetScale recently introduced a $5 single-node PostgreSQL tier that promises the same observability and maintenance workflow you get on their flagship MySQL product. I wanted a quick mental model for how that stack behaves compared with the no-frills Postgres box I run on a Hetzner CPX11 instance (2 vCPU / 2 GB RAM for €3.85 per month). Moving bits across the public internet will never beat reading from local disk, so this is not a like-for-like comparison—just a practical check on how large the gap is.
+PlanetScale’s new $5 single-node PostgreSQL tier promises the same observability/maintenance story you get from their Vitess-backed MySQL side. I wanted to see how it feels next to the very boring Postgres instance I already pay for: a Hetzner CPX11 (2 vCPU / 2 GB RAM for €3.85) running in their eu-central region (Nuremberg). Obviously “LAN vs internet” isn’t a fair fight, but having real numbers helps with gut checks.
 
-For PlanetScale I ran against the x64 PS-5, PS-10, PS-20, PS-40, PS-80, and PS-160 plans using their direct endpoints as well as PgBouncer. On Hetzner I measured both the raw database connection and PgBouncer to see how much connection pooling closes the gap.
+I pointed the usual pgbench mix at PlanetScale’s x64 PS-5, PS-10, PS-20, PS-40, PS-80, and PS-160 plans. I asked for eu-central-1 to keep everything close to the Hetzner VPS, but PlanetScale split the replicas across eu-central-1 and eu-central-2, so we roll with what they provisioned. Each plan got hit via the direct endpoint and via PgBouncer. The Hetzner box got the same treatment so we can see how much pooling narrows the gap. Everything lives in [mhmd-azeez/hetzner_vs_planetscale](https://github.com/mhmd-azeez/hetzner_vs_planetscale) if you want to re-run or tweak the tests.
 
 ## Direct connections
+
+First pass: raw connections, no pooling tricks, single region hops only.
 
 ### TPS (transactions/second)
 
@@ -43,6 +45,8 @@ For PlanetScale I ran against the x64 PS-5, PS-10, PS-20, PS-40, PS-80, and PS-1
 </div>
 
 ## PgBouncer
+
+Next pass: slap PgBouncer in front of everything and see how far we can push concurrency before the network becomes the wall.
 
 ### TPS
 
@@ -266,7 +270,7 @@ For PlanetScale I ran against the x64 PS-5, PS-10, PS-20, PS-40, PS-80, and PS-1
 
 ## Takeaways
 
-- Latency dominates: even the higher PlanetScale tiers are ~10x slower on single-connection round trips because of the unavoidable network hop.
-- Connection pooling matters: PgBouncer helps PlanetScale saturate the link—PS-160 with PgBouncer eventually overtakes the local box at very high concurrency.
-- Bandwidth ceilings appear quickly on the smallest plans (no 50-concurrency results), so size up if you expect sustained write-heavy workloads.
-- For production you would still pay for the managed experience—automated maintenance windows, observability, and backups—which is exactly where PlanetScale shines despite raw TPS differences.
+- Latency is the tax: even PS-160 stays ~10× slower on single-connection round trips because physics wins.
+- Pooling earns its keep: once PgBouncer gets involved, PS-160 eventually outruns the local box at extreme concurrency simply because it can hold more connections open at once.
+- Small plans hit ceilings fast: PS-5/10/20 tap out before the 50-connection mark, so plan accordingly if you expect chatty workloads.
+- You still pay for the managed bits: backups, maintenance, branches, and observability are the real pitch for PlanetScale; Hetzner only wins if you’re happy being your own DBA.
