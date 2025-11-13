@@ -204,7 +204,8 @@ Next pass: slap PgBouncer in front of everything and see how far we can push con
           spanGaps: true,
         }));
 
-        new Chart(canvas.getContext('2d'), {
+        const context = canvas.getContext('2d', { willReadFrequently: true });
+        const chart = new Chart(context, {
           type: 'line',
           data: {
             labels: config.labels,
@@ -242,7 +243,8 @@ Next pass: slap PgBouncer in front of everything and see how far we can push con
             },
             plugins: {
               legend: {
-                display: false,
+                display: true,
+                position: 'bottom',
               },
               tooltip: {
                 callbacks: {
