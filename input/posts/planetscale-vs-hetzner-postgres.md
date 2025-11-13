@@ -80,6 +80,29 @@ For PlanetScale I ran against the x64 PS-5, PS-10, PS-20, PS-40, PS-80, and PS-1
 
 <script>
   (function () {
+    const attachControls = (container, chart) => {
+      const controls = document.createElement('div');
+      controls.className = 'chart-controls';
+
+      chart.data.datasets.forEach((dataset, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'chart-toggle';
+        button.innerHTML = `<span class="chart-toggle__swatch" style="background:${dataset.borderColor}"></span>${dataset.label}`;
+
+        button.addEventListener('click', () => {
+          chart.toggleDataVisibility(index);
+          const visible = chart.isDatasetVisible(index);
+          button.classList.toggle('chart-toggle--inactive', !visible);
+          chart.update();
+        });
+
+        controls.appendChild(button);
+      });
+
+      container.appendChild(controls);
+    };
+
     const chartConfigs = {
       'direct-tps': {
         yLabel: 'Transactions per second',
@@ -163,6 +186,7 @@ For PlanetScale I ran against the x64 PS-5, PS-10, PS-20, PS-40, PS-80, and PS-1
         if (!canvas) {
           return;
         }
+        canvas.height = 320;
 
         const datasets = config.data.map((series, index) => ({
           label: series.label,
@@ -214,7 +238,7 @@ For PlanetScale I ran against the x64 PS-5, PS-10, PS-20, PS-40, PS-80, and PS-1
             },
             plugins: {
               legend: {
-                position: 'bottom',
+                display: false,
               },
               tooltip: {
                 callbacks: {
@@ -227,6 +251,8 @@ For PlanetScale I ran against the x64 PS-5, PS-10, PS-20, PS-40, PS-80, and PS-1
             },
           },
         });
+
+        attachControls(container, chart);
       });
     };
 
