@@ -8,7 +8,7 @@ tags:
   - hetzner
 ---
 
-PlanetScale’s new $5 single-node PostgreSQL tier promises the same observability/maintenance story you get from their Vitess-backed MySQL side. I wanted to see how it feels next to the very boring Postgres instance I already pay for: a Hetzner CPX11 (2 vCPU / 2 GB RAM for €3.85) running in their eu-central region (Nuremberg). Obviously “LAN vs internet” isn’t a fair fight, but having real numbers helps with gut checks.
+PlanetScale’s new $5 single-node PostgreSQL tier (PS-5) promises the same observability/maintenance story you get from their Vitess-backed MySQL side. I wanted to see how it feels next to the very boring Postgres instance I already pay for: a Hetzner CPX11 (2 vCPU / 2 GB RAM for €3.85) running in their eu-central region (Nuremberg). This isn’t even LAN vs internet—it’s literally local disk vs a remote region—so the goal is to get a sanity check, not crown a winner.
 
 I pointed the usual pgbench mix at PlanetScale’s x64 PS-5, PS-10, PS-20, PS-40, PS-80, and PS-160 plans. I asked for eu-central-1 to keep everything close to the Hetzner VPS, but PlanetScale split the replicas across eu-central-1 and eu-central-2, so we roll with what they provisioned. Each plan got hit via the direct endpoint and via PgBouncer. The Hetzner box got the same treatment so we can see how much pooling narrows the gap. Everything lives in [mhmd-azeez/hetzner_vs_planetscale](https://github.com/mhmd-azeez/hetzner_vs_planetscale) if you want to re-run or tweak the tests.
 
@@ -18,7 +18,7 @@ First pass: raw connections, no pooling tricks, single region hops only.
 
 ### TPS (transactions/second)
 
-| concurrency | local | ps5_direct | ps10_direct | ps20_direct | ps40_direct | ps80_direct | ps160_direct |
+| concurrency | local | ps5 | ps10 | ps20 | ps40 | ps80 | ps160 |
 | ----------- | ----- | ---------- | ----------- | ----------- | ----------- | ----------- | ------------ |
 | 1 | 406.97 | 29.43 | 24.70 | 24.67 | 23.59 | 28.50 | 24.11 |
 | 10 | 2,445.69 | 256.03 | 261.99 | 278.28 | 257.12 | 268.42 | 272.31 |
@@ -32,7 +32,7 @@ First pass: raw connections, no pooling tricks, single region hops only.
 
 ### Latency (ms)
 
-| concurrency | local | ps5_direct | ps10_direct | ps20_direct | ps40_direct | ps80_direct | ps160_direct |
+| concurrency | local | ps5 | ps10 | ps20 | ps40 | ps80 | ps160 |
 | ----------- | ----- | ---------- | ----------- | ----------- | ----------- | ----------- | ------------ |
 | 1 | 2.46 | 33.98 | 40.49 | 40.53 | 42.38 | 35.09 | 41.48 |
 | 10 | 4.09 | 39.06 | 38.17 | 35.93 | 38.89 | 37.26 | 36.72 |
@@ -50,7 +50,7 @@ Next pass: slap PgBouncer in front of everything and see how far we can push con
 
 ### TPS
 
-| concurrency | local_pgbouncer | ps5_pgbouncer | ps10_pgbouncer | ps20_pgbouncer | ps40_pgbouncer | ps80_pgbouncer | ps160_pgbouncer |
+| concurrency | local | ps5 | ps10 | ps20 | ps40 | ps80 | ps160 |
 | ----------- | --------------- | ------------- | -------------- | -------------- | -------------- | -------------- | --------------- |
 | 1 | 275.29 | 23.50 | 26.13 | 22.61 | 24.53 | 27.17 | 21.72 |
 | 10 | 1,645.86 | 256.16 | 264.75 | 253.11 | 259.09 | 260.90 | 265.06 |
@@ -67,7 +67,7 @@ Next pass: slap PgBouncer in front of everything and see how far we can push con
 
 ### Latency (ms)
 
-| concurrency | local_pgbouncer | ps5_pgbouncer | ps10_pgbouncer | ps20_pgbouncer | ps40_pgbouncer | ps80_pgbouncer | ps160_pgbouncer |
+| concurrency | local | ps5 | ps10 | ps20 | ps40 | ps80 | ps160 |
 | ----------- | --------------- | ------------- | -------------- | -------------- | -------------- | -------------- | --------------- |
 | 1 | 3.63 | 42.56 | 38.27 | 44.22 | 40.77 | 36.81 | 46.05 |
 | 10 | 6.08 | 39.04 | 37.77 | 39.51 | 38.60 | 38.33 | 37.73 |
@@ -84,29 +84,6 @@ Next pass: slap PgBouncer in front of everything and see how far we can push con
 
 <script>
   (function () {
-    const attachControls = (container, chart) => {
-      const controls = document.createElement('div');
-      controls.className = 'chart-controls';
-
-      chart.data.datasets.forEach((dataset, index) => {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'chart-toggle';
-        button.innerHTML = `<span class="chart-toggle__swatch" style="background:${dataset.borderColor}"></span>${dataset.label}`;
-
-        button.addEventListener('click', () => {
-          chart.toggleDataVisibility(index);
-          const visible = chart.isDatasetVisible(index);
-          button.classList.toggle('chart-toggle--inactive', !visible);
-          chart.update();
-        });
-
-        controls.appendChild(button);
-      });
-
-      container.appendChild(controls);
-    };
-
     const chartConfigs = {
       'direct-tps': {
         yLabel: 'Transactions per second',
@@ -166,7 +143,11 @@ Next pass: slap PgBouncer in front of everything and see how far we can push con
       },
     };
 
-    const palette = ['#6366F1', '#EC4899', '#F97316', '#10B981', '#0EA5E9', '#F59E0B', '#8B5CF6'];
+    const palette = [
+      '#2563EB', '#D946EF', '#F97316', '#10B981', '#F59E0B', '#9333EA', '#0891B2',
+      '#DC2626', '#0EA5E9', '#7C3AED'
+    ];
+    const mobileQuery = window.matchMedia('(max-width: 600px)');
 
     const formatValue = (value, unit) => {
       if (value === null || value === undefined || Number.isNaN(value)) {
@@ -190,7 +171,7 @@ Next pass: slap PgBouncer in front of everything and see how far we can push con
         if (!canvas) {
           return;
         }
-        canvas.height = 320;
+        canvas.height = mobileQuery.matches ? 240 : 320;
 
         const datasets = config.data.map((series, index) => ({
           label: series.label,
@@ -258,7 +239,6 @@ Next pass: slap PgBouncer in front of everything and see how far we can push con
           },
         });
 
-        attachControls(container, chart);
       });
     };
 
