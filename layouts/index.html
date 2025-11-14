@@ -3,6 +3,28 @@
   {{ with .Content }}
     {{ . }}
   {{ end }}
+  {{ with site.GetPage "page" "about" }}
+    {{ $paragraphs := findRE "(?s)<p.*?>.*?</p>" .Content }}
+    {{ $firstParagraph := "" }}
+    {{ if gt (len $paragraphs) 0 }}
+      {{ $firstParagraph = index $paragraphs 0 }}
+    {{ else if .Summary }}
+      {{ $firstParagraph = .Summary }}
+    {{ end }}
+    {{ if $firstParagraph }}
+      <section class="home-about" aria-labelledby="home-about-heading">
+        <p class="home-about__eyebrow">Quick intro</p>
+        <h2 id="home-about-heading">{{ .Title }}</h2>
+        <div class="home-about__excerpt">
+          {{ $firstParagraph | safeHTML }}
+        </div>
+        <a class="home-about__link" href="{{ .RelPermalink }}">
+          Read more
+          <span aria-hidden="true">→</span>
+        </a>
+      </section>
+    {{ end }}
+  {{ end }}
   {{ $posts := where .Site.RegularPages "Section" "posts" }}
   {{ $currentYear := "" }}
   <ul class="blog-posts">
