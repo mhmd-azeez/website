@@ -87,12 +87,16 @@ pre code{
 
 .ps-gallery__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(140px, 200px));
     gap: 16px;
+    justify-content: center;
+    justify-items: center;
 }
 
 .ps-gallery__card {
     margin: 0;
+    width: 100%;
+    max-width: 200px;
 }
 
 .ps-gallery__thumb {
@@ -113,7 +117,7 @@ pre code{
 
 .ps-gallery__thumb img {
     width: 100%;
-    height: 140px;
+    height: 120px;
     object-fit: cover;
     display: block;
 }
@@ -192,7 +196,7 @@ pre code{
 
 @media (max-width: 600px) {
     .ps-gallery__thumb img {
-        height: 110px;
+        height: 100px;
     }
 
     .ps-lightbox {
