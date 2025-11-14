@@ -12,6 +12,220 @@ PlanetScale’s new $5 single-node PostgreSQL tier (PS-5) promises the same obse
 
 I pointed the usual pgbench mix at PlanetScale’s x64 PS-5, PS-10, PS-20, PS-40, PS-80, and PS-160 plans. I asked for eu-central-1 to keep everything close to the Hetzner VPS, but PlanetScale split the replicas across eu-central-1 and eu-central-2, so we roll with what they provisioned. Each plan got hit via the direct endpoint and via PgBouncer. The Hetzner box got the same treatment so we can see how much pooling narrows the gap. Everything lives in [mhmd-azeez/hetzner_vs_planetscale](https://github.com/mhmd-azeez/hetzner_vs_planetscale) if you want to re-run or tweak the tests.
 
+## Control plane snapshots
+
+PlanetScale’s Insights and Metrics tabs tell you a lot about how each tier is behaving under load, so here’s a quick gallery of every plan I touched. Tap/click any tile to blow it up.
+
+<div id="planetscale-gallery" class="ps-gallery">
+  <div class="ps-gallery__grid">
+    <figure class="ps-gallery__card">
+      <a class="ps-gallery__thumb" href="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-5-main-insights-2025-11-13-16_50_37.png" data-lightbox-target="ps5-insights">
+        <img loading="lazy" src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-5-main-insights-2025-11-13-16_50_37.png" alt="PlanetScale PS-5 Insights tab" />
+      </a>
+      <figcaption>PS-5 · Insights</figcaption>
+    </figure>
+    <figure class="ps-gallery__card">
+      <a class="ps-gallery__thumb" href="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-5-main-metrics-2025-11-13-16_50_07.png" data-lightbox-target="ps5-metrics">
+        <img loading="lazy" src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-5-main-metrics-2025-11-13-16_50_07.png" alt="PlanetScale PS-5 Metrics tab" />
+      </a>
+      <figcaption>PS-5 · Metrics</figcaption>
+    </figure>
+    <figure class="ps-gallery__card">
+      <a class="ps-gallery__thumb" href="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-10-main-insights-2025-11-13-16_51_39.png" data-lightbox-target="ps10-insights">
+        <img loading="lazy" src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-10-main-insights-2025-11-13-16_51_39.png" alt="PlanetScale PS-10 Insights tab" />
+      </a>
+      <figcaption>PS-10 · Insights</figcaption>
+    </figure>
+    <figure class="ps-gallery__card">
+      <a class="ps-gallery__thumb" href="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-10-main-metrics-2025-11-13-16_51_22.png" data-lightbox-target="ps10-metrics">
+        <img loading="lazy" src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-10-main-metrics-2025-11-13-16_51_22.png" alt="PlanetScale PS-10 Metrics tab" />
+      </a>
+      <figcaption>PS-10 · Metrics</figcaption>
+    </figure>
+    <figure class="ps-gallery__card">
+      <a class="ps-gallery__thumb" href="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-20-main-insights-2025-11-13-16_52_31.png" data-lightbox-target="ps20-insights">
+        <img loading="lazy" src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-20-main-insights-2025-11-13-16_52_31.png" alt="PlanetScale PS-20 Insights tab" />
+      </a>
+      <figcaption>PS-20 · Insights</figcaption>
+    </figure>
+    <figure class="ps-gallery__card">
+      <a class="ps-gallery__thumb" href="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-20-main-metrics-2025-11-13-16_52_17.png" data-lightbox-target="ps20-metrics">
+        <img loading="lazy" src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-20-main-metrics-2025-11-13-16_52_17.png" alt="PlanetScale PS-20 Metrics tab" />
+      </a>
+      <figcaption>PS-20 · Metrics</figcaption>
+    </figure>
+    <figure class="ps-gallery__card">
+      <a class="ps-gallery__thumb" href="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-40-main-insights-2025-11-13-18_25_05.png" data-lightbox-target="ps40-insights">
+        <img loading="lazy" src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-40-main-insights-2025-11-13-18_25_05.png" alt="PlanetScale PS-40 Insights tab" />
+      </a>
+      <figcaption>PS-40 · Insights</figcaption>
+    </figure>
+    <figure class="ps-gallery__card">
+      <a class="ps-gallery__thumb" href="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-40-main-metrics-2025-11-13-18_24_32.png" data-lightbox-target="ps40-metrics">
+        <img loading="lazy" src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-40-main-metrics-2025-11-13-18_24_32.png" alt="PlanetScale PS-40 Metrics tab" />
+      </a>
+      <figcaption>PS-40 · Metrics</figcaption>
+    </figure>
+    <figure class="ps-gallery__card">
+      <a class="ps-gallery__thumb" href="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-80-main-insights-2025-11-13-18_17_20.png" data-lightbox-target="ps80-insights">
+        <img loading="lazy" src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-80-main-insights-2025-11-13-18_17_20.png" alt="PlanetScale PS-80 Insights tab" />
+      </a>
+      <figcaption>PS-80 · Insights</figcaption>
+    </figure>
+    <figure class="ps-gallery__card">
+      <a class="ps-gallery__thumb" href="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-80-main-metrics-2025-11-13-18_17_40.png" data-lightbox-target="ps80-metrics">
+        <img loading="lazy" src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-80-main-metrics-2025-11-13-18_17_40.png" alt="PlanetScale PS-80 Metrics tab" />
+      </a>
+      <figcaption>PS-80 · Metrics</figcaption>
+    </figure>
+    <figure class="ps-gallery__card">
+      <a class="ps-gallery__thumb" href="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-160-main-insights-2025-11-13-18_17_03.png" data-lightbox-target="ps160-insights">
+        <img loading="lazy" src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-160-main-insights-2025-11-13-18_17_03.png" alt="PlanetScale PS-160 Insights tab" />
+      </a>
+      <figcaption>PS-160 · Insights</figcaption>
+    </figure>
+    <figure class="ps-gallery__card">
+      <a class="ps-gallery__thumb" href="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-160-main-metrics-2025-11-13-18_16_42.png" data-lightbox-target="ps160-metrics">
+        <img loading="lazy" src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-160-main-metrics-2025-11-13-18_16_42.png" alt="PlanetScale PS-160 Metrics tab" />
+      </a>
+      <figcaption>PS-160 · Metrics</figcaption>
+    </figure>
+  </div>
+</div>
+
+<div id="ps5-insights" class="ps-lightbox" aria-hidden="true">
+  <a class="ps-lightbox__backdrop" href="#planetscale-gallery" aria-label="Close PS-5 Insights screenshot"></a>
+  <figure class="ps-lightbox__content">
+    <img src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-5-main-insights-2025-11-13-16_50_37.png" alt="PlanetScale PS-5 Insights tab enlarged" />
+    <figcaption>PS-5 · Insights</figcaption>
+    <a class="ps-lightbox__close" href="#planetscale-gallery" aria-label="Close PS-5 Insights screenshot">&times;</a>
+  </figure>
+</div>
+
+<div id="ps5-metrics" class="ps-lightbox" aria-hidden="true">
+  <a class="ps-lightbox__backdrop" href="#planetscale-gallery" aria-label="Close PS-5 Metrics screenshot"></a>
+  <figure class="ps-lightbox__content">
+    <img src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-5-main-metrics-2025-11-13-16_50_07.png" alt="PlanetScale PS-5 Metrics tab enlarged" />
+    <figcaption>PS-5 · Metrics</figcaption>
+    <a class="ps-lightbox__close" href="#planetscale-gallery" aria-label="Close PS-5 Metrics screenshot">&times;</a>
+  </figure>
+</div>
+
+<div id="ps10-insights" class="ps-lightbox" aria-hidden="true">
+  <a class="ps-lightbox__backdrop" href="#planetscale-gallery" aria-label="Close PS-10 Insights screenshot"></a>
+  <figure class="ps-lightbox__content">
+    <img src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-10-main-insights-2025-11-13-16_51_39.png" alt="PlanetScale PS-10 Insights tab enlarged" />
+    <figcaption>PS-10 · Insights</figcaption>
+    <a class="ps-lightbox__close" href="#planetscale-gallery" aria-label="Close PS-10 Insights screenshot">&times;</a>
+  </figure>
+</div>
+
+<div id="ps10-metrics" class="ps-lightbox" aria-hidden="true">
+  <a class="ps-lightbox__backdrop" href="#planetscale-gallery" aria-label="Close PS-10 Metrics screenshot"></a>
+  <figure class="ps-lightbox__content">
+    <img src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-10-main-metrics-2025-11-13-16_51_22.png" alt="PlanetScale PS-10 Metrics tab enlarged" />
+    <figcaption>PS-10 · Metrics</figcaption>
+    <a class="ps-lightbox__close" href="#planetscale-gallery" aria-label="Close PS-10 Metrics screenshot">&times;</a>
+  </figure>
+</div>
+
+<div id="ps20-insights" class="ps-lightbox" aria-hidden="true">
+  <a class="ps-lightbox__backdrop" href="#planetscale-gallery" aria-label="Close PS-20 Insights screenshot"></a>
+  <figure class="ps-lightbox__content">
+    <img src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-20-main-insights-2025-11-13-16_52_31.png" alt="PlanetScale PS-20 Insights tab enlarged" />
+    <figcaption>PS-20 · Insights</figcaption>
+    <a class="ps-lightbox__close" href="#planetscale-gallery" aria-label="Close PS-20 Insights screenshot">&times;</a>
+  </figure>
+</div>
+
+<div id="ps20-metrics" class="ps-lightbox" aria-hidden="true">
+  <a class="ps-lightbox__backdrop" href="#planetscale-gallery" aria-label="Close PS-20 Metrics screenshot"></a>
+  <figure class="ps-lightbox__content">
+    <img src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-20-main-metrics-2025-11-13-16_52_17.png" alt="PlanetScale PS-20 Metrics tab enlarged" />
+    <figcaption>PS-20 · Metrics</figcaption>
+    <a class="ps-lightbox__close" href="#planetscale-gallery" aria-label="Close PS-20 Metrics screenshot">&times;</a>
+  </figure>
+</div>
+
+<div id="ps40-insights" class="ps-lightbox" aria-hidden="true">
+  <a class="ps-lightbox__backdrop" href="#planetscale-gallery" aria-label="Close PS-40 Insights screenshot"></a>
+  <figure class="ps-lightbox__content">
+    <img src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-40-main-insights-2025-11-13-18_25_05.png" alt="PlanetScale PS-40 Insights tab enlarged" />
+    <figcaption>PS-40 · Insights</figcaption>
+    <a class="ps-lightbox__close" href="#planetscale-gallery" aria-label="Close PS-40 Insights screenshot">&times;</a>
+  </figure>
+</div>
+
+<div id="ps40-metrics" class="ps-lightbox" aria-hidden="true">
+  <a class="ps-lightbox__backdrop" href="#planetscale-gallery" aria-label="Close PS-40 Metrics screenshot"></a>
+  <figure class="ps-lightbox__content">
+    <img src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-40-main-metrics-2025-11-13-18_24_32.png" alt="PlanetScale PS-40 Metrics tab enlarged" />
+    <figcaption>PS-40 · Metrics</figcaption>
+    <a class="ps-lightbox__close" href="#planetscale-gallery" aria-label="Close PS-40 Metrics screenshot">&times;</a>
+  </figure>
+</div>
+
+<div id="ps80-insights" class="ps-lightbox" aria-hidden="true">
+  <a class="ps-lightbox__backdrop" href="#planetscale-gallery" aria-label="Close PS-80 Insights screenshot"></a>
+  <figure class="ps-lightbox__content">
+    <img src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-80-main-insights-2025-11-13-18_17_20.png" alt="PlanetScale PS-80 Insights tab enlarged" />
+    <figcaption>PS-80 · Insights</figcaption>
+    <a class="ps-lightbox__close" href="#planetscale-gallery" aria-label="Close PS-80 Insights screenshot">&times;</a>
+  </figure>
+</div>
+
+<div id="ps80-metrics" class="ps-lightbox" aria-hidden="true">
+  <a class="ps-lightbox__backdrop" href="#planetscale-gallery" aria-label="Close PS-80 Metrics screenshot"></a>
+  <figure class="ps-lightbox__content">
+    <img src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-80-main-metrics-2025-11-13-18_17_40.png" alt="PlanetScale PS-80 Metrics tab enlarged" />
+    <figcaption>PS-80 · Metrics</figcaption>
+    <a class="ps-lightbox__close" href="#planetscale-gallery" aria-label="Close PS-80 Metrics screenshot">&times;</a>
+  </figure>
+</div>
+
+<div id="ps160-insights" class="ps-lightbox" aria-hidden="true">
+  <a class="ps-lightbox__backdrop" href="#planetscale-gallery" aria-label="Close PS-160 Insights screenshot"></a>
+  <figure class="ps-lightbox__content">
+    <img src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-160-main-insights-2025-11-13-18_17_03.png" alt="PlanetScale PS-160 Insights tab enlarged" />
+    <figcaption>PS-160 · Insights</figcaption>
+    <a class="ps-lightbox__close" href="#planetscale-gallery" aria-label="Close PS-160 Insights screenshot">&times;</a>
+  </figure>
+</div>
+
+<div id="ps160-metrics" class="ps-lightbox" aria-hidden="true">
+  <a class="ps-lightbox__backdrop" href="#planetscale-gallery" aria-label="Close PS-160 Metrics screenshot"></a>
+  <figure class="ps-lightbox__content">
+    <img src="../assets/images/posts/planetscale-vs-hetzner-postgres/screencapture-app-planetscale-mhmd-azeez-ps-160-main-metrics-2025-11-13-18_16_42.png" alt="PlanetScale PS-160 Metrics tab enlarged" />
+    <figcaption>PS-160 · Metrics</figcaption>
+    <a class="ps-lightbox__close" href="#planetscale-gallery" aria-label="Close PS-160 Metrics screenshot">&times;</a>
+  </figure>
+</div>
+
+<script>
+  (function () {
+    const gallery = document.getElementById('planetscale-gallery');
+    if (!gallery) {
+      return;
+    }
+
+    gallery.querySelectorAll('[data-lightbox-target]').forEach((anchor) => {
+      anchor.addEventListener('click', (event) => {
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+          return;
+        }
+
+        const target = anchor.getAttribute('data-lightbox-target');
+        if (!target) {
+          return;
+        }
+
+        event.preventDefault();
+        window.location.hash = target;
+      });
+    });
+  })();
+</script>
+
 ## Direct connections
 
 First pass: raw connections, no pooling tricks, single region hops only.

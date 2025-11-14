@@ -80,3 +80,122 @@ pre code{
 #content table td {
     white-space: nowrap;
 }
+
+.ps-gallery {
+    margin: 32px 0;
+}
+
+.ps-gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+}
+
+.ps-gallery__card {
+    margin: 0;
+}
+
+.ps-gallery__thumb {
+    display: block;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ps-gallery__thumb:focus,
+.ps-gallery__thumb:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 24px rgba(15, 23, 42, 0.2);
+}
+
+.ps-gallery__thumb img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    display: block;
+}
+
+.ps-gallery__card figcaption {
+    margin-top: 8px;
+    font-size: 13px;
+    text-align: center;
+    color: #475569;
+}
+
+.ps-lightbox {
+    position: fixed;
+    inset: 0;
+    padding: 32px;
+    background: rgba(15, 23, 42, 0.92);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ps-lightbox:target {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.ps-lightbox__backdrop {
+    position: absolute;
+    inset: 0;
+    display: block;
+}
+
+.ps-lightbox__content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    margin: 0;
+}
+
+.ps-lightbox__content img {
+    width: 100%;
+    height: auto;
+    max-height: calc(90vh - 48px);
+    border-radius: 12px;
+    box-shadow: 0 25px 50px rgba(15, 23, 42, 0.35);
+    display: block;
+}
+
+.ps-lightbox__content figcaption {
+    margin-top: 12px;
+    font-size: 14px;
+    text-align: center;
+    color: #e2e8f0;
+}
+
+.ps-lightbox__close {
+    position: absolute;
+    top: -16px;
+    right: -16px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.75);
+    color: #f8fafc;
+    text-decoration: none;
+    font-size: 24px;
+    line-height: 32px;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    .ps-gallery__thumb img {
+        height: 110px;
+    }
+
+    .ps-lightbox {
+        padding: 16px;
+    }
+}
