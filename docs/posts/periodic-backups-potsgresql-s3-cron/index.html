@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" />
+<title>Automatic periodic backups from PostgreSQL to S3 using Cron | Muhammad Azeez</title>
+<meta name="title" content="Automatic periodic backups from PostgreSQL to S3 using Cron" />
+<meta name="description" content="If you&rsquo;re managing your own databases you&rsquo;ll need to make sure you database is backed up properly. A good option is to store your backups in an S3-compatible object storage.
+
+Install s3cmd:
+
+sudo apt install s3cmd
+
+Configure it:
+
+s3cmd --configure
+It will ask you several questions, consult your S3 providers docs for more information.
+
+Write a bash script to create a postgresql dump and upload it to S3:
+
+ 1DIR=$(dirname &#34;${BASH_SOURCE[0]}&#34;)
+ 2DB_NAME=my_db
+ 3DUMP_PATH=&#34;$DIR/$DB_NAME_$(date &#43;&#34;%Y-%m-%d@%H-%M&#34;).dump&#34;
+ 4
+ 5# DUMP the database
+ 6pg_dump --encoding utf8 --format c --compress 9 --file $DUMP_PATH $DB_NAME
+ 7
+ 8DUMP_KEY=$DUMP_PATH | cut -c 3- # Remove the ./ from the path
+ 9
+10# Upload the dump file to S3
+11s3cmd put $DUMP_PATH s3://$DB_NAME-db-backups/$DB_NAME/$DUMP_KEY
+12
+13# Remove the dump file from disk
+14rm $DUMP_PATH
+For more information about taking PostgreSQL backups, checkout my previous post." />
+<meta name="keywords" content="postgresql,s3,devops,cron," />
+
+
+<meta property="og:url" content="http://localhost:1313/posts/periodic-backups-potsgresql-s3-cron/">
+  <meta property="og:site_name" content="Muhammad Azeez">
+  <meta property="og:title" content="Automatic periodic backups from PostgreSQL to S3 using Cron">
+  <meta property="og:description" content="If you’re managing your own databases you’ll need to make sure you database is backed up properly. A good option is to store your backups in an S3-compatible object storage.
+Install s3cmd: sudo apt install s3cmd Configure it: s3cmd --configure It will ask you several questions, consult your S3 providers docs for more information.
+Write a bash script to create a postgresql dump and upload it to S3: 1DIR=$(dirname &#34;${BASH_SOURCE[0]}&#34;) 2DB_NAME=my_db 3DUMP_PATH=&#34;$DIR/$DB_NAME_$(date &#43;&#34;%Y-%m-%d@%H-%M&#34;).dump&#34; 4 5# DUMP the database 6pg_dump --encoding utf8 --format c --compress 9 --file $DUMP_PATH $DB_NAME 7 8DUMP_KEY=$DUMP_PATH | cut -c 3- # Remove the ./ from the path 9 10# Upload the dump file to S3 11s3cmd put $DUMP_PATH s3://$DB_NAME-db-backups/$DB_NAME/$DUMP_KEY 12 13# Remove the dump file from disk 14rm $DUMP_PATH For more information about taking PostgreSQL backups, checkout my previous post.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-01-29T00:00:00+00:00">
+    <meta property="article:modified_time" content="2022-01-29T00:00:00+00:00">
+    <meta property="article:tag" content="Postgresql">
+    <meta property="article:tag" content="S3">
+    <meta property="article:tag" content="Devops">
+    <meta property="article:tag" content="Cron">
+    <meta property="og:image" content="http://localhost:1313/assets/images/cover.jpg">
+
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/assets/images/cover.jpg">
+  <meta name="twitter:title" content="Automatic periodic backups from PostgreSQL to S3 using Cron">
+  <meta name="twitter:description" content="If you’re managing your own databases you’ll need to make sure you database is backed up properly. A good option is to store your backups in an S3-compatible object storage.
+Install s3cmd: sudo apt install s3cmd Configure it: s3cmd --configure It will ask you several questions, consult your S3 providers docs for more information.
+Write a bash script to create a postgresql dump and upload it to S3: 1DIR=$(dirname &#34;${BASH_SOURCE[0]}&#34;) 2DB_NAME=my_db 3DUMP_PATH=&#34;$DIR/$DB_NAME_$(date &#43;&#34;%Y-%m-%d@%H-%M&#34;).dump&#34; 4 5# DUMP the database 6pg_dump --encoding utf8 --format c --compress 9 --file $DUMP_PATH $DB_NAME 7 8DUMP_KEY=$DUMP_PATH | cut -c 3- # Remove the ./ from the path 9 10# Upload the dump file to S3 11s3cmd put $DUMP_PATH s3://$DB_NAME-db-backups/$DB_NAME/$DUMP_KEY 12 13# Remove the dump file from disk 14rm $DUMP_PATH For more information about taking PostgreSQL backups, checkout my previous post.">
+
+
+
+
+  <meta itemprop="name" content="Automatic periodic backups from PostgreSQL to S3 using Cron">
+  <meta itemprop="description" content="If you’re managing your own databases you’ll need to make sure you database is backed up properly. A good option is to store your backups in an S3-compatible object storage.
+Install s3cmd: sudo apt install s3cmd Configure it: s3cmd --configure It will ask you several questions, consult your S3 providers docs for more information.
+Write a bash script to create a postgresql dump and upload it to S3: 1DIR=$(dirname &#34;${BASH_SOURCE[0]}&#34;) 2DB_NAME=my_db 3DUMP_PATH=&#34;$DIR/$DB_NAME_$(date &#43;&#34;%Y-%m-%d@%H-%M&#34;).dump&#34; 4 5# DUMP the database 6pg_dump --encoding utf8 --format c --compress 9 --file $DUMP_PATH $DB_NAME 7 8DUMP_KEY=$DUMP_PATH | cut -c 3- # Remove the ./ from the path 9 10# Upload the dump file to S3 11s3cmd put $DUMP_PATH s3://$DB_NAME-db-backups/$DB_NAME/$DUMP_KEY 12 13# Remove the dump file from disk 14rm $DUMP_PATH For more information about taking PostgreSQL backups, checkout my previous post.">
+  <meta itemprop="datePublished" content="2022-01-29T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2022-01-29T00:00:00+00:00">
+  <meta itemprop="wordCount" content="171">
+  <meta itemprop="image" content="http://localhost:1313/assets/images/cover.jpg">
+  <meta itemprop="keywords" content="Postgresql,S3,Devops,Cron">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #222;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background-color: #01242e;
+      --heading-color: #eee;
+      --text-color: #ddd;
+      --link-color: #8cc2dd;
+      --visited-color: #8b6fcb;
+      --blockquote-color: #ccc;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  time {
+    font-family: monospace;
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--blockquote-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+
+</style>
+<link rel="stylesheet" href="/assets/css/highlight.css">
+<link rel="stylesheet" href="/assets/css/override.css">
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+  <header><div class="site-brand site-brand--inline">
+  <a href="/" class="title">
+    <h2>Muhammad Azeez</h2>
+  </a>
+  <nav class="site-nav"><a href="/">Home</a>
+<a href="/about/">About</a>
+</nav>
+</div>
+</header>
+  <main>
+
+<content>
+  <p>If you&rsquo;re managing your own databases you&rsquo;ll need to make sure you database is backed up properly. A good option is to store your backups in an S3-compatible object storage.</p>
+<ol>
+<li>Install <code>s3cmd</code>:</li>
+</ol>
+<pre tabindex="0"><code>sudo apt install s3cmd
+</code></pre><ol start="2">
+<li>Configure it:</li>
+</ol>
+<pre tabindex="0"><code>s3cmd --configure
+</code></pre><p>It will ask you several questions, consult your S3 providers docs for more information.</p>
+<ol start="3">
+<li>Write a bash script to create a postgresql dump and upload it to S3:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span><span style="color:#bb60d5">DIR</span><span style="color:#666">=</span><span style="color:#007020;font-weight:bold">$(</span>dirname <span style="color:#4070a0">&#34;</span><span style="color:#70a0d0">${</span><span style="color:#bb60d5">BASH_SOURCE</span>[0]<span style="color:#70a0d0">}</span><span style="color:#4070a0">&#34;</span><span style="color:#007020;font-weight:bold">)</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span><span style="color:#bb60d5">DB_NAME</span><span style="color:#666">=</span>my_db
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span><span style="color:#bb60d5">DUMP_PATH</span><span style="color:#666">=</span><span style="color:#4070a0">&#34;</span><span style="color:#bb60d5">$DIR</span><span style="color:#4070a0">/</span><span style="color:#bb60d5">$DB_NAME_</span><span style="color:#007020;font-weight:bold">$(</span>date +<span style="color:#4070a0">&#34;%Y-%m-%d@%H-%M&#34;</span><span style="color:#007020;font-weight:bold">)</span><span style="color:#4070a0">.dump&#34;</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span><span style="color:#60a0b0;font-style:italic"># DUMP the database</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>pg_dump --encoding utf8 --format c --compress <span style="color:#40a070">9</span> --file <span style="color:#bb60d5">$DUMP_PATH</span> <span style="color:#bb60d5">$DB_NAME</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span><span style="color:#bb60d5">DUMP_KEY</span><span style="color:#666">=</span><span style="color:#bb60d5">$DUMP_PATH</span> | cut -c 3- <span style="color:#60a0b0;font-style:italic"># Remove the ./ from the path</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span><span style="color:#60a0b0;font-style:italic"># Upload the dump file to S3</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span>s3cmd put <span style="color:#bb60d5">$DUMP_PATH</span> s3://<span style="color:#bb60d5">$DB_NAME</span>-db-backups/<span style="color:#bb60d5">$DB_NAME</span>/<span style="color:#bb60d5">$DUMP_KEY</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span><span style="color:#60a0b0;font-style:italic"># Remove the dump file from disk</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14</span><span>rm <span style="color:#bb60d5">$DUMP_PATH</span>
+</span></span></code></pre></div><p>For more information about taking PostgreSQL backups, checkout <a href="https://mazeez.dev/posts/backup-and-restore-in-postgres">my previous post</a>.</p>
+<ol start="4">
+<li>Write a crontab job to run your script periodically:</li>
+</ol>
+<pre tabindex="0"><code>crontab -e
+</code></pre><pre tabindex="0"><code>0 */3 * * * path/to/your/script/job.sh
+</code></pre><p><strong>Note:</strong> This expression means the job will be run every 3 hours. You can change it to whatever your want.</p>
+
+</content>
+
+
+
+<p>
+  
+  <a href="http://localhost:1313/tags/postgresql/">#postgresql</a>
+
+  
+  <a href="http://localhost:1313/tags/s3/">#s3</a>
+
+  
+  <a href="http://localhost:1313/tags/devops/">#devops</a>
+
+  
+  <a href="http://localhost:1313/tags/cron/">#cron</a>
+
+  
+</p>
+
+
+
+<section class="related-posts">
+  <h3>Keep reading</h3>
+  <ul>
+    
+    <li>
+      <a href="http://localhost:1313/posts/planetscale-vs-hetzner-postgres/">Comparing PlanetScale PostgreSQL with Hetzner Local Postgres</a>
+      <span class="related-posts__date">
+        13 Nov, 2025
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/pg-trgm-similarity-search-and-fast-like/">String similarity search and fast LIKE operator using pg_trgm</a>
+      <span class="related-posts__date">
+        12 May, 2021
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/backup-and-restore-in-postgres/">Backing up and restoring databases in Postgres</a>
+      <span class="related-posts__date">
+        01 Apr, 2021
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/update-sideloaded-uwp-2/">&#39;Enabling automatic updates for sideloaded UWP apps: Multiple update channels&#39;</a>
+      <span class="related-posts__date">
+        25 Apr, 2020
+      </span>
+    </li>
+    
+  </ul>
+</section>
+
+
+  </main>
+  <footer><div class="footer-links">
+  <a href="/">Home</a> · <a href="/about/">About</a>
+</div>
+<div class="footer-credit">Made with <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a></div>
+</footer>
+
+  
+</body>
+
+</html>

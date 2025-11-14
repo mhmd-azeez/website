@@ -1,0 +1,42 @@
+{{ define "main" }}
+<content>
+  {{ with .Content }}
+    {{ . }}
+  {{ end }}
+  {{ $posts := where .Site.RegularPages "Section" "posts" }}
+  {{ $currentYear := "" }}
+  <ul class="blog-posts">
+    {{ range $posts.ByDate.Reverse }}
+      {{ $year := .Date.Format "2006" }}
+      {{ if ne $year $currentYear }}
+        {{ if ne $currentYear "" }}
+          </ul>
+          <div class="year-spacer" aria-hidden="true"></div>
+          <ul class="blog-posts">
+        {{ end }}
+        <li class="year-heading"><span>{{ $year }}</span></li>
+        {{ $currentYear = $year }}
+      {{ end }}
+    <li>
+      <span>
+        <i>
+          <time datetime='{{ .Date.Format "2006-01-02" }}'>
+            {{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}
+          </time>
+        </i>
+      </span>
+      <a href="{{ .Permalink }}">{{ .Title }}</a>
+    </li>
+    {{ else }}
+    <li>No posts yet</li>
+    {{ end }}
+  </ul>
+  <small>
+    <div>
+      {{ range .Site.Taxonomies.tags }}
+      {{ partial "tag_link.html" .Page }}&nbsp;
+      {{ end }}
+    </div>
+  </small>
+</content>
+{{ end }}

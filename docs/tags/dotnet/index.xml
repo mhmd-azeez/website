@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Dotnet on Muhammad Azeez</title>
+    <link>http://localhost:1313/tags/dotnet/</link>
+    <description>Recent content in Dotnet on Muhammad Azeez</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 16 Nov 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/dotnet/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Isomorphic .NET Support in Extism</title>
+      <link>http://localhost:1313/posts/isomorphic-dotnet/</link>
+      <pubDate>Thu, 16 Nov 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/isomorphic-dotnet/</guid>
+      <description>&lt;p&gt;In the early days of computing, software was pretty much locked into specific hardware setups. Then came operating systems, providing a layer of abstraction over the hardware. However, that still didn’t quite cut it. Businesses wanted to write their apps once and have them work on all sorts of platforms. This demand gave birth to higher-level languages that brought along their own runtimes, making it possible for software to run seamlessly on different operating systems.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>How to include folders as link recursively in csproj files</title>
+      <link>http://localhost:1313/posts/csproj-include-folders-recursively/</link>
+      <pubDate>Tue, 13 Oct 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/csproj-include-folders-recursively/</guid>
+      <description>&lt;p&gt;Suppose we have a folder called &lt;code&gt;dependencies&lt;/code&gt; with this structure:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt; - dependencies&#xA;   - child-folder&#xA;     - file.txt&#xA;     - file2.txt&#xA;   - file3.txt&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you want to add the entire folder as link and preserve the directory structure, you can use this inside your &lt;code&gt;.csproj&lt;/code&gt; file:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;&amp;lt;ItemGroup&amp;gt;&#xA;    &amp;lt;None Include=&amp;#34;..\dependencies\**\*&amp;#34;&amp;gt;&#xA;      &amp;lt;Link&amp;gt;dependencies\%(RecursiveDir)/%(FileName)%(Extension)&amp;lt;/Link&amp;gt;&#xA;      &amp;lt;CopyToOutputDirectory&amp;gt;PreserveNewest&amp;lt;/CopyToOutputDirectory&amp;gt;&#xA;    &amp;lt;/None&amp;gt;&#xA;&amp;lt;/ItemGroup&amp;gt;&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will include &lt;code&gt;dependencies&lt;/code&gt; folder inside your project along with all of its child folder and files.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Debugging native library dependencies on Linux</title>
+      <link>http://localhost:1313/posts/debugging-native-library-dependencies-linux/</link>
+      <pubDate>Sat, 04 Apr 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/debugging-native-library-dependencies-linux/</guid>
+      <description>&lt;p&gt;.NET Core apps can run on a number of operating systems. When using purely .NET libraries, deployment is a breeze. However, if you&amp;rsquo;re using a library that wraps a native (C/C++) library, then you might have come across this error message when trying to run your app on Linux:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;System.TypeInitializationException: The type initializer for &amp;#39;DlibDotNet.NativeMethods&amp;#39; threw an exception.&#xA; ---&amp;gt; System.DllNotFoundException: Unable to load shared library &amp;#39;DlibDotNetNativeDnn&amp;#39; or one of its dependencies. In order to help diagnose loading problems, consider setting the LD_DEBUG environment variable: libDlibDotNetNativeDnn: cannot open shared object file: No such file or directory&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This tells us that either &lt;code&gt;libDlibDotNetNativeDnn.so&lt;/code&gt; doesn&amp;rsquo;t exist (which in my case it did), or it has some other native dependencies that are missing.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

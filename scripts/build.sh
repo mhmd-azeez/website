@@ -1,19 +1,10 @@
-BASEDIR=$(dirname "$0")
+#!/usr/bin/env bash
+set -euo pipefail
 
-echo "Installing .NET Core 2.1 SDK..."
-wget -q https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh
-chmod +x ./dotnet-install.sh
-./dotnet-install.sh -Channel 2.1 > /dev/null 2>&1 # Install .NET quitely
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT_DIR"
 
-echo "Installing Wyam..."
-wget -q https://github.com/Wyamio/Wyam/releases/download/v2.2.9/Wyam-v2.2.9.zip
-unzip -q Wyam-v2.2.9.zip -d wyam
+echo "Building site with Hugo..."
+hugo --minify
 
-mkdir -p $BASEDIR/../docs
-
-echo "Builiding website..."
-dotnet ./wyam/Wyam.dll --output $BASEDIR/../docs
-
-echo "Done :)"
-
-ls -la $BASEDIR/../docs
+echo "Build artifacts written to $(realpath docs)"

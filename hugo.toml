@@ -1,0 +1,44 @@
+baseURL = "https://mazeez.dev/"
+title = "Muhammad Azeez"
+languageCode = "en-us"
+theme = "hugo-bearblog"
+publishDir = "docs"
+[pagination]
+  pagerSize = 10
+author = "Muhammad Azeez"
+enableRobotsTXT = true
+disqusShortname = "mazeez"
+
+[permalinks]
+  posts = "/posts/:slug/"
+
+[params]
+  description = "A blog about software engineering and beyond!"
+  favicon = "/favicon.ico"
+  images = ["/assets/images/cover.jpg"]
+
+[menu]
+  [[menu.main]]
+    name = "About"
+    identifier = "about"
+    url = "/about/"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    style = "friendly"
+    lineNos = true
+    lineNumbersInTable = false
+
+[related]
+  threshold = 0
+  includeNewer = true
+  toLower = true
+  [[related.indices]]
+    name = "tags"
+    weight = 100
+  [[related.indices]]
+    name = "date"
+    weight = 10

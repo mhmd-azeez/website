@@ -1,0 +1,7 @@
+[build.environment]
+HUGO_VERSION = "0.152.2"
+HUGO_EXTENDED = "true"
+
+[build]
+publish = "docs"
+command = "hugo --gc --minify --baseURL \"${URL}\""

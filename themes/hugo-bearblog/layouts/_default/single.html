@@ -1,0 +1,42 @@
+{{ define "main" }}
+{{ if eq .Type "blog" }}{{ if not .Params.menu }}
+<h1>{{ .Title }}</h1>
+<p>
+  <i>
+    <time datetime='{{ .Date.Format "2006-01-02" }}'>
+      {{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}
+    </time>
+  </i>
+</p>
+{{ end }}{{ end }}
+<content>
+  {{ .Content }}
+</content>
+
+{{ if eq .Type "blog" }}{{ if (.Param "enablePostNavigator")}}
+{{- partial "post_navigator.html" . -}}
+{{ end }}{{ end }}
+
+<p>
+  {{ range (.GetTerms "tags") }}
+  {{ partial "tag_link.html" . }}
+  {{ end }}
+</p>
+
+{{ $related := (.Site.RegularPages.Related .) | first 4 }}
+{{ if $related }}
+<section class="related-posts">
+  <h3>Keep reading</h3>
+  <ul>
+    {{ range $related }}
+    <li>
+      <a href="{{ .Permalink }}">{{ .Title }}</a>
+      <span class="related-posts__date">
+        {{ .Date.Format (default "02 Jan, 2006" $.Site.Params.dateFormat) }}
+      </span>
+    </li>
+    {{ end }}
+  </ul>
+</section>
+{{ end }}
+{{ end }}

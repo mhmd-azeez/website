@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Code-Signing on Muhammad Azeez</title>
+    <link>http://localhost:1313/tags/code-signing/</link>
+    <description>Recent content in Code-Signing on Muhammad Azeez</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 16 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/code-signing/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Getting a code signing certificate for a company in Iraq</title>
+      <link>http://localhost:1313/posts/code-signing-certificate-iraq/</link>
+      <pubDate>Thu, 16 Apr 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/code-signing-certificate-iraq/</guid>
+      <description>&lt;p&gt;If your company is based in one of the developed countries, chances are you won&amp;rsquo;t have much of a problem. It would take a week at most to get a code signing certificate. However, If your company is based in a country like Iraq, which doesn&amp;rsquo;t have an up-to-date online-accessible list of its companies, then you are going to have a harder time. Fortunately, this guide makes the process much easier and faster. The documents might vary by country, but the certificate authority support team will help you go through the process.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

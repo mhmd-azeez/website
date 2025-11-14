@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" />
+<title>Mocking Authentication and Authorization in ASP.NET Core Integration Tests | Muhammad Azeez</title>
+<meta name="title" content="Mocking Authentication and Authorization in ASP.NET Core Integration Tests" />
+<meta name="description" content="ASP.NET Core makes writing integration tests very easy and even fun. One aspect that might be a bit tough to figure out is authentication and authorization. We might want to run integration tests under different users and different roles.
+To get started, let&rsquo;s assume we have an endpoint like this:
+1app.MapGet(&#34;hi&#34;, (HttpContext httpContext) =&gt;
+2{
+3    var userId = httpContext.User?.Claims?.FirstOrDefault(c =&gt; c.Type == ClaimTypes.NameIdentifier)?.Value;
+4
+5    return $&#34;Hello #{userId}&#34;;
+6}).RequireAuthorization();
+It&rsquo;s a very simple endpoint. It gets the currently logged in user&rsquo;s ID and says hello to them." />
+<meta name="keywords" content="aspnet,auth,testing," />
+
+
+<meta property="og:url" content="http://localhost:1313/posts/auth-in-integration-tests/">
+  <meta property="og:site_name" content="Muhammad Azeez">
+  <meta property="og:title" content="Mocking Authentication and Authorization in ASP.NET Core Integration Tests">
+  <meta property="og:description" content="ASP.NET Core makes writing integration tests very easy and even fun. One aspect that might be a bit tough to figure out is authentication and authorization. We might want to run integration tests under different users and different roles.
+To get started, let’s assume we have an endpoint like this:
+1app.MapGet(&#34;hi&#34;, (HttpContext httpContext) =&gt; 2{ 3 var userId = httpContext.User?.Claims?.FirstOrDefault(c =&gt; c.Type == ClaimTypes.NameIdentifier)?.Value; 4 5 return $&#34;Hello #{userId}&#34;; 6}).RequireAuthorization(); It’s a very simple endpoint. It gets the currently logged in user’s ID and says hello to them.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2021-12-12T00:00:00+00:00">
+    <meta property="article:modified_time" content="2021-12-12T00:00:00+00:00">
+    <meta property="article:tag" content="Aspnet">
+    <meta property="article:tag" content="Auth">
+    <meta property="article:tag" content="Testing">
+    <meta property="og:image" content="http://localhost:1313/assets/images/cover.jpg">
+
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/assets/images/cover.jpg">
+  <meta name="twitter:title" content="Mocking Authentication and Authorization in ASP.NET Core Integration Tests">
+  <meta name="twitter:description" content="ASP.NET Core makes writing integration tests very easy and even fun. One aspect that might be a bit tough to figure out is authentication and authorization. We might want to run integration tests under different users and different roles.
+To get started, let’s assume we have an endpoint like this:
+1app.MapGet(&#34;hi&#34;, (HttpContext httpContext) =&gt; 2{ 3 var userId = httpContext.User?.Claims?.FirstOrDefault(c =&gt; c.Type == ClaimTypes.NameIdentifier)?.Value; 4 5 return $&#34;Hello #{userId}&#34;; 6}).RequireAuthorization(); It’s a very simple endpoint. It gets the currently logged in user’s ID and says hello to them.">
+
+
+
+
+  <meta itemprop="name" content="Mocking Authentication and Authorization in ASP.NET Core Integration Tests">
+  <meta itemprop="description" content="ASP.NET Core makes writing integration tests very easy and even fun. One aspect that might be a bit tough to figure out is authentication and authorization. We might want to run integration tests under different users and different roles.
+To get started, let’s assume we have an endpoint like this:
+1app.MapGet(&#34;hi&#34;, (HttpContext httpContext) =&gt; 2{ 3 var userId = httpContext.User?.Claims?.FirstOrDefault(c =&gt; c.Type == ClaimTypes.NameIdentifier)?.Value; 4 5 return $&#34;Hello #{userId}&#34;; 6}).RequireAuthorization(); It’s a very simple endpoint. It gets the currently logged in user’s ID and says hello to them.">
+  <meta itemprop="datePublished" content="2021-12-12T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2021-12-12T00:00:00+00:00">
+  <meta itemprop="wordCount" content="614">
+  <meta itemprop="image" content="http://localhost:1313/assets/images/cover.jpg">
+  <meta itemprop="keywords" content="Aspnet,Auth,Testing">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #222;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background-color: #01242e;
+      --heading-color: #eee;
+      --text-color: #ddd;
+      --link-color: #8cc2dd;
+      --visited-color: #8b6fcb;
+      --blockquote-color: #ccc;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  time {
+    font-family: monospace;
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--blockquote-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+
+</style>
+<link rel="stylesheet" href="/assets/css/highlight.css">
+<link rel="stylesheet" href="/assets/css/override.css">
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+  <header><div class="site-brand site-brand--inline">
+  <a href="/" class="title">
+    <h2>Muhammad Azeez</h2>
+  </a>
+  <nav class="site-nav"><a href="/">Home</a>
+<a href="/about/">About</a>
+</nav>
+</div>
+</header>
+  <main>
+
+<content>
+  <p>ASP.NET Core makes writing integration tests very easy and even fun. One aspect that might be a bit tough to figure out is authentication and authorization. We might want to run integration tests under different users and different roles.</p>
+<p>To get started, let&rsquo;s assume we have an endpoint like this:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cs" data-lang="cs"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>app.MapGet(<span style="color:#4070a0">&#34;hi&#34;</span>, (HttpContext httpContext) =&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span>{
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span>    <span style="color:#902000">var</span> userId = httpContext.User?.Claims?.FirstOrDefault(c =&gt; c.Type == ClaimTypes.NameIdentifier)?.Value;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5</span><span>    <span style="color:#007020;font-weight:bold">return</span> <span style="color:#4070a0">$&#34;Hello #{userId}&#34;</span>;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6</span><span>}).RequireAuthorization();
+</span></span></code></pre></div><p>It&rsquo;s a very simple endpoint. It gets the currently logged in user&rsquo;s ID and says hello to them.</p>
+<p>To make it possible to mock auth, we have to register a custom <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authentication.authenticationhandler-1?view=aspnetcore-6.0"><code>AuthenticationHandler</code></a>.</p>
+<p>Here is a simple implementation of a mock Authentication Handler:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cs" data-lang="cs"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span><span style="color:#007020;font-weight:bold">public</span> <span style="color:#007020;font-weight:bold">class</span> <span style="color:#0e84b5;font-weight:bold">TestAuthHandlerOptions</span> : AuthenticationSchemeOptions
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span>{
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span>    <span style="color:#007020;font-weight:bold">public</span> <span style="color:#902000">string</span> DefaultUserId { <span style="color:#007020;font-weight:bold">get</span>; <span style="color:#007020;font-weight:bold">set</span>; } = <span style="color:#007020;font-weight:bold">null</span>!;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>}
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span><span style="color:#007020;font-weight:bold">public</span> <span style="color:#007020;font-weight:bold">class</span> <span style="color:#0e84b5;font-weight:bold">TestAuthHandler</span> : AuthenticationHandler&lt;TestAuthHandlerOptions&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>{
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>    <span style="color:#007020;font-weight:bold">public</span> <span style="color:#007020;font-weight:bold">const</span> <span style="color:#902000">string</span> UserId = <span style="color:#4070a0">&#34;UserId&#34;</span>;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>    <span style="color:#007020;font-weight:bold">public</span> <span style="color:#007020;font-weight:bold">const</span> <span style="color:#902000">string</span> AuthenticationScheme = <span style="color:#4070a0">&#34;Test&#34;</span>;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span>    <span style="color:#007020;font-weight:bold">private</span> <span style="color:#007020;font-weight:bold">readonly</span> <span style="color:#902000">string</span> _defaultUserId;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span>    <span style="color:#007020;font-weight:bold">public</span> TestAuthHandler(
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14</span><span>        IOptionsMonitor&lt;TestAuthHandlerOptions&gt; options,
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15</span><span>        ILoggerFactory logger,
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16</span><span>        UrlEncoder encoder,
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17</span><span>        ISystemClock clock) : <span style="color:#007020;font-weight:bold">base</span>(options, logger, encoder, clock)
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18</span><span>    {
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19</span><span>        _defaultUserId = options.CurrentValue.DefaultUserId;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20</span><span>    }
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22</span><span>    <span style="color:#007020;font-weight:bold">protected</span> <span style="color:#007020;font-weight:bold">override</span> Task&lt;AuthenticateResult&gt; HandleAuthenticateAsync()
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23</span><span>    {
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24</span><span>        <span style="color:#902000">var</span> claims = <span style="color:#007020;font-weight:bold">new</span> List&lt;Claim&gt; { <span style="color:#007020;font-weight:bold">new</span> Claim(ClaimTypes.Name, <span style="color:#4070a0">&#34;Test user&#34;</span>) };
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26</span><span>        <span style="color:#60a0b0;font-style:italic">// Extract User ID from the request headers if it exists,</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27</span><span>        <span style="color:#60a0b0;font-style:italic">// otherwise use the default User ID from the options.</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28</span><span>        <span style="color:#007020;font-weight:bold">if</span> (Context.Request.Headers.TryGetValue(UserId, <span style="color:#007020;font-weight:bold">out</span> <span style="color:#902000">var</span> userId))
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29</span><span>        {
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30</span><span>            claims.Add(<span style="color:#007020;font-weight:bold">new</span> Claim(ClaimTypes.NameIdentifier, userId[<span style="color:#40a070">0</span>]));
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31</span><span>        }
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32</span><span>        <span style="color:#007020;font-weight:bold">else</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33</span><span>        {
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34</span><span>            claims.Add(<span style="color:#007020;font-weight:bold">new</span> Claim(ClaimTypes.NameIdentifier, _defaultUserId));
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35</span><span>        }
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37</span><span>        <span style="color:#60a0b0;font-style:italic">// TODO: Add as many claims as you need here</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39</span><span>        <span style="color:#902000">var</span> identity = <span style="color:#007020;font-weight:bold">new</span> ClaimsIdentity(claims, AuthenticationScheme);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40</span><span>        <span style="color:#902000">var</span> principal = <span style="color:#007020;font-weight:bold">new</span> ClaimsPrincipal(identity);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41</span><span>        <span style="color:#902000">var</span> ticket = <span style="color:#007020;font-weight:bold">new</span> AuthenticationTicket(principal, AuthenticationScheme);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43</span><span>        <span style="color:#902000">var</span> result = AuthenticateResult.Success(ticket);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45</span><span>        <span style="color:#007020;font-weight:bold">return</span> Task.FromResult(result);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46</span><span>    }
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47</span><span>}
+</span></span></code></pre></div><p>The basic idea is this: by default authenticate every request with user id provided in the <code>TestAuthHandlerOptions</code>. If a test wants to send a request under on behalf of a different user, they can do so by sending the user ID in the <code>UserId</code> header of the HTTP request.</p>
+<p>We also need to create a custom WebApplicationFactory that takes advantage of our mock Authentication Handler:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cs" data-lang="cs"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span><span style="color:#007020;font-weight:bold">public</span> <span style="color:#007020;font-weight:bold">class</span> <span style="color:#0e84b5;font-weight:bold">WebAppFactory</span> : WebApplicationFactory&lt;Program&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span>{
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span>    <span style="color:#007020;font-weight:bold">public</span> <span style="color:#902000">string</span> DefaultUserId { <span style="color:#007020;font-weight:bold">get</span>; <span style="color:#007020;font-weight:bold">set</span>; } = <span style="color:#4070a0">&#34;1&#34;</span>;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span>    <span style="color:#007020;font-weight:bold">protected</span> <span style="color:#007020;font-weight:bold">override</span> <span style="color:#007020;font-weight:bold">void</span> ConfigureWebHost(IWebHostBuilder builder)
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>    {
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>        builder.ConfigureTestServices(services =&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>        {
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>            services.Configure&lt;TestAuthHandlerOptions&gt;(options =&gt; options.DefaultUserId = DefaultUserId);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span>            services.AddAuthentication(TestAuthHandler.AuthenticationScheme)
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>                .AddScheme&lt;TestAuthHandlerOptions, TestAuthHandler&gt;(TestAuthHandler.AuthenticationScheme, options =&gt; { });
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span>        });
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14</span><span>    }
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15</span><span>}
+</span></span></code></pre></div><p>We have defined a <code>DefaultUserId</code> property on the factory so that the individual test fixtures can specify their own default user ID.</p>
+<p>And we can use the mock authentication in the test cases like this:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cs" data-lang="cs"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span><span style="color:#007020;font-weight:bold">public</span> <span style="color:#007020;font-weight:bold">class</span> <span style="color:#0e84b5;font-weight:bold">SimpleTest</span> : IClassFixture&lt;WebAppFactory&gt;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span>{
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span>    <span style="color:#007020;font-weight:bold">private</span> HttpClient _httpClient;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span>    <span style="color:#007020;font-weight:bold">public</span> SimpleTest(WebAppFactory factory)
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>    {
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>        factory.DefaultUserId = <span style="color:#4070a0">&#34;5&#34;</span>;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>        _httpClient = factory.CreateClient();
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>        _httpClient.BaseAddress = <span style="color:#007020;font-weight:bold">new</span> Uri(<span style="color:#4070a0">&#34;https://localhost/&#34;</span>);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span>        <span style="color:#60a0b0;font-style:italic">// Use our mock Auth scheme </span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>        _httpClient.DefaultRequestHeaders.Authorization = <span style="color:#007020;font-weight:bold">new</span> AuthenticationHeaderValue(<span style="color:#4070a0">&#34;Test&#34;</span>);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span>    }
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14</span><span><span style="color:#4070a0">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15</span><span><span style="color:#4070a0">    [Fact]</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16</span><span>    <span style="color:#007020;font-weight:bold">public</span> <span style="color:#007020;font-weight:bold">async</span> Task SayHiToNumber5()
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17</span><span>    {
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18</span><span>        _httpClient.DefaultRequestHeaders.Remove(TestAuthHandler.UserId);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20</span><span>        <span style="color:#902000">var</span> response = <span style="color:#007020;font-weight:bold">await</span> _httpClient.GetStringAsync(<span style="color:#4070a0">&#34;hi&#34;</span>);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21</span><span>        Assert.Equal(<span style="color:#4070a0">&#34;Hello #5&#34;</span>, response);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22</span><span>    }
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23</span><span><span style="color:#4070a0">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24</span><span><span style="color:#4070a0">    [Fact]</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25</span><span>    <span style="color:#007020;font-weight:bold">public</span> <span style="color:#007020;font-weight:bold">async</span> Task SayHiToNumber1()
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26</span><span>    {
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27</span><span>        _httpClient.DefaultRequestHeaders.Add(TestAuthHandler.UserId, <span style="color:#4070a0">&#34;1&#34;</span>);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29</span><span>        <span style="color:#902000">var</span> response = <span style="color:#007020;font-weight:bold">await</span> _httpClient.GetStringAsync(<span style="color:#4070a0">&#34;hi&#34;</span>);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30</span><span>        Assert.Equal(<span style="color:#4070a0">&#34;Hello #1&#34;</span>, response);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31</span><span>    }
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32</span><span><span style="color:#4070a0">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33</span><span><span style="color:#4070a0">    [Fact]</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34</span><span>    <span style="color:#007020;font-weight:bold">public</span> <span style="color:#007020;font-weight:bold">async</span> Task SayHiToNumber3()
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35</span><span>    {
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36</span><span>        _httpClient.DefaultRequestHeaders.Add(TestAuthHandler.UserId, <span style="color:#4070a0">&#34;3&#34;</span>);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38</span><span>        <span style="color:#902000">var</span> response = <span style="color:#007020;font-weight:bold">await</span> _httpClient.GetStringAsync(<span style="color:#4070a0">&#34;hi&#34;</span>);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39</span><span>        Assert.Equal(<span style="color:#4070a0">&#34;Hello #3&#34;</span>, response);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40</span><span>    }
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41</span><span>}
+</span></span></code></pre></div><p>And that&rsquo;s it! With a few lines of code, you now have a flexible mock authentication scheme that you can use in your tests. You can also customize it to match your needs.</p>
+<p>You can download the source code on <a href="https://github.com/mhmd-azeez/IntegrationTestAuth">GitHub</a>.</p>
+
+</content>
+
+
+
+<p>
+  
+  <a href="http://localhost:1313/tags/aspnet/">#aspnet</a>
+
+  
+  <a href="http://localhost:1313/tags/auth/">#auth</a>
+
+  
+  <a href="http://localhost:1313/tags/testing/">#testing</a>
+
+  
+</p>
+
+
+
+<section class="related-posts">
+  <h3>Keep reading</h3>
+  <ul>
+    
+    <li>
+      <a href="http://localhost:1313/posts/email-snapshot-testing/">Testing Email Templates in ASP.NET Core</a>
+      <span class="related-posts__date">
+        09 Dec, 2021
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/asp-net-core-api-auth0/">Securing ASP.NET Core APIs using Auth0</a>
+      <span class="related-posts__date">
+        09 Oct, 2021
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/asp-net-core-api-checklist/">ASP.NET Core API Checklist</a>
+      <span class="related-posts__date">
+        13 Jun, 2021
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/aspnet-on-linux-1/">Running ASP.NET Core on Linux Part 1</a>
+      <span class="related-posts__date">
+        07 Apr, 2020
+      </span>
+    </li>
+    
+  </ul>
+</section>
+
+
+  </main>
+  <footer><div class="footer-links">
+  <a href="/">Home</a> · <a href="/about/">About</a>
+</div>
+<div class="footer-credit">Made with <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a></div>
+</footer>
+
+  
+</body>
+
+</html>

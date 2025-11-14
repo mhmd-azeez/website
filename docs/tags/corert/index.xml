@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Corert on Muhammad Azeez</title>
+    <link>http://localhost:1313/tags/corert/</link>
+    <description>Recent content in Corert on Muhammad Azeez</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 03 May 2019 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/corert/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Writing Native Libraries in C# and using them in other languages</title>
+      <link>http://localhost:1313/posts/writing-native-libraries-in-csharp/</link>
+      <pubDate>Fri, 03 May 2019 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/writing-native-libraries-in-csharp/</guid>
+      <description>&lt;blockquote&gt;&#xA;&lt;p&gt;Note: Stefan Hausotte has ported &lt;a href=&#34;https://secanablog.wordpress.com/2020/02/01/writing-a-native-library-in-f-which-can-be-called-from-c/&#34;&gt;this little experiment to F#&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;Recently I stumbled upon &lt;a href=&#34;https://medium.com/@MStrehovsky/fight-the-global-warming-compile-your-c-apps-ahead-of-time-9997e953645b&#34;&gt;this article&lt;/a&gt; from &lt;a href=&#34;https://twitter.com/MStrehovsky&#34;&gt;Michal Strehovsky&lt;/a&gt;. It was a great introduction to CoreRT, it made me curious, can you write native libraries with CoreRT? and the answer was Yes!&lt;/p&gt;&#xA;&lt;?# Twitter 1123859217654460424 /?&gt;&#xA;&lt;p&gt;I have a little library that I want to be available for multiple languages, so I was quite interested in it. So I tried out the &lt;a href=&#34;https://github.com/dotnet/corert/tree/master/samples/NativeLibrary&#34;&gt;official sample&lt;/a&gt; and was delighted with the results.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

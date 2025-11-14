@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" />
+<title>Backing up and restoring databases in Postgres | Muhammad Azeez</title>
+<meta name="title" content="Backing up and restoring databases in Postgres" />
+<meta name="description" content="To get a dump of a database you can use pg_dump or pg_dumpall for dumping an entire cluster. It supports 4 formats:
+
+  
+      
+          Format
+          Description
+          Restore via
+      
+  
+  
+      
+          plain
+          Output a plain-text SQL script file (the default).
+          psql
+      
+      
+          custom
+          Output a custom-format archive suitable for input into pg_restore. Together with the directory output format, this is the most flexible output format in that it allows manual selection and reordering of archived items during restore. This format is also compressed by default.
+          pg_restore
+      
+      
+          directory
+          Output a directory-format archive suitable for input into pg_restore. This will create a directory with one file for each table and blob being dumped, plus a so-called Table of Contents file describing the dumped objects in a machine-readable format that pg_restore can read. A directory format archive can be manipulated with standard Unix tools; for example, files in an uncompressed archive can be compressed with the gzip tool. This format is compressed by default.
+          pg_restore
+      
+      
+          tar
+          Output a tar-format archive suitable for input into pg_restore. The tar format is compatible with the directory format: extracting a tar-format archive produces a valid directory-format archive. However, the tar format does not support compression. Also, when using tar format the relative order of table data items cannot be changed during restore.
+          pg_restore
+      
+  
+
+How to backup a database
+To create a dump of sample-db in custom format and save it to sample-db.dump:" />
+<meta name="keywords" content="postgresql,pg_dump,pg_restore,psql," />
+
+
+<meta property="og:url" content="http://localhost:1313/posts/backup-and-restore-in-postgres/">
+  <meta property="og:site_name" content="Muhammad Azeez">
+  <meta property="og:title" content="Backing up and restoring databases in Postgres">
+  <meta property="og:description" content="To get a dump of a database you can use pg_dump or pg_dumpall for dumping an entire cluster. It supports 4 formats:
+Format Description Restore via plain Output a plain-text SQL script file (the default). psql custom Output a custom-format archive suitable for input into pg_restore. Together with the directory output format, this is the most flexible output format in that it allows manual selection and reordering of archived items during restore. This format is also compressed by default. pg_restore directory Output a directory-format archive suitable for input into pg_restore. This will create a directory with one file for each table and blob being dumped, plus a so-called Table of Contents file describing the dumped objects in a machine-readable format that pg_restore can read. A directory format archive can be manipulated with standard Unix tools; for example, files in an uncompressed archive can be compressed with the gzip tool. This format is compressed by default. pg_restore tar Output a tar-format archive suitable for input into pg_restore. The tar format is compatible with the directory format: extracting a tar-format archive produces a valid directory-format archive. However, the tar format does not support compression. Also, when using tar format the relative order of table data items cannot be changed during restore. pg_restore How to backup a database To create a dump of sample-db in custom format and save it to sample-db.dump:">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2021-04-01T00:00:00+00:00">
+    <meta property="article:modified_time" content="2021-04-01T00:00:00+00:00">
+    <meta property="article:tag" content="Postgresql">
+    <meta property="article:tag" content="Pg_dump">
+    <meta property="article:tag" content="Pg_restore">
+    <meta property="article:tag" content="Psql">
+    <meta property="og:image" content="http://localhost:1313/assets/images/cover.jpg">
+
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/assets/images/cover.jpg">
+  <meta name="twitter:title" content="Backing up and restoring databases in Postgres">
+  <meta name="twitter:description" content="To get a dump of a database you can use pg_dump or pg_dumpall for dumping an entire cluster. It supports 4 formats:
+Format Description Restore via plain Output a plain-text SQL script file (the default). psql custom Output a custom-format archive suitable for input into pg_restore. Together with the directory output format, this is the most flexible output format in that it allows manual selection and reordering of archived items during restore. This format is also compressed by default. pg_restore directory Output a directory-format archive suitable for input into pg_restore. This will create a directory with one file for each table and blob being dumped, plus a so-called Table of Contents file describing the dumped objects in a machine-readable format that pg_restore can read. A directory format archive can be manipulated with standard Unix tools; for example, files in an uncompressed archive can be compressed with the gzip tool. This format is compressed by default. pg_restore tar Output a tar-format archive suitable for input into pg_restore. The tar format is compatible with the directory format: extracting a tar-format archive produces a valid directory-format archive. However, the tar format does not support compression. Also, when using tar format the relative order of table data items cannot be changed during restore. pg_restore How to backup a database To create a dump of sample-db in custom format and save it to sample-db.dump:">
+
+
+
+
+  <meta itemprop="name" content="Backing up and restoring databases in Postgres">
+  <meta itemprop="description" content="To get a dump of a database you can use pg_dump or pg_dumpall for dumping an entire cluster. It supports 4 formats:
+Format Description Restore via plain Output a plain-text SQL script file (the default). psql custom Output a custom-format archive suitable for input into pg_restore. Together with the directory output format, this is the most flexible output format in that it allows manual selection and reordering of archived items during restore. This format is also compressed by default. pg_restore directory Output a directory-format archive suitable for input into pg_restore. This will create a directory with one file for each table and blob being dumped, plus a so-called Table of Contents file describing the dumped objects in a machine-readable format that pg_restore can read. A directory format archive can be manipulated with standard Unix tools; for example, files in an uncompressed archive can be compressed with the gzip tool. This format is compressed by default. pg_restore tar Output a tar-format archive suitable for input into pg_restore. The tar format is compatible with the directory format: extracting a tar-format archive produces a valid directory-format archive. However, the tar format does not support compression. Also, when using tar format the relative order of table data items cannot be changed during restore. pg_restore How to backup a database To create a dump of sample-db in custom format and save it to sample-db.dump:">
+  <meta itemprop="datePublished" content="2021-04-01T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2021-04-01T00:00:00+00:00">
+  <meta itemprop="wordCount" content="466">
+  <meta itemprop="image" content="http://localhost:1313/assets/images/cover.jpg">
+  <meta itemprop="keywords" content="Postgresql,Pg_dump,Pg_restore,Psql">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #222;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background-color: #01242e;
+      --heading-color: #eee;
+      --text-color: #ddd;
+      --link-color: #8cc2dd;
+      --visited-color: #8b6fcb;
+      --blockquote-color: #ccc;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  time {
+    font-family: monospace;
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--blockquote-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+
+</style>
+<link rel="stylesheet" href="/assets/css/highlight.css">
+<link rel="stylesheet" href="/assets/css/override.css">
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+  <header><div class="site-brand site-brand--inline">
+  <a href="/" class="title">
+    <h2>Muhammad Azeez</h2>
+  </a>
+  <nav class="site-nav"><a href="/">Home</a>
+<a href="/about/">About</a>
+</nav>
+</div>
+</header>
+  <main>
+
+<content>
+  <p>To get a dump of a database you can use <code>pg_dump</code> or <code>pg_dumpall</code> for dumping an entire cluster. It <a href="https://www.postgresql.org/docs/9.1/app-pgdump.html">supports 4 formats</a>:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Format</th>
+          <th>Description</th>
+          <th>Restore via</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>plain</code></td>
+          <td>Output a plain-text SQL script file (the default).</td>
+          <td><code>psql</code></td>
+      </tr>
+      <tr>
+          <td><code>custom</code></td>
+          <td>Output a custom-format archive suitable for input into pg_restore. Together with the directory output format, this is the most flexible output format in that it allows manual selection and reordering of archived items during restore. This format is also compressed by default.</td>
+          <td><code>pg_restore</code></td>
+      </tr>
+      <tr>
+          <td><code>directory</code></td>
+          <td>Output a directory-format archive suitable for input into pg_restore. This will create a directory with one file for each table and blob being dumped, plus a so-called Table of Contents file describing the dumped objects in a machine-readable format that pg_restore can read. A directory format archive can be manipulated with standard Unix tools; for example, files in an uncompressed archive can be compressed with the gzip tool. This format is compressed by default.</td>
+          <td><code>pg_restore</code></td>
+      </tr>
+      <tr>
+          <td><code>tar</code></td>
+          <td>Output a <code>tar</code>-format archive suitable for input into pg_restore. The tar format is compatible with the directory format: extracting a tar-format archive produces a valid directory-format archive. However, the tar format does not support compression. Also, when using tar format the relative order of table data items cannot be changed during restore.</td>
+          <td><code>pg_restore</code></td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="how-to-backup-a-database">How to backup a database</h3>
+<p>To create a dump of <code>sample-db</code> in <code>custom</code> format and save it to <code>sample-db.dump</code>:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>pg_dump -U postgres --encoding utf8 -F c -f sample-db.dump sample-db
+</span></span></code></pre></div><p>To create a dump of <code>sample-db</code> in <code>plain</code> format and save it to <code>sample-db.sql</code>:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>pg_dump -U postgres --encoding utf8 -F p -f stoplist.sql stoplist
+</span></span></code></pre></div><h3 id="how-to-restore-a-database-dump">How to restore a database dump</h3>
+<p>First create an empty database to restore the dump to.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#60a0b0;font-style:italic"># We use template0 because it&#39;s is empty and it doesn&#39;t conflict with the schemas and tables in the dump.</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span>createdb -U postgres restored-db --template<span style="color:#666">=</span>template0
+</span></span></code></pre></div><p>Restore <code>custom</code>, <code>directory</code>, and <code>tar</code> format dumps using <code>pg_restore</code>:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>pg_restore -U postgres -d restored-db &lt; ./sample-db.dump
+</span></span></code></pre></div><p>Restore <code>plain</code> format dumps using <code>psql</code>:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>psql -U postgres -d restored-db &lt; ./sample-db.sql
+</span></span></code></pre></div><blockquote>
+<p><strong>Note:</strong> In Powershell the <code>&lt;</code> operator doesn&rsquo;t work. So you&rsquo;ll have to use <code>cmd</code> on Windows.</p>
+</blockquote>
+<h3 id="errors-you-might-come-across">Errors you might come across:</h3>
+<ol>
+<li>Corrupted dumps</li>
+</ol>
+<pre tabindex="0"><code>pg_restore: [archiver] found unexpected block id (x) when reading data -- expected y
+</code></pre><pre tabindex="0"><code>pg_restore: error unrecognized data block type
+</code></pre><p>This might mean the dump is corrupted. One possible reason is the database contained Unicode data and the dump was not encoded in utf8. Use <code>--encoding utf8</code> when running <code>pg_dump</code> to fix that.</p>
+<ol start="2">
+<li>Restoring <code>plain</code> format dumps using <code>pg_restore</code>:</li>
+</ol>
+<pre tabindex="0"><code>pg_restore: [archiver] did not find magic string in file header
+</code></pre><pre tabindex="0"><code>pg_restore: [archiver] input file does not appear to be a valid archive
+</code></pre><p>This happens if you run <code>pg_restore</code> on a <code>plain</code> format dump. Use <code>psql</code> to restore it instead.</p>
+<p>If you have any other tips/tricks, please write the down in the comments!</p>
+
+</content>
+
+
+
+<p>
+  
+  <a href="http://localhost:1313/tags/postgresql/">#postgresql</a>
+
+  
+  <a href="http://localhost:1313/tags/pg_dump/">#pg_dump</a>
+
+  
+  <a href="http://localhost:1313/tags/pg_restore/">#pg_restore</a>
+
+  
+  <a href="http://localhost:1313/tags/psql/">#psql</a>
+
+  
+</p>
+
+
+
+<section class="related-posts">
+  <h3>Keep reading</h3>
+  <ul>
+    
+    <li>
+      <a href="http://localhost:1313/posts/pg-trgm-similarity-search-and-fast-like/">String similarity search and fast LIKE operator using pg_trgm</a>
+      <span class="related-posts__date">
+        12 May, 2021
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/planetscale-vs-hetzner-postgres/">Comparing PlanetScale PostgreSQL with Hetzner Local Postgres</a>
+      <span class="related-posts__date">
+        13 Nov, 2025
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/periodic-backups-potsgresql-s3-cron/">Automatic periodic backups from PostgreSQL to S3 using Cron</a>
+      <span class="related-posts__date">
+        29 Jan, 2022
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/auth-in-integration-tests/">Mocking Authentication and Authorization in ASP.NET Core Integration Tests</a>
+      <span class="related-posts__date">
+        12 Dec, 2021
+      </span>
+    </li>
+    
+  </ul>
+</section>
+
+
+  </main>
+  <footer><div class="footer-links">
+  <a href="/">Home</a> · <a href="/about/">About</a>
+</div>
+<div class="footer-credit">Made with <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a></div>
+</footer>
+
+  
+</body>
+
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" />
+<title>String similarity search and fast LIKE operator using pg_trgm | Muhammad Azeez</title>
+<meta name="title" content="String similarity search and fast LIKE operator using pg_trgm" />
+<meta name="description" content="SQL supports wildcard search on strings using LIKE operator which accepts % and _ wildcards. The problem with LIKE is it&rsquo;s not very fast if you have a lot of rows and the query is non-sargable. And in some cases you need to provide fuzzy search capabilities where the results don&rsquo;t have to exactly match the query.
+PostgreSQL has the pg_trgm extension that solves both problems:
+
+It has gin and gist indexes for speeding up LIKE and other string operators
+It has similarity function and % operator for string similarity search using trigrams.
+
+Let&rsquo;s assume we have this table:" />
+<meta name="keywords" content="postgresql,pg_trgm," />
+
+
+<meta property="og:url" content="http://localhost:1313/posts/pg-trgm-similarity-search-and-fast-like/">
+  <meta property="og:site_name" content="Muhammad Azeez">
+  <meta property="og:title" content="String similarity search and fast LIKE operator using pg_trgm">
+  <meta property="og:description" content="SQL supports wildcard search on strings using LIKE operator which accepts % and _ wildcards. The problem with LIKE is it’s not very fast if you have a lot of rows and the query is non-sargable. And in some cases you need to provide fuzzy search capabilities where the results don’t have to exactly match the query.
+PostgreSQL has the pg_trgm extension that solves both problems:
+It has gin and gist indexes for speeding up LIKE and other string operators It has similarity function and % operator for string similarity search using trigrams. Let’s assume we have this table:">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2021-05-12T00:00:00+00:00">
+    <meta property="article:modified_time" content="2021-05-12T00:00:00+00:00">
+    <meta property="article:tag" content="Postgresql">
+    <meta property="article:tag" content="Pg_trgm">
+    <meta property="og:image" content="http://localhost:1313/assets/images/cover.jpg">
+
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/assets/images/cover.jpg">
+  <meta name="twitter:title" content="String similarity search and fast LIKE operator using pg_trgm">
+  <meta name="twitter:description" content="SQL supports wildcard search on strings using LIKE operator which accepts % and _ wildcards. The problem with LIKE is it’s not very fast if you have a lot of rows and the query is non-sargable. And in some cases you need to provide fuzzy search capabilities where the results don’t have to exactly match the query.
+PostgreSQL has the pg_trgm extension that solves both problems:
+It has gin and gist indexes for speeding up LIKE and other string operators It has similarity function and % operator for string similarity search using trigrams. Let’s assume we have this table:">
+
+
+
+
+  <meta itemprop="name" content="String similarity search and fast LIKE operator using pg_trgm">
+  <meta itemprop="description" content="SQL supports wildcard search on strings using LIKE operator which accepts % and _ wildcards. The problem with LIKE is it’s not very fast if you have a lot of rows and the query is non-sargable. And in some cases you need to provide fuzzy search capabilities where the results don’t have to exactly match the query.
+PostgreSQL has the pg_trgm extension that solves both problems:
+It has gin and gist indexes for speeding up LIKE and other string operators It has similarity function and % operator for string similarity search using trigrams. Let’s assume we have this table:">
+  <meta itemprop="datePublished" content="2021-05-12T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2021-05-12T00:00:00+00:00">
+  <meta itemprop="wordCount" content="953">
+  <meta itemprop="image" content="http://localhost:1313/assets/images/cover.jpg">
+  <meta itemprop="keywords" content="Postgresql,Pg_trgm">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #222;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background-color: #01242e;
+      --heading-color: #eee;
+      --text-color: #ddd;
+      --link-color: #8cc2dd;
+      --visited-color: #8b6fcb;
+      --blockquote-color: #ccc;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  time {
+    font-family: monospace;
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--blockquote-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+
+</style>
+<link rel="stylesheet" href="/assets/css/highlight.css">
+<link rel="stylesheet" href="/assets/css/override.css">
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+  <header><div class="site-brand site-brand--inline">
+  <a href="/" class="title">
+    <h2>Muhammad Azeez</h2>
+  </a>
+  <nav class="site-nav"><a href="/">Home</a>
+<a href="/about/">About</a>
+</nav>
+</div>
+</header>
+  <main>
+
+<content>
+  <p>SQL supports wildcard search on strings using <code>LIKE</code> operator which accepts <code>%</code> and <code>_</code> wildcards. The problem with <code>LIKE</code> is it&rsquo;s not very fast if you have a lot of rows and the query is <a href="https://en.wikipedia.org/wiki/Sargable">non-sargable</a>. And in some cases you need to provide fuzzy search capabilities where the results don&rsquo;t have to exactly match the query.</p>
+<p>PostgreSQL has the <a href="https://www.postgresql.org/docs/9.6/pgtrgm.html"><code>pg_trgm</code> extension</a> that solves both problems:</p>
+<ul>
+<li>It has <code>gin</code> and <code>gist</code> indexes for speeding up <code>LIKE</code> and other string operators</li>
+<li>It has <code>similarity</code> function and <code>%</code> operator for string similarity search using trigrams.</li>
+</ul>
+<p>Let&rsquo;s assume we have this table:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#007020;font-weight:bold">CREATE</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">TABLE</span><span style="color:#bbb"> </span>persons<span style="color:#bbb"> </span>(<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span><span style="color:#bbb">	</span>id<span style="color:#bbb"> </span>int4<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">NOT</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">NULL</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">GENERATED</span><span style="color:#bbb"> </span>ALWAYS<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">AS</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">IDENTITY</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span><span style="color:#bbb">	</span>forenames<span style="color:#bbb"> </span><span style="color:#007020">varchar</span>(<span style="color:#40a070">100</span>)<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">NOT</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">NULL</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4</span><span><span style="color:#bbb">	</span>surname<span style="color:#bbb"> </span><span style="color:#007020">varchar</span>(<span style="color:#40a070">100</span>)<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">NOT</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">NULL</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5</span><span><span style="color:#bbb">	</span>forenames_normalized<span style="color:#bbb"> </span><span style="color:#007020">varchar</span>(<span style="color:#40a070">100</span>)<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">NOT</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">NULL</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6</span><span><span style="color:#bbb">	</span>surname_normalized<span style="color:#bbb"> </span><span style="color:#007020">varchar</span>(<span style="color:#40a070">100</span>)<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">NOT</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">NULL</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7</span><span><span style="color:#bbb">	</span><span style="color:#007020;font-weight:bold">CONSTRAINT</span><span style="color:#bbb"> </span>persons_pk<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">PRIMARY</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">KEY</span><span style="color:#bbb"> </span>(id)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8</span><span><span style="color:#bbb"></span>);<span style="color:#bbb">
+</span></span></span></code></pre></div><p><strong>Note:</strong> Normalized columns are lowercase versions of the normal columns and special characters are removed. You can also remove character accents. This is to make the search experience better for the user as they don&rsquo;t have to type in the exact case and punctuations.</p>
+<p>I inserted 10M rows of fake data generated by <a href="https://github.com/bchavez/Bogus">Bogus</a> into the table. You can <a href="http://github.com/mhmd-azeez/PgTrgm">download the dump here</a>.</p>
+<p>If we run a <code>LIKE</code> query on it:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#007020;font-weight:bold">select</span><span style="color:#bbb"> </span><span style="color:#666">*</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">from</span><span style="color:#bbb"> </span>persons<span style="color:#bbb"> </span>p<span style="color:#bbb"> 
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span><span style="color:#bbb"></span><span style="color:#007020;font-weight:bold">where</span><span style="color:#bbb"> </span>surname_normalized<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">like</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#39;%tche%&#39;</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">and</span><span style="color:#bbb"> </span>forenames_normalized<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">like</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#39;%nde%&#39;</span><span style="color:#bbb">
+</span></span></span></code></pre></div><p>On my laptop it takes PostgreSQL about a second to return the results:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>Gather<span style="color:#bbb">  </span>(cost<span style="color:#666">=</span><span style="color:#40a070">1000</span>.<span style="color:#40a070">00</span>..<span style="color:#40a070">142174</span>.<span style="color:#40a070">75</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">rows</span><span style="color:#666">=</span><span style="color:#40a070">10</span><span style="color:#bbb"> </span>width<span style="color:#666">=</span><span style="color:#40a070">30</span>)<span style="color:#bbb"> </span>(actual<span style="color:#bbb"> </span>time<span style="color:#666">=</span><span style="color:#40a070">9</span>.<span style="color:#40a070">719</span>..<span style="color:#40a070">639</span>.<span style="color:#40a070">460</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">rows</span><span style="color:#666">=</span><span style="color:#40a070">75</span><span style="color:#bbb"> </span>loops<span style="color:#666">=</span><span style="color:#40a070">1</span>)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span><span style="color:#bbb">  </span>Workers<span style="color:#bbb"> </span>Planned:<span style="color:#bbb"> </span><span style="color:#40a070">2</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span><span style="color:#bbb">  </span>Workers<span style="color:#bbb"> </span>Launched:<span style="color:#bbb"> </span><span style="color:#40a070">2</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4</span><span><span style="color:#bbb">  </span><span style="color:#666">-&gt;</span><span style="color:#bbb">  </span>Parallel<span style="color:#bbb"> </span>Seq<span style="color:#bbb"> </span>Scan<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">on</span><span style="color:#bbb"> </span>persons<span style="color:#bbb"> </span>p<span style="color:#bbb">  </span>(cost<span style="color:#666">=</span><span style="color:#40a070">0</span>.<span style="color:#40a070">00</span>..<span style="color:#40a070">141173</span>.<span style="color:#40a070">75</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">rows</span><span style="color:#666">=</span><span style="color:#40a070">4</span><span style="color:#bbb"> </span>width<span style="color:#666">=</span><span style="color:#40a070">30</span>)<span style="color:#bbb"> </span>(actual<span style="color:#bbb"> </span>time<span style="color:#666">=</span><span style="color:#40a070">3</span>.<span style="color:#40a070">425</span>..<span style="color:#40a070">605</span>.<span style="color:#40a070">240</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">rows</span><span style="color:#666">=</span><span style="color:#40a070">25</span><span style="color:#bbb"> </span>loops<span style="color:#666">=</span><span style="color:#40a070">3</span>)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5</span><span><span style="color:#bbb">        </span>Filter:<span style="color:#bbb"> </span>(((surname_normalized)::<span style="color:#007020">text</span><span style="color:#bbb"> </span><span style="color:#666">~~</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#39;%tche%&#39;</span>::<span style="color:#007020">text</span>)<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">AND</span><span style="color:#bbb"> </span>((forenames_normalized)::<span style="color:#007020">text</span><span style="color:#bbb"> </span><span style="color:#666">~~</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#39;%nde%&#39;</span>::<span style="color:#007020">text</span>))<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6</span><span><span style="color:#bbb">        </span><span style="color:#007020;font-weight:bold">Rows</span><span style="color:#bbb"> </span>Removed<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">by</span><span style="color:#bbb"> </span>Filter:<span style="color:#bbb"> </span><span style="color:#40a070">3333308</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7</span><span><span style="color:#bbb"></span>Planning<span style="color:#bbb"> </span>Time:<span style="color:#bbb"> </span><span style="color:#40a070">0</span>.<span style="color:#40a070">097</span><span style="color:#bbb"> </span>ms<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8</span><span><span style="color:#bbb"></span>Execution<span style="color:#bbb"> </span>Time:<span style="color:#bbb"> </span><span style="color:#40a070">639</span>.<span style="color:#40a070">494</span><span style="color:#bbb"> </span>ms<span style="color:#bbb">
+</span></span></span></code></pre></div><p>It seems like all of rows rows are scanned in the table. To speed things up, first we need to enable the <code>pg_trgm</code> extension on the database:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#007020;font-weight:bold">create</span><span style="color:#bbb"> </span>extension<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">not</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">exists</span><span style="color:#bbb"> </span>pg_trgm;<span style="color:#bbb">
+</span></span></span></code></pre></div><p>Then we can use the <code>gin</code> index on the normalized columns:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#007020;font-weight:bold">create</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">index</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">not</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">exists</span><span style="color:#bbb"> </span>idx_gin_persons_on_names<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">on</span><span style="color:#bbb"> </span>persons<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">using</span><span style="color:#bbb"> </span>gin<span style="color:#bbb"> </span>(forenames_normalized<span style="color:#bbb"> </span>gin_trgm_ops,<span style="color:#bbb"> </span>surname_normalized<span style="color:#bbb"> </span>gin_trgm_ops)<span style="color:#bbb">
+</span></span></span></code></pre></div><p><strong>Note:</strong> <code>gin</code> index and <code>gin_trgm_ops</code> operator are part of <code>pg_trgm</code>.</p>
+<p>Adding the <code>gin</code> index took about a minute on my laptop for 10M rows.</p>
+<p>Now let&rsquo;s see if the results have improved:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>Bitmap<span style="color:#bbb"> </span>Heap<span style="color:#bbb"> </span>Scan<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">on</span><span style="color:#bbb"> </span>persons<span style="color:#bbb"> </span>p<span style="color:#bbb">  </span>(cost<span style="color:#666">=</span><span style="color:#40a070">54</span>.<span style="color:#40a070">20</span>..<span style="color:#40a070">3692</span>.<span style="color:#40a070">46</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">rows</span><span style="color:#666">=</span><span style="color:#40a070">995</span><span style="color:#bbb"> </span>width<span style="color:#666">=</span><span style="color:#40a070">30</span>)<span style="color:#bbb"> </span>(actual<span style="color:#bbb"> </span>time<span style="color:#666">=</span><span style="color:#40a070">4</span>.<span style="color:#40a070">011</span>..<span style="color:#40a070">4</span>.<span style="color:#40a070">066</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">rows</span><span style="color:#666">=</span><span style="color:#40a070">75</span><span style="color:#bbb"> </span>loops<span style="color:#666">=</span><span style="color:#40a070">1</span>)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span><span style="color:#bbb">  </span><span style="color:#007020;font-weight:bold">Recheck</span><span style="color:#bbb"> </span>Cond:<span style="color:#bbb"> </span>(((forenames_normalized)::<span style="color:#007020">text</span><span style="color:#bbb"> </span><span style="color:#666">~~</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#39;%nde%&#39;</span>::<span style="color:#007020">text</span>)<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">AND</span><span style="color:#bbb"> </span>((surname_normalized)::<span style="color:#007020">text</span><span style="color:#bbb"> </span><span style="color:#666">~~</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#39;%tche%&#39;</span>::<span style="color:#007020">text</span>))<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span><span style="color:#bbb">  </span>Heap<span style="color:#bbb"> </span>Blocks:<span style="color:#bbb"> </span>exact<span style="color:#666">=</span><span style="color:#40a070">75</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4</span><span><span style="color:#bbb">  </span><span style="color:#666">-&gt;</span><span style="color:#bbb">  </span>Bitmap<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">Index</span><span style="color:#bbb"> </span>Scan<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">on</span><span style="color:#bbb"> </span>idx_gin_persons_on_names<span style="color:#bbb">  </span>(cost<span style="color:#666">=</span><span style="color:#40a070">0</span>.<span style="color:#40a070">00</span>..<span style="color:#40a070">53</span>.<span style="color:#40a070">95</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">rows</span><span style="color:#666">=</span><span style="color:#40a070">995</span><span style="color:#bbb"> </span>width<span style="color:#666">=</span><span style="color:#40a070">0</span>)<span style="color:#bbb"> </span>(actual<span style="color:#bbb"> </span>time<span style="color:#666">=</span><span style="color:#40a070">3</span>.<span style="color:#40a070">999</span>..<span style="color:#40a070">3</span>.<span style="color:#40a070">999</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">rows</span><span style="color:#666">=</span><span style="color:#40a070">75</span><span style="color:#bbb"> </span>loops<span style="color:#666">=</span><span style="color:#40a070">1</span>)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5</span><span><span style="color:#bbb">        </span><span style="color:#007020;font-weight:bold">Index</span><span style="color:#bbb"> </span>Cond:<span style="color:#bbb"> </span>(((forenames_normalized)::<span style="color:#007020">text</span><span style="color:#bbb"> </span><span style="color:#666">~~</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#39;%nde%&#39;</span>::<span style="color:#007020">text</span>)<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">AND</span><span style="color:#bbb"> </span>((surname_normalized)::<span style="color:#007020">text</span><span style="color:#bbb"> </span><span style="color:#666">~~</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#39;%tche%&#39;</span>::<span style="color:#007020">text</span>))<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6</span><span><span style="color:#bbb"></span>Planning<span style="color:#bbb"> </span>Time:<span style="color:#bbb"> </span><span style="color:#40a070">0</span>.<span style="color:#40a070">092</span><span style="color:#bbb"> </span>ms<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7</span><span><span style="color:#bbb"></span>Execution<span style="color:#bbb"> </span>Time:<span style="color:#bbb"> </span><span style="color:#40a070">4</span>.<span style="color:#40a070">120</span><span style="color:#bbb"> </span>ms<span style="color:#bbb">
+</span></span></span></code></pre></div><p>Instead of <code>639.494 ms</code> for execution time, now it only takes <code>4.1 ms</code>! That&rsquo;s because instead of sequentially scanning all of the rows in the document, it scanned the <code>gin</code> index.</p>
+<p>Great, now let&rsquo;s take a look at how to do fuzzy search:</p>
+<p>Let&rsquo;s say we are trying to find someone with forename(s) of <code>anderson</code> and surname of <code>mitchell</code>:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#007020;font-weight:bold">select</span><span style="color:#bbb"> </span>id,<span style="color:#bbb"> </span>forenames,<span style="color:#bbb"> </span>surname,<span style="color:#bbb"> </span>((similarity(<span style="color:#4070a0">&#39;mitchel&#39;</span>,<span style="color:#bbb"> </span>surname_normalized)<span style="color:#bbb"> </span><span style="color:#666">+</span><span style="color:#bbb"> </span>similarity(<span style="color:#4070a0">&#39;andersen&#39;</span>,<span style="color:#bbb"> </span>forenames_normalized))<span style="color:#bbb"> </span><span style="color:#666">/</span><span style="color:#bbb"> </span><span style="color:#40a070">2</span>)<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">as</span><span style="color:#bbb"> </span>score<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">from</span><span style="color:#bbb"> </span>persons<span style="color:#bbb"> </span>p<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span><span style="color:#bbb"></span><span style="color:#007020;font-weight:bold">order</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">by</span><span style="color:#bbb"> </span>score<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">desc</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span><span style="color:#bbb"></span><span style="color:#007020;font-weight:bold">limit</span><span style="color:#bbb"> </span><span style="color:#40a070">10</span><span style="color:#bbb">
+</span></span></span></code></pre></div><p>This query takes about 58 seconds to complete. The <code>similarity</code> function is expensive, so we have to try not to use it as much as possible. For that, we can use the similarity operator (<code>%</code>) to filter out the rows that are below a certain threshold. By default the threshold is 30% similarity (<code>0.3</code>) but you can change that using <code>set_limit</code>. Now let&rsquo;s use it:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#007020;font-weight:bold">select</span><span style="color:#bbb"> </span>id,<span style="color:#bbb"> </span>forenames,<span style="color:#bbb"> </span>surname,<span style="color:#bbb"> </span>((similarity(<span style="color:#4070a0">&#39;mitchel&#39;</span>,<span style="color:#bbb"> </span>surname_normalized)<span style="color:#bbb"> </span><span style="color:#666">+</span><span style="color:#bbb"> </span>similarity(<span style="color:#4070a0">&#39;andersen&#39;</span>,<span style="color:#bbb"> </span>forenames_normalized))<span style="color:#bbb"> </span><span style="color:#666">/</span><span style="color:#bbb"> </span><span style="color:#40a070">2</span>)<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">as</span><span style="color:#bbb"> </span>score<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">from</span><span style="color:#bbb"> </span>persons<span style="color:#bbb"> </span>p<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span><span style="color:#bbb"></span><span style="color:#007020;font-weight:bold">where</span><span style="color:#bbb"> </span>forenames_normalized<span style="color:#bbb"> </span><span style="color:#666">%</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#39;andersen&#39;</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">and</span><span style="color:#bbb"> </span>surname_normalized<span style="color:#bbb"> </span><span style="color:#666">%</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#39;mitchel&#39;</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span><span style="color:#bbb"></span><span style="color:#007020;font-weight:bold">order</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">by</span><span style="color:#bbb"> </span>score<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">desc</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4</span><span><span style="color:#bbb"></span><span style="color:#007020;font-weight:bold">limit</span><span style="color:#bbb"> </span><span style="color:#40a070">10</span><span style="color:#bbb">
+</span></span></span></code></pre></div><p>Now it takes about <code>100ms</code> on my laptop. A huge improvement over 58 seconds :)</p>
+<h2 id="edge-cases">Edge Cases</h2>
+<p><code>pg_trgm</code> uses tri-grams for indexing. It means that each string is broken into all possible 3 letter components. For example <code>mitchel</code>&rsquo;s trigrams are: <code>mit</code>,<code>itc</code>,<code>tch</code>,<code>che</code>,<code>hel</code> and <code>michelle</code>&rsquo;s trigrams are: <code>mic</code>,<code>ich</code>,<code>che</code>,<code>hel</code>,<code>ell</code>,<code>lle</code>. They share 2 trigrams so the similarity of <code>mitchel</code> with <code>michelle</code> is 30%.</p>
+<p>This approach is not useful for words that are less than 3 letters. As you can&rsquo;t form any trigrams. So this query:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#007020;font-weight:bold">select</span><span style="color:#bbb"> </span><span style="color:#666">*</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">from</span><span style="color:#bbb"> </span>persons<span style="color:#bbb"> </span>p<span style="color:#bbb"> 
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span><span style="color:#bbb"></span><span style="color:#007020;font-weight:bold">where</span><span style="color:#bbb"> </span>surname_normalized<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">like</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#39;%he%&#39;</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">and</span><span style="color:#bbb"> </span>forenames_normalized<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">like</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#39;%de%&#39;</span><span style="color:#bbb">
+</span></span></span></code></pre></div><p>Takes the same amount of time on both the indexed table and the non-indexed table because PostgreSQL does sequential scan for both of them:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span>Gather<span style="color:#bbb">  </span>(cost<span style="color:#666">=</span><span style="color:#40a070">1000</span>.<span style="color:#40a070">00</span>..<span style="color:#40a070">147095</span>.<span style="color:#40a070">90</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">rows</span><span style="color:#666">=</span><span style="color:#40a070">49229</span><span style="color:#bbb"> </span>width<span style="color:#666">=</span><span style="color:#40a070">30</span>)<span style="color:#bbb"> </span>(actual<span style="color:#bbb"> </span>time<span style="color:#666">=</span><span style="color:#40a070">1</span>.<span style="color:#40a070">169</span>..<span style="color:#40a070">655</span>.<span style="color:#40a070">329</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">rows</span><span style="color:#666">=</span><span style="color:#40a070">21216</span><span style="color:#bbb"> </span>loops<span style="color:#666">=</span><span style="color:#40a070">1</span>)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span><span style="color:#bbb">  </span>Workers<span style="color:#bbb"> </span>Planned:<span style="color:#bbb"> </span><span style="color:#40a070">2</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span><span style="color:#bbb">  </span>Workers<span style="color:#bbb"> </span>Launched:<span style="color:#bbb"> </span><span style="color:#40a070">2</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4</span><span><span style="color:#bbb">  </span><span style="color:#666">-&gt;</span><span style="color:#bbb">  </span>Parallel<span style="color:#bbb"> </span>Seq<span style="color:#bbb"> </span>Scan<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">on</span><span style="color:#bbb"> </span>persons<span style="color:#bbb"> </span>p<span style="color:#bbb">  </span>(cost<span style="color:#666">=</span><span style="color:#40a070">0</span>.<span style="color:#40a070">00</span>..<span style="color:#40a070">141173</span>.<span style="color:#40a070">00</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">rows</span><span style="color:#666">=</span><span style="color:#40a070">20512</span><span style="color:#bbb"> </span>width<span style="color:#666">=</span><span style="color:#40a070">30</span>)<span style="color:#bbb"> </span>(actual<span style="color:#bbb"> </span>time<span style="color:#666">=</span><span style="color:#40a070">0</span>.<span style="color:#40a070">397</span>..<span style="color:#40a070">583</span>.<span style="color:#40a070">521</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">rows</span><span style="color:#666">=</span><span style="color:#40a070">7072</span><span style="color:#bbb"> </span>loops<span style="color:#666">=</span><span style="color:#40a070">3</span>)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5</span><span><span style="color:#bbb">        </span>Filter:<span style="color:#bbb"> </span>(((surname_normalized)::<span style="color:#007020">text</span><span style="color:#bbb"> </span><span style="color:#666">~~</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#39;%he%&#39;</span>::<span style="color:#007020">text</span>)<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">AND</span><span style="color:#bbb"> </span>((forenames_normalized)::<span style="color:#007020">text</span><span style="color:#bbb"> </span><span style="color:#666">~~</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#39;%de%&#39;</span>::<span style="color:#007020">text</span>))<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6</span><span><span style="color:#bbb">        </span><span style="color:#007020;font-weight:bold">Rows</span><span style="color:#bbb"> </span>Removed<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">by</span><span style="color:#bbb"> </span>Filter:<span style="color:#bbb"> </span><span style="color:#40a070">3326261</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7</span><span><span style="color:#bbb"></span>Planning<span style="color:#bbb"> </span>Time:<span style="color:#bbb"> </span><span style="color:#40a070">0</span>.<span style="color:#40a070">105</span><span style="color:#bbb"> </span>ms<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8</span><span><span style="color:#bbb"></span>Execution<span style="color:#bbb"> </span>Time:<span style="color:#bbb"> </span><span style="color:#40a070">655</span>.<span style="color:#40a070">974</span><span style="color:#bbb"> </span>ms<span style="color:#bbb">
+</span></span></span></code></pre></div><p>There can be cases where the index makes things slower. So please test it for your own use case and weight the trade-offs. Also keep in mind that <a href="https://iamsafts.com/posts/postgres-gin-performance/">inserts and updates take longer with the index</a>.</p>
+<h2 id="benchmarks">Benchmarks</h2>
+<p>I wrote some very simple benchmarks using <a href="https://github.com/dotnet/BenchmarkDotNet">BenchmarkDotNet</a> and here is the results:</p>
+<pre tabindex="0"><code>// * Summary *
+
+BenchmarkDotNet=v0.12.1, OS=Windows 10.0.19041.928 (2004/?/20H1)
+Intel Core i7-8550U CPU 1.80GHz (Kaby Lake R), 1 CPU, 8 logical and 4 physical cores
+.NET Core SDK=5.0.201
+  [Host]     : .NET Core 5.0.4 (CoreCLR 5.0.421.11614, CoreFX 5.0.421.11614), X64 RyuJIT
+  DefaultJob : .NET Core 5.0.4 (CoreCLR 5.0.421.11614, CoreFX 5.0.421.11614), X64 RyuJIT
+
+
+|            Method    |         Mean |      Error |     StdDev |     Median |
+|---------------------:|-------------:|-----------:|-----------:|-----------:|
+|    LikeOnGinIndex    |     5.398 ms |  0.7167 ms |   2.113 ms |   4.170 ms |
+|              Like    | 1,035.140 ms | 55.0098 ms | 158.716 ms | 991.495 ms |
+| SimilarityOnGinIndex |   137.339 ms | 14.7610 ms |  43.523 ms | 114.342 ms |
+</code></pre><p><strong>Note</strong>: Please download the database dump and code on <a href="http://github.com/mhmd-azeez/PgTrgm">GitHub</a>.</p>
+
+</content>
+
+
+
+<p>
+  
+  <a href="http://localhost:1313/tags/postgresql/">#postgresql</a>
+
+  
+  <a href="http://localhost:1313/tags/pg_trgm/">#pg_trgm</a>
+
+  
+</p>
+
+
+
+<section class="related-posts">
+  <h3>Keep reading</h3>
+  <ul>
+    
+    <li>
+      <a href="http://localhost:1313/posts/backup-and-restore-in-postgres/">Backing up and restoring databases in Postgres</a>
+      <span class="related-posts__date">
+        01 Apr, 2021
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/planetscale-vs-hetzner-postgres/">Comparing PlanetScale PostgreSQL with Hetzner Local Postgres</a>
+      <span class="related-posts__date">
+        13 Nov, 2025
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/periodic-backups-potsgresql-s3-cron/">Automatic periodic backups from PostgreSQL to S3 using Cron</a>
+      <span class="related-posts__date">
+        29 Jan, 2022
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/auth-in-integration-tests/">Mocking Authentication and Authorization in ASP.NET Core Integration Tests</a>
+      <span class="related-posts__date">
+        12 Dec, 2021
+      </span>
+    </li>
+    
+  </ul>
+</section>
+
+
+  </main>
+  <footer><div class="footer-links">
+  <a href="/">Home</a> · <a href="/about/">About</a>
+</div>
+<div class="footer-credit">Made with <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a></div>
+</footer>
+
+  
+</body>
+
+</html>
