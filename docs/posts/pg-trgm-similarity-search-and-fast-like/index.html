@@ -226,7 +226,14 @@ It has gin and gist indexes for speeding up LIKE and other string operators It h
 </div>
 </header>
   <main>
-
+<h1>String similarity search and fast LIKE operator using pg_trgm</h1>
+<p>
+  <i>
+    <time datetime='2021-05-12'>
+      12 May 2021
+    </time>
+  </i>
+</p>
 <content>
   <p>SQL supports wildcard search on strings using <code>LIKE</code> operator which accepts <code>%</code> and <code>_</code> wildcards. The problem with <code>LIKE</code> is it&rsquo;s not very fast if you have a lot of rows and the query is <a href="https://en.wikipedia.org/wiki/Sargable">non-sargable</a>. And in some cases you need to provide fuzzy search capabilities where the results don&rsquo;t have to exactly match the query.</p>
 <p>PostgreSQL has the <a href="https://www.postgresql.org/docs/9.6/pgtrgm.html"><code>pg_trgm</code> extension</a> that solves both problems:</p>
@@ -339,28 +346,28 @@ Intel Core i7-8550U CPU 1.80GHz (Kaby Lake R), 1 CPU, 8 logical and 4 physical c
     <li>
       <a href="http://localhost:1313/posts/backup-and-restore-in-postgres/">Backing up and restoring databases in Postgres</a>
       <span class="related-posts__date">
-        01 Apr, 2021
+        01 Apr 2021
       </span>
     </li>
     
     <li>
       <a href="http://localhost:1313/posts/planetscale-vs-hetzner-postgres/">Comparing PlanetScale PostgreSQL with Hetzner Local Postgres</a>
       <span class="related-posts__date">
-        13 Nov, 2025
+        13 Nov 2025
       </span>
     </li>
     
     <li>
       <a href="http://localhost:1313/posts/periodic-backups-potsgresql-s3-cron/">Automatic periodic backups from PostgreSQL to S3 using Cron</a>
       <span class="related-posts__date">
-        29 Jan, 2022
+        29 Jan 2022
       </span>
     </li>
     
     <li>
       <a href="http://localhost:1313/posts/auth-in-integration-tests/">Mocking Authentication and Authorization in ASP.NET Core Integration Tests</a>
       <span class="related-posts__date">
-        12 Dec, 2021
+        12 Dec 2021
       </span>
     </li>
     

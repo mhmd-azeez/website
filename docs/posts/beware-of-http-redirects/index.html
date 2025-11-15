@@ -221,7 +221,14 @@ When I inspected the Request property of the HttpResponse, I saw that there was 
 </div>
 </header>
   <main>
-
+<h1>Beware of HTTP Redirects!</h1>
+<p>
+  <i>
+    <time datetime='2021-09-08'>
+      08 Sep 2021
+    </time>
+  </i>
+</p>
 <content>
   <p>Today, I spent an hour debugging why an http call was getting 401 as a response. I was setting the Authorization header properly and the token was valid. This was the call I was making:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#902000">var</span> httpClient = <span style="color:#007020;font-weight:bold">new</span> HttpClient();
@@ -264,28 +271,28 @@ GOOD: api/endpoint/?parameter=true
     <li>
       <a href="http://localhost:1313/posts/auth-in-integration-tests/">Mocking Authentication and Authorization in ASP.NET Core Integration Tests</a>
       <span class="related-posts__date">
-        12 Dec, 2021
+        12 Dec 2021
       </span>
     </li>
     
     <li>
       <a href="http://localhost:1313/posts/email-snapshot-testing/">Testing Email Templates in ASP.NET Core</a>
       <span class="related-posts__date">
-        09 Dec, 2021
+        09 Dec 2021
       </span>
     </li>
     
     <li>
       <a href="http://localhost:1313/posts/asp-net-core-api-auth0/">Securing ASP.NET Core APIs using Auth0</a>
       <span class="related-posts__date">
-        09 Oct, 2021
+        09 Oct 2021
       </span>
     </li>
     
     <li>
       <a href="http://localhost:1313/posts/quick-edit-mode/">Why my console app gets stuck</a>
       <span class="related-posts__date">
-        09 Aug, 2021
+        09 Aug 2021
       </span>
     </li>
     

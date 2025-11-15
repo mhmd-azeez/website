@@ -216,7 +216,14 @@
 </div>
 </header>
   <main>
-
+<h1>Comparing PlanetScale PostgreSQL with Hetzner Local Postgres</h1>
+<p>
+  <i>
+    <time datetime='2025-11-13'>
+      13 Nov, 2025
+    </time>
+  </i>
+</p>
 <content>
   <p>PlanetScale’s new $5 single-node PostgreSQL tier (PS-5) promises the same observability/maintenance story you get from their Vitess-backed MySQL side. I wanted to see how it feels next to the very boring Postgres instance I already pay for: a Hetzner CPX11 (2 vCPU / 2 GB RAM for €3.85) running in their eu-central region (Nuremberg). This isn’t even LAN vs internet—it’s literally local disk vs a remote region—so the goal is to get a sanity check, not crown a winner.</p>
 <p>I pointed the usual pgbench mix at PlanetScale’s x64 PS-5, PS-10, PS-20, PS-40, PS-80, and PS-160 plans. I asked for eu-central-1 to keep everything close to the Hetzner VPS, but PlanetScale split the replicas across eu-central-1 and eu-central-2, so we roll with what they provisioned. Each plan got hit via the direct endpoint and via PgBouncer. The Hetzner box got the same treatment so we can see how much pooling narrows the gap. Everything lives in <a href="https://github.com/mhmd-azeez/hetzner_vs_planetscale">mhmd-azeez/hetzner_vs_planetscale</a> if you want to re-run or tweak the tests.</p>
