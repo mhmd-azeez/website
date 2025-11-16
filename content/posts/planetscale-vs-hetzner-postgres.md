@@ -2,6 +2,9 @@
 title: "Comparing PlanetScale PostgreSQL with Hetzner Local Postgres"
 date: 2025-11-13
 slug: "planetscale-vs-hetzner-postgres"
+aliases:
+  - /posts/planetscale-vs-hetzner-postgresa/
+  - /posts/planetscale-vs-hetzner-postgresa
 tags:
   - postgresql
   - benchmarking
