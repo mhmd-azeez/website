@@ -35,6 +35,6 @@ Grug say go. Claude go. Grug not help. Grug not interrupt.
 
 Ask new Claude to review. Then grug review own self. Grug run code. Grug test. Grug make sure test good.
 
-Grug not trust code that grug not test. Grug make sure new (or existing) automated tests cover new code.
+Grug not trust code that grug not test. Grug make sure new (or existing) automated tests cover new code. Grug ask CC explain new libraries/concepts. Grug make sure grug understand new code.
 
 Grug Profit.
