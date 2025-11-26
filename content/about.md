@@ -3,25 +3,23 @@ title: "About"
 slug: "about"
 ---
 
-Hi, I’m Muhammad Azeez. I build software, AI automations, and developer tooling that moves the business forward and graduate ideas into reliable products with measurable impact.
+I'm Muhammad Azeez. I build SDKs, distributed systems, and AI tooling. Most recently at Dylibso shipping WebAssembly infrastructure, and before that spun up an edtech startup scaling to 50k+ students in Iraq.
 
-## How I create leverage
+## What I've built
 
-- **AI & automation:** MCP, multi-agent orchestration, eval loops, and the unglamorous reliability work that keeps assistants useful after launch.
-- **Systems & SDKs:** Host SDKs, CLIs, CI/CD, and workflow glue so your platform feels cohesive even when the stack is eclectic.
-- **Product-focused engineering:** I’ll take a feature from ideation to deploy, instrument it, and iterate until it buries the spreadsheet goals.
+**Extism SDKs & tooling** — Architected and shipped host SDKs across C#, Go, PHP, and JavaScript, then built the .NET PDK solving WebAssembly integration challenges. Contributed to mcp.run, wiring up AI agents (crewAI, Mastra) with XTP infrastructure. Worked directly with customers on adoption, docs, and troubleshooting.
 
-## Impact snapshots
+**Pepu** (co-founder) — Took an education platform from idea to $revenue in Iraq. Engineered a scalable API and data model serving 50,000+ users on a single VPS. Built a billing system (subscriptions, vouchers, offline payments), internal admin portal, and a custom content renderer for rich math/LaTeX that gave us an edge over local competitors.
 
-- Took Extism’s host SDKs + CLIs to production across C#, Go, PHP, and TypeScript so customers could embed WebAssembly plugins without a rewrite.
-- Helped ship mcp.run + MCP tooling by pairing pragmatic engineering with relentless customer iteration.
-- Designed resilient data flows for governments, ed-tech, and SaaS startups: identity, border control, classrooms, billing, payments, analytics.
+**Government systems** — [REDACTED]
 
-## Side quests & tinkering
+**Earlier roles** — Fixed memory leaks in desktop apps, spearheaded git adoption + CI/CD pipelines (enabling daily deploys instead of monthly), designed distributed data sync systems, and built an optical mark reader analyzer with custom SkiaSharp layout tools.
 
-- **olox** — bytecode VM for the Lox language in Odin. [GitHub →](https://github.com/mhmd-azeez/olox)
-- **sheets** — a minimalist spreadsheet engine where I play with parsers, dependency graphs, and snapshot tests. [GitHub →](https://github.com/mhmd-azeez/sheets)
-- **Wikipedia toolbox** — Lua modules, bots, and SPARQL queries that helped Kurdish editors modernize workflows. [GitHub →](https://github.com/mhmd-azeez/wikipedia)
+## Tinkering
+
+- **olox** — bytecode VM for Lox in Odin. [GitHub →](https://github.com/mhmd-azeez/olox)
+- **sheets** — minimalist spreadsheet with dependency graphs. [GitHub →](https://github.com/mhmd-azeez/sheets)
+- **Wikipedia** — Lua modules and tools for Kurdish editor workflows. [GitHub →](https://github.com/mhmd-azeez/wikipedia)
 
 ## Get in touch
 
