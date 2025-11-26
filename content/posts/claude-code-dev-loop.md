@@ -1,6 +1,6 @@
 ---
 title: "Claude Code Dev Loop for Grug Brained Developer"
-date: 2025-11-27
+date: 2025-11-26
 slug: "claude-code-dev-loop-grug"
 tags: ["ai", "workflow", "tooling"]
 ---
@@ -27,9 +27,9 @@ Claude suggest approach. If good, say yes. If not, say why. Claude fix. Go back 
 
 Not pretend first plan perfect. Grug just say what think.
 
-## Claude work. Grug rest.
+## Claude work. Grug monitor.
 
-Grug say go. Claude go. Grug not help. Grug not interrupt.
+Grug say go. Claude go. Grug monitor Claude. Grug make sure Claude dont go astray.
 
 ## Fresh eyes and test
 
