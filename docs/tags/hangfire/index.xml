@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hangfire on Muhammad Azeez</title>
+    <link>http://localhost:1313/tags/hangfire/</link>
+    <description>Recent content in Hangfire on Muhammad Azeez</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 05 Dec 2020 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/hangfire/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Background Job Scheduling using Hangfire</title>
+      <link>http://localhost:1313/posts/background-job-scheduling-using-hangfire/</link>
+      <pubDate>Sat, 05 Dec 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/background-job-scheduling-using-hangfire/</guid>
+      <description>&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; This post is part of C# &lt;a href=&#34;https://www.csadvent.christmas/&#34;&gt;Advent Calendar 2020&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;Sometimes you&amp;rsquo;ve tasks that would take too much time to do in the request-response model. For example sending multiple emails. So you have to send the emails asynchronously (i.e. in the background) and returning a response before the jobs are done. Or maybe you want to do some task periodically. For example generating a resource-intensive report at midnight or sending monthly invoices to customers. In short, you want to be able to schedule jobs and be able to track their progress and see their results.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

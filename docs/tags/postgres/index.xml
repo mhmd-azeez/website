@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Postgres on Muhammad Azeez</title>
+    <link>http://localhost:1313/tags/postgres/</link>
+    <description>Recent content in Postgres on Muhammad Azeez</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 22 Aug 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/postgres/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Bringing WebAssembly to PostgreSQL using Extism</title>
+      <link>http://localhost:1313/posts/pg-extism/</link>
+      <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/pg-extism/</guid>
+      <description>&lt;p&gt;Database UDFs, or user-defined functions, are functions that are created by users to add custom functionality to a database. With UDFs, users can extend the capabilities of a database beyond its built-in functions and tailor it to their specific needs. UDFs are commonly used to perform complex calculations, manipulate data, or perform custom operations that are not natively supported by the database. They help to reduce the amount of code that needs to be written and improve performance by avoiding the need to move data outside of the database.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

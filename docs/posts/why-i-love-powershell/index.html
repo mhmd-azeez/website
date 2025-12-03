@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" />
+<title>Why I love Powershell as a scripting language | Muhammad Azeez</title>
+<meta name="title" content="Why I love Powershell as a scripting language" />
+<meta name="description" content="Every once in a while, I have to write a script to automate a task. Maybe it&rsquo;s part of a CI/CD pipeline, or it&rsquo;s part of my dev workflow. My favorite language for writing scripts is PowerShell. Here is why:
+1. Powershell has an object pipeline
+When you pass data (or pipe them) from one command to the next, the data is treated as an object, not as a string. Which means the data can have different properties and it retains these properties." />
+<meta name="keywords" content="powershell,automation," />
+
+
+<meta property="og:url" content="http://localhost:1313/posts/why-i-love-powershell/">
+  <meta property="og:site_name" content="Muhammad Azeez">
+  <meta property="og:title" content="Why I love Powershell as a scripting language">
+  <meta property="og:description" content="Every once in a while, I have to write a script to automate a task. Maybe it’s part of a CI/CD pipeline, or it’s part of my dev workflow. My favorite language for writing scripts is PowerShell. Here is why:
+1. Powershell has an object pipeline When you pass data (or pipe them) from one command to the next, the data is treated as an object, not as a string. Which means the data can have different properties and it retains these properties.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2021-03-14T00:00:00+00:00">
+    <meta property="article:modified_time" content="2021-03-14T00:00:00+00:00">
+    <meta property="article:tag" content="Powershell">
+    <meta property="article:tag" content="Automation">
+    <meta property="og:image" content="http://localhost:1313/assets/images/cover.jpg">
+
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/assets/images/cover.jpg">
+  <meta name="twitter:title" content="Why I love Powershell as a scripting language">
+  <meta name="twitter:description" content="Every once in a while, I have to write a script to automate a task. Maybe it’s part of a CI/CD pipeline, or it’s part of my dev workflow. My favorite language for writing scripts is PowerShell. Here is why:
+1. Powershell has an object pipeline When you pass data (or pipe them) from one command to the next, the data is treated as an object, not as a string. Which means the data can have different properties and it retains these properties.">
+
+
+
+
+  <meta itemprop="name" content="Why I love Powershell as a scripting language">
+  <meta itemprop="description" content="Every once in a while, I have to write a script to automate a task. Maybe it’s part of a CI/CD pipeline, or it’s part of my dev workflow. My favorite language for writing scripts is PowerShell. Here is why:
+1. Powershell has an object pipeline When you pass data (or pipe them) from one command to the next, the data is treated as an object, not as a string. Which means the data can have different properties and it retains these properties.">
+  <meta itemprop="datePublished" content="2021-03-14T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2021-03-14T00:00:00+00:00">
+  <meta itemprop="wordCount" content="586">
+  <meta itemprop="image" content="http://localhost:1313/assets/images/cover.jpg">
+  <meta itemprop="keywords" content="Powershell,Automation">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #222;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background-color: #01242e;
+      --heading-color: #eee;
+      --text-color: #ddd;
+      --link-color: #8cc2dd;
+      --visited-color: #8b6fcb;
+      --blockquote-color: #ccc;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  time {
+    font-family: monospace;
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--blockquote-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+
+</style>
+<link rel="stylesheet" href="/assets/css/highlight.css">
+<link rel="stylesheet" href="/assets/css/override.css">
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+  <header><div class="site-brand site-brand--inline">
+  <a href="/" class="title">
+    <h2>Muhammad Azeez</h2>
+  </a>
+  <nav class="site-nav"><a href="/">Home</a>
+<a href="/about/">About</a>
+</nav>
+</div>
+</header>
+  <main>
+<h1>Why I love Powershell as a scripting language</h1>
+<p>
+  <i>
+    <time datetime='2021-03-14'>
+      14 Mar, 2021
+    </time>
+  </i>
+</p>
+<content>
+  <p>Every once in a while, I have to write a script to automate a task. Maybe it&rsquo;s part of a CI/CD pipeline, or it&rsquo;s part of my dev workflow. My favorite language for writing scripts is PowerShell. Here is why:</p>
+<h1 id="1-powershell-has-an-object-pipeline">1. Powershell has an object pipeline</h1>
+<p>When you pass data (or pipe them) from one command to the next, the data is treated as an object, not as a string. Which means the data can have different properties and it retains these properties.</p>
+<p>This is very powerful and unlocks all kinds of composability scenarios. Commands don&rsquo;t have to be single purpose, they don&rsquo;t have to provide different switches to get different outputs. They give you everything and you can use only the properties you need.</p>
+<h1 id="2-you-have-the-full-power-of-net">2. You have the full power of .NET</h1>
+<p>Powershell is a first class programming language on .NET. You can do almost everything with Powershell. that you can do with C# or F#.  <a href="https://devblogs.microsoft.com/scripting/create-a-simple-graphical-interface-for-a-powershell-script/">You can even create GUIs if you want to</a>. This means that you have access to the coherent and well designed Base Class Library of .NET as well as the entire gallery of <a href="https://www.nuget.org/">nuget</a> packages. It also has <a href="https://www.powershellgallery.com/packages">a lot of modules of it&rsquo;s own</a>.</p>
+<h1 id="3-you-can-use-selectwheregroupby">3. You can use Select/Where/GroupBy</h1>
+<p>Because Powershell is built on top of .NET, it has access to .NET&rsquo;s version of map/filter/reduce. They make scripts much more pleasant to write and read. However the names are a bit different from Javascript or other languages:</p>
+<table>
+  <thead>
+      <tr>
+          <th>JS Name</th>
+          <th>Powershell</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Filter</td>
+          <td>Where</td>
+      </tr>
+      <tr>
+          <td>Map</td>
+          <td>Select</td>
+      </tr>
+      <tr>
+          <td>Reduce</td>
+          <td>Measure / ForEach</td>
+      </tr>
+      <tr>
+          <td>Reduce</td>
+          <td>GroupBy</td>
+      </tr>
+  </tbody>
+</table>
+<h1 id="4-its-now-cross-platform-and-open-source">4. It&rsquo;s now cross-platform and open-source</h1>
+<p><a href="https://github.com/PowerShell/PowerShell">Powershell Core</a> is a cross-platform and open-source version of Powershell built on top of .NET Core maintained by Microsoft.</p>
+<h1 id="5-working-with-data-is-easy">5. Working with Data is easy</h1>
+<p>You can easily work with <a href="https://adamtheautomator.com/powershell-excel/">Excel</a>, <a href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/select-xml">XML</a> and <a href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/convertfrom-json">JSON</a> data which makes working with APIs much easier.</p>
+<h1 id="some-cool-examples">Some cool examples</h1>
+<p>Here are some cool examples that demonstrate the points above:</p>
+<h2 id="get-top-3-largest-files-in-a-folder">Get top 3 largest files in a folder</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#007020">Get-Childitem</span> <span style="color:#4070a0">&#39;C:\Windows\System32&#39;</span> | 
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span>    <span style="color:#007020">Where </span>Length <span style="color:#666">-gt</span> (<span style="color:#40a070">10</span>MB) | <span style="color:#60a0b0;font-style:italic"># Only files that are greater than (-gt) 10 MB (MB is a constant in PS!)</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span>    <span style="color:#007020">Sort </span>-Descending -Property Length | <span style="color:#60a0b0;font-style:italic"># Sort files by their length ascending</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4</span><span>    <span style="color:#007020">Select </span>-First <span style="color:#40a070">3</span> Name, Length <span style="color:#60a0b0;font-style:italic"># Only select name and length properties (projection)</span>
+</span></span></code></pre></div><h3 id="output">Output</h3>
+<pre tabindex="0"><code>Name                    Length
+----                    ------
+MRT.exe              131005360
+nvcompiler.dll        40444864
+WindowsCodecsRaw.dll  32612880
+</code></pre><h2 id="calling-a-rest-api">Calling a REST API</h2>
+<p>In this example we call a JSON REST API and print a property</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#bb60d5">$uri</span> = <span style="color:#4070a0">&#39;https://cat-fact.herokuapp.com/facts/random&#39;</span> <span style="color:#60a0b0;font-style:italic"># random cat fact API</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span><span style="color:#bb60d5">$fact</span> = <span style="color:#007020">Invoke-RestMethod</span> -Uri <span style="color:#bb60d5">$uri</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span><span style="color:#007020">Write-Host</span> <span style="color:#bb60d5">$fact</span>.text
+</span></span></code></pre></div><h3 id="output-1">Output:</h3>
+<pre tabindex="0"><code>Cats make about 100 different sounds. Dogs make only about 10.
+</code></pre><h2 id="export-all-process-information-as-an-excel-sheet">Export all process information as an excel sheet</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#007020">Get-Process</span> | <span style="color:#007020">Select-Object</span> Company, Name, Handles | <span style="color:#007020">Export-Excel</span>
+</span></span></code></pre></div><h3 id="result">Result:</h3>
+<table>
+  <thead>
+      <tr>
+          <th>Company</th>
+          <th>Name</th>
+          <th>Handles</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Microsoft Corporation</td>
+          <td>Calculator</td>
+          <td>537</td>
+      </tr>
+      <tr>
+          <td>Google LLC</td>
+          <td>chrome</td>
+          <td>449</td>
+      </tr>
+      <tr>
+          <td>&hellip;</td>
+          <td>&hellip;</td>
+          <td>&hellip;</td>
+      </tr>
+  </tbody>
+</table>
+<blockquote>
+<p>Note: You&rsquo;ll have to install <a href="https://github.com/dfinke/ImportExcel">ImportExcel</a> module for this example to work.</p>
+</blockquote>
+<h2 id="importing-data-from-excel">Importing data from excel</h2>
+<p>Consider this excel sheet:</p>
+<table>
+  <thead>
+      <tr>
+          <th><strong>City</strong></th>
+          <th><strong>Population</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Erbil</td>
+          <td>1500000</td>
+      </tr>
+      <tr>
+          <td>Sulaymani</td>
+          <td>739182</td>
+      </tr>
+      <tr>
+          <td>Duhok</td>
+          <td>1293000</td>
+      </tr>
+      <tr>
+          <td>Kirkuk</td>
+          <td>1598000</td>
+      </tr>
+      <tr>
+          <td>Halabja</td>
+          <td>245700</td>
+      </tr>
+  </tbody>
+</table>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#60a0b0;font-style:italic"># Get the average poluation of cities in Kurdistan:</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span><span style="color:#007020">Import-Excel</span> <span style="color:#4070a0">&#39;F:\cities.xlsx&#39;</span> | <span style="color:#007020">Measure </span>-Average -Property population | <span style="color:#007020">Select </span>-Property Average
+</span></span></code></pre></div><blockquote>
+<p>Note: You&rsquo;ll have to install <a href="https://github.com/dfinke/ImportExcel">ImportExcel</a> module for this example to work.</p>
+<p>Note 2: Data is from Wikipedia.</p>
+</blockquote>
+<h3 id="ouput">Ouput:</h3>
+<pre tabindex="0"><code>1075176.4
+</code></pre><p>While my preferred scripting language is Powershell, I strongly believe everyone should use whatever tools/languages they are productive in. There is no best language. Everyone has different preferences and that&rsquo;s okay.</p>
+<p>If you&rsquo;re using Powershell on Windows, I suggest you read <a href="https://www.hanselman.com/blog/taking-your-powershell-prompt-to-the-next-level-with-windows-terminal-and-oh-my-posh-3">this post</a> to make your experience even better.</p>
+
+</content>
+
+
+
+<p>
+  
+  <a href="http://localhost:1313/tags/powershell/">#powershell</a>
+
+  
+  <a href="http://localhost:1313/tags/automation/">#automation</a>
+
+  
+</p>
+
+
+
+<section class="related-posts">
+  <h3>Keep reading</h3>
+  <ul>
+    
+    <li>
+      <a href="http://localhost:1313/posts/auth-in-integration-tests/">Mocking Authentication and Authorization in ASP.NET Core Integration Tests</a>
+      <span class="related-posts__date">
+        12 Dec, 2021
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/email-snapshot-testing/">Testing Email Templates in ASP.NET Core</a>
+      <span class="related-posts__date">
+        09 Dec, 2021
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/asp-net-core-api-auth0/">Securing ASP.NET Core APIs using Auth0</a>
+      <span class="related-posts__date">
+        09 Oct, 2021
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/beware-of-http-redirects/">Beware of HTTP Redirects!</a>
+      <span class="related-posts__date">
+        08 Sep, 2021
+      </span>
+    </li>
+    
+  </ul>
+</section>
+
+
+  </main>
+  <footer><div class="footer-links">
+  <a href="/">Home</a> · <a href="/about/">About</a>
+</div>
+<div class="footer-credit">Made with <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a></div>
+</footer>
+
+  
+</body>
+
+</html>

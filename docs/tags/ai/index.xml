@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ai on Muhammad Azeez</title>
+    <link>http://localhost:1313/tags/ai/</link>
+    <description>Recent content in Ai on Muhammad Azeez</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 26 Nov 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/ai/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Claude Code Dev Loop for Grug Brained Developer</title>
+      <link>http://localhost:1313/posts/claude-code-dev-loop-grug/</link>
+      <pubDate>Wed, 26 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/claude-code-dev-loop-grug/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://grugbrain.dev/&#34;&gt;Grug&lt;/a&gt; brain small. Claude brain also small. This collection of thoughts on using AI coding agents gathered by grug brain developer.&lt;/p&gt;&#xA;&lt;h2 id=&#34;grug-think-of-one-thing&#34;&gt;Grug think of one thing&lt;/h2&gt;&#xA;&lt;p&gt;One user story. One bug. One feature. Not ten thing. Grug brain hold one thing.&lt;/p&gt;&#xA;&lt;h2 id=&#34;grug-give-claude-context&#34;&gt;Grug give Claude context&lt;/h2&gt;&#xA;&lt;p&gt;Open Plan Mode. Tell Claude what want. Reference relevant files. Paste official doc for libraries/services. Screenshot if help. Grug not make Claude guess.&lt;/p&gt;&#xA;&lt;h2 id=&#34;claude-ask-grug-answer&#34;&gt;Claude ask. Grug answer.&lt;/h2&gt;&#xA;&lt;p&gt;Claude ask question about design. About edge case. About what mean.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>The Agent Builder&#39;s Reading List: What Actually Matters</title>
+      <link>http://localhost:1313/posts/essential-llm-resources/</link>
+      <pubDate>Mon, 25 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/essential-llm-resources/</guid>
+      <description>&lt;p&gt;Building AI agents? Here are the resources that actually taught me something useful, beyond the usual hype. If you&amp;rsquo;re tired of theoretical papers and want practical insights that work in the real world, start here.&lt;/p&gt;&#xA;&lt;h2 id=&#34;building-effective-agents-by-anthropic&#34;&gt;Building effective agents by Anthropic&lt;/h2&gt;&#xA;&lt;p&gt;&lt;strong&gt;What you&amp;rsquo;ll learn&lt;/strong&gt;: Stop overcomplicating things. The Anthropic team cuts through the noise and shows why the simplest agent often wins. They&amp;rsquo;re brutally honest about what doesn&amp;rsquo;t work - complex frameworks, over-engineered patterns, and agents that try to do everything. Instead, they advocate for boring solutions that actually ship: clear goals, simple tools, and relentless testing. The most valuable insight? Most &amp;ldquo;agent problems&amp;rdquo; are actually prompt engineering problems in disguise.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

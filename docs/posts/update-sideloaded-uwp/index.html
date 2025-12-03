@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" />
+<title>Enabling automatic updates for sideloaded UWP apps | Muhammad Azeez</title>
+<meta name="title" content="Enabling automatic updates for sideloaded UWP apps" />
+<meta name="description" content="Recently we wanted to enable auto-updates for an app that we were developing for a client. The app is developed in UWP and it&rsquo;s sideloaded into the client&rsquo;s computers. Although Microsoft has added an auto-update functionality in the 1803 build of Windows, we had a few issues with it:
+
+It was not very reliable
+We didn&rsquo;t have much control over it beside a simple auto-update policy that specified how often it should check for updates.
+Troubleshooting was very hard as there were no clear way to find out why the auto-updater was not working properly.
+
+So I found an article from 2016 and decided to improve upon it and put it a nuget package. The library is open-source and is available on GitHub." />
+<meta name="keywords" content="uwp,devops," />
+
+
+<meta property="og:url" content="http://localhost:1313/posts/update-sideloaded-uwp/">
+  <meta property="og:site_name" content="Muhammad Azeez">
+  <meta property="og:title" content="Enabling automatic updates for sideloaded UWP apps">
+  <meta property="og:description" content="Recently we wanted to enable auto-updates for an app that we were developing for a client. The app is developed in UWP and it’s sideloaded into the client’s computers. Although Microsoft has added an auto-update functionality in the 1803 build of Windows, we had a few issues with it:
+It was not very reliable We didn’t have much control over it beside a simple auto-update policy that specified how often it should check for updates. Troubleshooting was very hard as there were no clear way to find out why the auto-updater was not working properly. So I found an article from 2016 and decided to improve upon it and put it a nuget package. The library is open-source and is available on GitHub.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2018-12-28T00:00:00+00:00">
+    <meta property="article:modified_time" content="2018-12-28T00:00:00+00:00">
+    <meta property="article:tag" content="Uwp">
+    <meta property="article:tag" content="Devops">
+    <meta property="og:image" content="http://localhost:1313/assets/images/cover.jpg">
+
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/assets/images/cover.jpg">
+  <meta name="twitter:title" content="Enabling automatic updates for sideloaded UWP apps">
+  <meta name="twitter:description" content="Recently we wanted to enable auto-updates for an app that we were developing for a client. The app is developed in UWP and it’s sideloaded into the client’s computers. Although Microsoft has added an auto-update functionality in the 1803 build of Windows, we had a few issues with it:
+It was not very reliable We didn’t have much control over it beside a simple auto-update policy that specified how often it should check for updates. Troubleshooting was very hard as there were no clear way to find out why the auto-updater was not working properly. So I found an article from 2016 and decided to improve upon it and put it a nuget package. The library is open-source and is available on GitHub.">
+
+
+
+
+  <meta itemprop="name" content="Enabling automatic updates for sideloaded UWP apps">
+  <meta itemprop="description" content="Recently we wanted to enable auto-updates for an app that we were developing for a client. The app is developed in UWP and it’s sideloaded into the client’s computers. Although Microsoft has added an auto-update functionality in the 1803 build of Windows, we had a few issues with it:
+It was not very reliable We didn’t have much control over it beside a simple auto-update policy that specified how often it should check for updates. Troubleshooting was very hard as there were no clear way to find out why the auto-updater was not working properly. So I found an article from 2016 and decided to improve upon it and put it a nuget package. The library is open-source and is available on GitHub.">
+  <meta itemprop="datePublished" content="2018-12-28T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2018-12-28T00:00:00+00:00">
+  <meta itemprop="wordCount" content="503">
+  <meta itemprop="image" content="http://localhost:1313/assets/images/cover.jpg">
+  <meta itemprop="keywords" content="Uwp,Devops">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #222;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background-color: #01242e;
+      --heading-color: #eee;
+      --text-color: #ddd;
+      --link-color: #8cc2dd;
+      --visited-color: #8b6fcb;
+      --blockquote-color: #ccc;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  time {
+    font-family: monospace;
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--blockquote-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+
+</style>
+<link rel="stylesheet" href="/assets/css/highlight.css">
+<link rel="stylesheet" href="/assets/css/override.css">
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+  <header><div class="site-brand site-brand--inline">
+  <a href="/" class="title">
+    <h2>Muhammad Azeez</h2>
+  </a>
+  <nav class="site-nav"><a href="/">Home</a>
+<a href="/about/">About</a>
+</nav>
+</div>
+</header>
+  <main>
+<h1>Enabling automatic updates for sideloaded UWP apps</h1>
+<p>
+  <i>
+    <time datetime='2018-12-28'>
+      28 Dec, 2018
+    </time>
+  </i>
+</p>
+<content>
+  <p>Recently we wanted to enable auto-updates for an app that we were developing for a client. The app is developed in UWP and it&rsquo;s sideloaded into the client&rsquo;s computers. Although Microsoft has added an auto-update functionality in the <code>1803</code> build of Windows, we had a few issues with it:</p>
+<ul>
+<li>It was not very reliable</li>
+<li>We didn&rsquo;t have much control over it beside a simple auto-update policy that specified how often it should check for updates.</li>
+<li>Troubleshooting was very hard as there were no clear way to find out why the auto-updater was not working properly.</li>
+</ul>
+<p>So I found <a href="https://matthijs.hoekstraonline.net/2016/09/27/auto-updater-for-my-side-loaded-uwp-apps/">an article</a> from 2016 and decided to improve upon it and put it a <a href="http://nuget.org/packages/Dwrandaz.AutoUpdateComponent">nuget package</a>. The library is open-source and is available on <a href="https://github.com/dwrandaz/AutoUpdateComponent">GitHub</a>.</p>
+<h2 id="how-to-use">How to use</h2>
+<ol>
+<li>First, <a href="https://docs.microsoft.com/en-us/windows/uwp/packaging/web-install-iis">configure the IIS server and create a web app</a>. You can also take a look <a href="https://github.com/Dwrandaz/AutoUpdateComponent/tree/master/Sample/CustomStore">at the sample web app</a>.</li>
+<li>Install the nuget package: <a href="http://nuget.org/packages/Dwrandaz.AutoUpdateComponent">Dwrandaz.AutoUpdateComponent</a> in the UWP app.</li>
+<li>Set minimum version of the app to <code>1803</code></li>
+<li>Open the package manifest <code>.appmanifest</code> file of the main app and declare an app service:
+<ul>
+<li>Name: The default values is <code>Dwrandaz.AutoUpdate</code>. However, you can change it to any name you like but you should note that this name is important and it should be passed to <code>AutoUpdateManager.TryToUpdateAsync</code> if you don&rsquo;t use the default name.</li>
+<li>Entry point: <code>Dwrandaz.AutoUpdateComponent.UpdateTask</code></li>
+</ul>
+</li>
+<li>Right click on the package manifest <code>.appmanifest</code> file and click on <code>View Code</code>.</li>
+<li>Add this namespace declaration: <code>xmlns:rescap=&quot;http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities&quot;</code></li>
+<li>Add <code>rescap</code> to the <code>IgnorableNamespaces</code>, for example: <code>IgnorableNamespaces=&quot;uap mp rescap&quot;</code></li>
+<li>Inside the <code>Package</code> tag, make sure these elements exist:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#062873;font-weight:bold">&lt;Capabilities&gt;</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span>    <span style="color:#062873;font-weight:bold">&lt;Capability</span> <span style="color:#4070a0">Name=</span><span style="color:#4070a0">&#34;internetClient&#34;</span> <span style="color:#062873;font-weight:bold">/&gt;</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span>    <span style="color:#062873;font-weight:bold">&lt;rescap:Capability</span> <span style="color:#4070a0">Name=</span><span style="color:#4070a0">&#34;packageManagement&#34;</span> <span style="color:#062873;font-weight:bold">/&gt;</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4</span><span><span style="color:#062873;font-weight:bold">&lt;/Capabilities&gt;</span>
+</span></span></code></pre></div><p>For more information, take a look at the <a href="https://github.com/Dwrandaz/AutoUpdateComponent/blob/master/Sample/SampleApp/Package.appxmanifest">sample apps manifest file</a>.</p>
+<ol>
+<li>Example usage:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span><span style="color:#902000">var</span> path = <span style="color:#4070a0">&#34;http://localhost:5000/install/AwesomeApp.appinstaller&#34;</span>;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span><span style="color:#902000">var</span> info = <span style="color:#007020;font-weight:bold">await</span> AutoUpdateManager.CheckForUpdatesAsync(path);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span><span style="color:#007020;font-weight:bold">if</span> (!info.Succeeded)
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>{
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span>    <span style="color:#60a0b0;font-style:italic">// There was an error in getting the update information from the server</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>    <span style="color:#60a0b0;font-style:italic">// use info.ErrorMessage to get the error message</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>    <span style="color:#007020;font-weight:bold">return</span>;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>}
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span><span style="color:#007020;font-weight:bold">if</span> (!info.ShouldUpdate)
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span>{
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>    <span style="color:#60a0b0;font-style:italic">// The app is already up-to-date :)</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span>    <span style="color:#007020;font-weight:bold">return</span>;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14</span><span>}
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16</span><span><span style="color:#60a0b0;font-style:italic">// You can use info.MainBundleVersion to get the update version</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18</span><span><span style="color:#902000">var</span> result = <span style="color:#007020;font-weight:bold">await</span> AutoUpdateManager.TryToUpdateAsync(info);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19</span><span><span style="color:#007020;font-weight:bold">if</span> (!result.Succeeded)
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20</span><span>{
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21</span><span>    <span style="color:#60a0b0;font-style:italic">// There was an error in updating the app</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22</span><span>    <span style="color:#60a0b0;font-style:italic">// use result.ErrorMessage to get the error message</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23</span><span>    <span style="color:#007020;font-weight:bold">return</span>;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24</span><span>}
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26</span><span><span style="color:#60a0b0;font-style:italic">// Success! The app was updated, it will restart soon!</span>
+</span></span></code></pre></div><p>For more infromation take a look at the <a href="https://github.com/Dwrandaz/AutoUpdateComponent/blob/master/Sample/SampleApp/MainPage.xaml.cs#L35">Sample app</a>.</p>
+<h2 id="creating-update-packages">Creating update packages</h2>
+<ol>
+<li>Make sure you select the <code>Release</code> configuration</li>
+<li>Right click on the main app project and click <code>Store</code> &gt; <code>Create App Packages...</code></li>
+<li>Select <code>I want to create packages for sideloading.</code>And check the <code>Enable automatic updates</code> checkbox</li>
+<li>Click on <code>Next</code></li>
+<li>Check the <code>Automatically Incremenent</code> checkbox under <code>version</code>.</li>
+<li>Select <code>Always</code> under <code>Generate App bundle</code></li>
+<li>Click on <code>Next</code></li>
+<li>Write the update location path and Select <code>Check every 1 Week</code> or more so that the native auto-update mechanism doesn&rsquo;t mess with our auto-update mechanism.</li>
+<li>Click on <code>Create</code></li>
+<li>Upload the <code>.appinstaller</code>, <code>.index.html</code> and the package folder to the web app in the path that was used in <code>AutoUpdateManager.CheckForUpdatesAsync</code>.</li>
+</ol>
+
+</content>
+
+
+
+<p>
+  
+  <a href="http://localhost:1313/tags/uwp/">#uwp</a>
+
+  
+  <a href="http://localhost:1313/tags/devops/">#devops</a>
+
+  
+</p>
+
+
+
+<section class="related-posts">
+  <h3>Keep reading</h3>
+  <ul>
+    
+    <li>
+      <a href="http://localhost:1313/posts/update-sideloaded-uwp-2/">&#39;Enabling automatic updates for sideloaded UWP apps: Multiple update channels&#39;</a>
+      <span class="related-posts__date">
+        25 Apr, 2020
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/uwp-devops/">Setting up automated build and release pipeline for side-loaded UWP apps using Azure DevOps</a>
+      <span class="related-posts__date">
+        27 Oct, 2019
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/periodic-backups-potsgresql-s3-cron/">Automatic periodic backups from PostgreSQL to S3 using Cron</a>
+      <span class="related-posts__date">
+        29 Jan, 2022
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/how-to-get-an-instance-of-a-page-when-you-navigate-to-it-in-uwp/">How to get an instance of a page when you navigate to it in UWP</a>
+      <span class="related-posts__date">
+        26 May, 2019
+      </span>
+    </li>
+    
+  </ul>
+</section>
+
+
+  </main>
+  <footer><div class="footer-links">
+  <a href="/">Home</a> · <a href="/about/">About</a>
+</div>
+<div class="footer-credit">Made with <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a></div>
+</footer>
+
+  
+</body>
+
+</html>

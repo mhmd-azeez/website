@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Console on Muhammad Azeez</title>
+    <link>http://localhost:1313/tags/console/</link>
+    <description>Recent content in Console on Muhammad Azeez</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 09 Aug 2021 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/console/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Why my console app gets stuck</title>
+      <link>http://localhost:1313/posts/quick-edit-mode/</link>
+      <pubDate>Mon, 09 Aug 2021 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/quick-edit-mode/</guid>
+      <description>&lt;p&gt;In my current project, we have a console app that runs in the background and sends data to a frontend application. The app works great but sometimes it stops working and we need to press a key for it to continue. It turned out it was because of Windows Console&amp;rsquo;s &lt;code&gt;Quick Mode&lt;/code&gt; feature. &lt;a href=&#34;https://stackoverflow.com/a/30517482&#34;&gt;When a user clicks on the console window, it hangs the app execution to allow the user to select the text.&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

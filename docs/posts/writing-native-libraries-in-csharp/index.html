@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" />
+<title>Writing Native Libraries in C# and using them in other languages | Muhammad Azeez</title>
+<meta name="title" content="Writing Native Libraries in C# and using them in other languages" />
+<meta name="description" content="
+Note: Stefan Hausotte has ported this little experiment to F#.
+
+Recently I stumbled upon this article from Michal Strehovsky. It was a great introduction to CoreRT, it made me curious, can you write native libraries with CoreRT? and the answer was Yes!
+&lt;?# Twitter 1123859217654460424 /?&gt;
+I have a little library that I want to be available for multiple languages, so I was quite interested in it. So I tried out the official sample and was delighted with the results." />
+<meta name="keywords" content="csharp,corert," />
+
+
+<meta property="og:url" content="http://localhost:1313/posts/writing-native-libraries-in-csharp/">
+  <meta property="og:site_name" content="Muhammad Azeez">
+  <meta property="og:title" content="Writing Native Libraries in C# and using them in other languages">
+  <meta property="og:description" content="Note: Stefan Hausotte has ported this little experiment to F#.
+Recently I stumbled upon this article from Michal Strehovsky. It was a great introduction to CoreRT, it made me curious, can you write native libraries with CoreRT? and the answer was Yes!
+&lt;?# Twitter 1123859217654460424 /?&gt; I have a little library that I want to be available for multiple languages, so I was quite interested in it. So I tried out the official sample and was delighted with the results.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2019-05-03T00:00:00+00:00">
+    <meta property="article:modified_time" content="2019-05-03T00:00:00+00:00">
+    <meta property="article:tag" content="Csharp">
+    <meta property="article:tag" content="Corert">
+    <meta property="og:image" content="http://localhost:1313/assets/images/cover.jpg">
+
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/assets/images/cover.jpg">
+  <meta name="twitter:title" content="Writing Native Libraries in C# and using them in other languages">
+  <meta name="twitter:description" content="Note: Stefan Hausotte has ported this little experiment to F#.
+Recently I stumbled upon this article from Michal Strehovsky. It was a great introduction to CoreRT, it made me curious, can you write native libraries with CoreRT? and the answer was Yes!
+&lt;?# Twitter 1123859217654460424 /?&gt; I have a little library that I want to be available for multiple languages, so I was quite interested in it. So I tried out the official sample and was delighted with the results.">
+
+
+
+
+  <meta itemprop="name" content="Writing Native Libraries in C# and using them in other languages">
+  <meta itemprop="description" content="Note: Stefan Hausotte has ported this little experiment to F#.
+Recently I stumbled upon this article from Michal Strehovsky. It was a great introduction to CoreRT, it made me curious, can you write native libraries with CoreRT? and the answer was Yes!
+&lt;?# Twitter 1123859217654460424 /?&gt; I have a little library that I want to be available for multiple languages, so I was quite interested in it. So I tried out the official sample and was delighted with the results.">
+  <meta itemprop="datePublished" content="2019-05-03T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2019-05-03T00:00:00+00:00">
+  <meta itemprop="wordCount" content="824">
+  <meta itemprop="image" content="http://localhost:1313/assets/images/cover.jpg">
+  <meta itemprop="keywords" content="Csharp,Corert">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #222;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background-color: #01242e;
+      --heading-color: #eee;
+      --text-color: #ddd;
+      --link-color: #8cc2dd;
+      --visited-color: #8b6fcb;
+      --blockquote-color: #ccc;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  time {
+    font-family: monospace;
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--blockquote-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+
+</style>
+<link rel="stylesheet" href="/assets/css/highlight.css">
+<link rel="stylesheet" href="/assets/css/override.css">
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+  <header><div class="site-brand site-brand--inline">
+  <a href="/" class="title">
+    <h2>Muhammad Azeez</h2>
+  </a>
+  <nav class="site-nav"><a href="/">Home</a>
+<a href="/about/">About</a>
+</nav>
+</div>
+</header>
+  <main>
+<h1>Writing Native Libraries in C# and using them in other languages</h1>
+<p>
+  <i>
+    <time datetime='2019-05-03'>
+      03 May, 2019
+    </time>
+  </i>
+</p>
+<content>
+  <blockquote>
+<p>Note: Stefan Hausotte has ported <a href="https://secanablog.wordpress.com/2020/02/01/writing-a-native-library-in-f-which-can-be-called-from-c/">this little experiment to F#</a>.</p>
+</blockquote>
+<p>Recently I stumbled upon <a href="https://medium.com/@MStrehovsky/fight-the-global-warming-compile-your-c-apps-ahead-of-time-9997e953645b">this article</a> from <a href="https://twitter.com/MStrehovsky">Michal Strehovsky</a>. It was a great introduction to CoreRT, it made me curious, can you write native libraries with CoreRT? and the answer was Yes!</p>
+<?# Twitter 1123859217654460424 /?>
+<p>I have a little library that I want to be available for multiple languages, so I was quite interested in it. So I tried out the <a href="https://github.com/dotnet/corert/tree/master/samples/NativeLibrary">official sample</a> and was delighted with the results.</p>
+<p>I compiled the library using <code>dotnet publish /p:NativeLib=Shared -r win-x64 -c Release</code> and it produced a 4.52 MB dll. With the help of Michal and by following the steps of <a href="https://github.com/dotnet/corert/blob/master/Documentation/using-corert/optimizing-corert.md">this article</a>, I was able to get the size down to 1.67 MB, which is good enough for me.</p>
+<p>The official sample has <a href="https://github.com/dotnet/corert/blob/master/samples/NativeLibrary/Class1.cs">a class</a> that contains two methods: <code>Add</code> and <code>WriteLine</code> which demonstrate how to take primitives and strings as parameters. By default, CoreRT only allows primitives as parameter types, you&rsquo;ll have to marshal anything else that&rsquo;s more complex. However, <code>System.Runtime.InteropServices.Marshal</code> does some have helpful methods.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span><span style="color:#007020;font-weight:bold">public</span> <span style="color:#007020;font-weight:bold">class</span> <span style="color:#0e84b5;font-weight:bold">Class1</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span>{
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span><span style="color:#4070a0">    [NativeCallable(EntryPoint = &#34;add&#34;, CallingConvention = CallingConvention.StdCall)]</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>    <span style="color:#007020;font-weight:bold">public</span> <span style="color:#007020;font-weight:bold">static</span> <span style="color:#902000">int</span> Add(<span style="color:#902000">int</span> a, <span style="color:#902000">int</span> b)
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span>    {
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>        <span style="color:#007020;font-weight:bold">return</span> a + b;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>    }
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span><span style="color:#4070a0">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span><span style="color:#4070a0">    [NativeCallable(EntryPoint = &#34;write_line&#34;, CallingConvention = CallingConvention.StdCall)]</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>    <span style="color:#007020;font-weight:bold">public</span> <span style="color:#007020;font-weight:bold">static</span> <span style="color:#902000">int</span> WriteLine(IntPtr pString)
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span>    {
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>        <span style="color:#60a0b0;font-style:italic">// The marshalling code is typically auto-generated by a custom tool in larger projects.</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span>        <span style="color:#007020;font-weight:bold">try</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14</span><span>        {
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15</span><span>            <span style="color:#60a0b0;font-style:italic">// NativeCallable methods only accept primitive arguments. The primitive arguments</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16</span><span>            <span style="color:#60a0b0;font-style:italic">// have to be marshalled manually if necessary.</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17</span><span>            <span style="color:#902000">string</span> str = Marshal.PtrToStringAnsi(pString);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19</span><span>            Console.WriteLine(str);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20</span><span>        }
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21</span><span>        <span style="color:#007020;font-weight:bold">catch</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22</span><span>        {
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23</span><span>            <span style="color:#60a0b0;font-style:italic">// Exceptions escaping out of NativeCallable methods are treated as unhandled exceptions.</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24</span><span>            <span style="color:#60a0b0;font-style:italic">// The errors have to be marshalled manually if necessary.</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25</span><span>            <span style="color:#007020;font-weight:bold">return</span> -<span style="color:#40a070">1</span>;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26</span><span>        }
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27</span><span>        <span style="color:#007020;font-weight:bold">return</span> <span style="color:#40a070">0</span>;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28</span><span>    }
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29</span><span>}
+</span></span></code></pre></div><p>The methods that are decorated with <code>NativeCallable</code> cannot be called through normal C# methods, but they can be called through P/Invoke 😈.</p>
+<p>To do that, you have to:</p>
+<ol>
+<li>Build the native library by running <code>dotnet publish /p:NativeLib=Shared -r win-x64 -c Release</code> in its folder.</li>
+<li>Create a new console app (I created a dotnet core console app, but it doesn&rsquo;t matter).</li>
+<li>Right click on the project and click <code>Add =&gt; Exisiting Item</code>.</li>
+<li>Browse to <code>bin\Release\netcoreapp2.2\win-x64\native</code> folder of the native library project and then select the dll and click on <code>Add As Link</code>.</li>
+<li>Right Click on the dll in Solution Explorer and click on properties.</li>
+<li>Change <code>Copy to Output Directory</code> to <code>Copy if newer</code>.</li>
+<li>Change Solutions Platform to <code>x64</code>
+<img src="https://thepracticaldev.s3.amazonaws.com/i/czdhpxbk35a55er415n3.PNG" alt="Solutions Platform"></li>
+<li>And then change the code in <code>Program.cs</code> as follows:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span><span style="color:#007020;font-weight:bold">class</span> <span style="color:#0e84b5;font-weight:bold">Program</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span>{
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span><span style="color:#4070a0">    [DllImport(&#34;NativeLibrary.dll&#34;, EntryPoint = &#34;add&#34;, CallingConvention = CallingConvention.StdCall)]</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>    <span style="color:#007020;font-weight:bold">public</span> <span style="color:#007020;font-weight:bold">static</span> <span style="color:#007020;font-weight:bold">extern</span> <span style="color:#902000">int</span> Add(<span style="color:#902000">int</span> a, <span style="color:#902000">int</span> b);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span><span style="color:#4070a0">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span><span style="color:#4070a0">    [DllImport(&#34;NativeLibrary.dll&#34;, EntryPoint = &#34;write_line&#34;, CallingConvention = CallingConvention.StdCall)]</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>    <span style="color:#007020;font-weight:bold">public</span> <span style="color:#007020;font-weight:bold">static</span> <span style="color:#007020;font-weight:bold">extern</span> <span style="color:#007020;font-weight:bold">void</span> WriteLine(<span style="color:#902000">string</span> text);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>    <span style="color:#007020;font-weight:bold">static</span> <span style="color:#007020;font-weight:bold">void</span> Main(<span style="color:#902000">string</span>[] args)
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>    {
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span>        <span style="color:#902000">var</span> result = Add(<span style="color:#40a070">1</span>, <span style="color:#40a070">2</span>);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12</span><span>        WriteLine(result.ToString());
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13</span><span>        WriteLine(<span style="color:#4070a0">&#34;Hello World!&#34;</span>);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14</span><span>    }
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15</span><span>}
+</span></span></code></pre></div><p>Now run the console app and you&rsquo;ll get an output like this:</p>
+<pre tabindex="0"><code>3
+Hello World!
+</code></pre><p><img src="https://thepracticaldev.s3.amazonaws.com/i/84kbvfvss1xwiy7vnvbx.gif" alt="But Why?"></p>
+<p>Now p/invoking the library might not be very useful, but compiling a class library as a native library opens doors for other languages to call the library.</p>
+<p>It was a long and painful process, but I was eventually able to reference the library from the C++ app. This <a href="https://youtu.be/or1dAmUO8k0">video</a> and this <a href="https://docs.microsoft.com/en-us/cpp/build/walkthrough-creating-and-using-a-dynamic-link-library-cpp?view=vs-2019">article</a> were super helpful.</p>
+<p>Here are the steps:</p>
+<ol>
+<li>
+<p>Add an empty C++ project to the solution.</p>
+</li>
+<li>
+<p>Add a source file and paste in this code snippet:</p>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span><span style="color:#007020">#include</span> <span style="color:#007020">&lt;iostream&gt;</span><span style="color:#007020">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span><span style="color:#007020">#include</span> <span style="color:#007020">&lt;NativeLibrary.h&gt;</span><span style="color:#007020">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span><span style="color:#007020"></span><span style="color:#007020;font-weight:bold">using</span> <span style="color:#007020;font-weight:bold">namespace</span> std;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span><span style="color:#902000">void</span> <span style="color:#06287e">main</span>()
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>{
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>    <span style="color:#902000">int</span> result <span style="color:#666">=</span> add(<span style="color:#40a070">1</span>, <span style="color:#40a070">2</span>);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>    cout <span style="color:#666">&lt;&lt;</span> result <span style="color:#666">&lt;&lt;</span> endl;
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>    write_line(<span style="color:#4070a0">&#34;Hello World!&#34;</span>);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>}
+</span></span></code></pre></div><ol start="3">
+<li>Create a new header file called <code>NativeLibrary.h</code> (That&rsquo;s the name of the library) and paste in this code snippet:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#007020">#pragma once
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2</span><span><span style="color:#007020"></span><span style="color:#007020;font-weight:bold">extern</span> <span style="color:#4070a0">&#34;C&#34;</span> <span style="color:#902000">int</span> <span style="color:#007020;font-weight:bold">__stdcall</span> add(<span style="color:#902000">int</span> a, <span style="color:#902000">int</span> b);
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3</span><span><span style="color:#007020;font-weight:bold">extern</span> <span style="color:#4070a0">&#34;C&#34;</span> <span style="color:#902000">void</span> <span style="color:#007020;font-weight:bold">__stdcall</span> write_line(<span style="color:#007020;font-weight:bold">const</span> <span style="color:#902000">char</span><span style="color:#666">*</span> pString);
+</span></span></code></pre></div><p>As you can see have written the signatures of the functions that are exported from <code>NativeLibrary</code>.</p>
+<ol start="4">
+<li>
+<p>Right Click on the C++ project and Click on Properties.</p>
+</li>
+<li>
+<p>Choose <code>All Configurations</code> from <code>Configuration:</code>. This will make sure that the changes apply to both <code>Release</code> and <code>Debug</code> configurations (And any other configuration you might have).</p>
+</li>
+<li>
+<p>Go to General and change <code>Output Directory</code> to <code>$(ProjectDir)bin\$(Platform)\$(Configuration)\</code>. This is not necessary, but I felt more at home like this.</p>
+</li>
+<li>
+<p>Go to <code>C\C++</code> &gt; <code>Linker</code> &gt; <code>General</code> and add <code>$(SolutionDir)NativeLibrary\bin\Release\netcoreapp2.2\win-x64\native</code> to <code>Additional Library Directories</code>. This allows the linker to discover <code>NativeLibrary.lib</code>.</p>
+</li>
+<li>
+<p>Go to <code>C\C++</code> &gt; <code>Linker</code> &gt; <code>Input</code> and add <code>NativeLibrary.lib</code> to the list of <code>Additional Dependencies</code>.</p>
+</li>
+<li>
+<p>Go to <code>Build Events</code> &gt; <code>Post-Build Event</code> and paste in this code snippet to <code>Command Line</code>:</p>
+</li>
+</ol>
+<pre tabindex="0"><code>xcopy /y /d &#34;$(SolutionDir)NativeLibrary\bin\Release\netcoreapp2.2\win-x64\native\NativeLibrary.dll&#34; &#34;$(OutDir)&#34;
+</code></pre><p>This will copy <code>NativeLibrary.dll</code> to the output dir whenever you build the C++ project.</p>
+<ol start="10">
+<li>Build and run the application and you should see this output:</li>
+</ol>
+<pre tabindex="0"><code>3
+Hello World!
+</code></pre><p>If this is not cool, I don&rsquo;t know what is.</p>
+<p>The source code is <a href="https://github.com/encrypt0r/CoreRTDemo">available on GitHub</a>.</p>
+
+</content>
+
+
+
+<p>
+  
+  <a href="http://localhost:1313/tags/csharp/">#csharp</a>
+
+  
+  <a href="http://localhost:1313/tags/corert/">#corert</a>
+
+  
+</p>
+
+
+
+<section class="related-posts">
+  <h3>Keep reading</h3>
+  <ul>
+    
+    <li>
+      <a href="http://localhost:1313/posts/how-orms-work/">How do Object Relational Mappers (like Entity Framework) work?</a>
+      <span class="related-posts__date">
+        21 Dec, 2019
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/csharp-yield/">How the C# yield keyword works</a>
+      <span class="related-posts__date">
+        20 May, 2019
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/chat-gpt-csharp-bindings/">Generating C# bindings for native libraries by using ChatGPT</a>
+      <span class="related-posts__date">
+        17 Dec, 2022
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/csproj-include-folders-recursively/">How to include folders as link recursively in csproj files</a>
+      <span class="related-posts__date">
+        13 Oct, 2020
+      </span>
+    </li>
+    
+  </ul>
+</section>
+
+
+  </main>
+  <footer><div class="footer-links">
+  <a href="/">Home</a> · <a href="/about/">About</a>
+</div>
+<div class="footer-credit">Made with <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a></div>
+</footer>
+
+  
+</body>
+
+</html>

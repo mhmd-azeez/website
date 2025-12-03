@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" />
+<title>Running ASP.NET Core on Linux Part 1 | Muhammad Azeez</title>
+<meta name="title" content="Running ASP.NET Core on Linux Part 1" />
+<meta name="description" content="In the last couple of weeks, I have been busy setting up a CI/CD pipeline for one of my side projects and getting it to run on Linux. I&rsquo;ll try to write about what I have learned in the process.
+This will be a series of blog posts because I don&rsquo;t want it to become too long. This is the first part. We will create a new ASP.NET Core application and manually run it on Linux and configure Nginx and systemd." />
+<meta name="keywords" content="aspnet,linux," />
+
+
+<meta property="og:url" content="http://localhost:1313/posts/aspnet-on-linux-1/">
+  <meta property="og:site_name" content="Muhammad Azeez">
+  <meta property="og:title" content="Running ASP.NET Core on Linux Part 1">
+  <meta property="og:description" content="In the last couple of weeks, I have been busy setting up a CI/CD pipeline for one of my side projects and getting it to run on Linux. I’ll try to write about what I have learned in the process.
+This will be a series of blog posts because I don’t want it to become too long. This is the first part. We will create a new ASP.NET Core application and manually run it on Linux and configure Nginx and systemd.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2020-04-07T00:00:00+00:00">
+    <meta property="article:modified_time" content="2020-04-07T00:00:00+00:00">
+    <meta property="article:tag" content="Aspnet">
+    <meta property="article:tag" content="Linux">
+    <meta property="og:image" content="http://localhost:1313/assets/images/cover.jpg">
+
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/assets/images/cover.jpg">
+  <meta name="twitter:title" content="Running ASP.NET Core on Linux Part 1">
+  <meta name="twitter:description" content="In the last couple of weeks, I have been busy setting up a CI/CD pipeline for one of my side projects and getting it to run on Linux. I’ll try to write about what I have learned in the process.
+This will be a series of blog posts because I don’t want it to become too long. This is the first part. We will create a new ASP.NET Core application and manually run it on Linux and configure Nginx and systemd.">
+
+
+
+
+  <meta itemprop="name" content="Running ASP.NET Core on Linux Part 1">
+  <meta itemprop="description" content="In the last couple of weeks, I have been busy setting up a CI/CD pipeline for one of my side projects and getting it to run on Linux. I’ll try to write about what I have learned in the process.
+This will be a series of blog posts because I don’t want it to become too long. This is the first part. We will create a new ASP.NET Core application and manually run it on Linux and configure Nginx and systemd.">
+  <meta itemprop="datePublished" content="2020-04-07T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2020-04-07T00:00:00+00:00">
+  <meta itemprop="wordCount" content="972">
+  <meta itemprop="image" content="http://localhost:1313/assets/images/cover.jpg">
+  <meta itemprop="keywords" content="Aspnet,Linux">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #222;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background-color: #01242e;
+      --heading-color: #eee;
+      --text-color: #ddd;
+      --link-color: #8cc2dd;
+      --visited-color: #8b6fcb;
+      --blockquote-color: #ccc;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  time {
+    font-family: monospace;
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--blockquote-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+
+</style>
+<link rel="stylesheet" href="/assets/css/highlight.css">
+<link rel="stylesheet" href="/assets/css/override.css">
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+  <header><div class="site-brand site-brand--inline">
+  <a href="/" class="title">
+    <h2>Muhammad Azeez</h2>
+  </a>
+  <nav class="site-nav"><a href="/">Home</a>
+<a href="/about/">About</a>
+</nav>
+</div>
+</header>
+  <main>
+<h1>Running ASP.NET Core on Linux Part 1</h1>
+<p>
+  <i>
+    <time datetime='2020-04-07'>
+      07 Apr, 2020
+    </time>
+  </i>
+</p>
+<content>
+  <p>In the last couple of weeks, I have been busy setting up a CI/CD pipeline for one of my side projects and getting it to run on Linux. I&rsquo;ll try to write about what I have learned in the process.</p>
+<p>This will be a series of blog posts because I don&rsquo;t want it to become too long. This is the first part. We will create a new ASP.NET Core application and manually run it on Linux and configure Nginx and systemd.</p>
+<hr>
+<p>Before anything lets create a new ASP.NET Core Razor Pages web application by running:</p>
+<pre tabindex="0"><code>dotnet new webapp
+</code></pre><p>Good, now add it to a git repository and upload it to GitHub, it will be useful for us in the next part of the series.</p>
+<h2 id="setting-up-vscode">Setting up VSCode</h2>
+<p>VSCode is great for accessing remote Linux servers. It allows you to open multiple terminals and edit files and allows you to download and upload them too. Follow these steps to set it up:</p>
+<ol>
+<li>
+<p>Install the <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh">Remote - SSH</a> extension to be able to login into the server and be able to run commands and edit files.</p>
+</li>
+<li>
+<p>In <em>Remote Explorer</em> tab add a new SSH Target for your server and inter username and IP address and follow the instructions. After you added the server to <em>Remote Explorer</em> connect to it and in <em>Explorer</em> tab open the <code>/</code> directory.</p>
+</li>
+<li>
+<p>Download and install the ASP.NET Core runtime on the server. You can find instructions <a href="https://dotnet.microsoft.com/download/dotnet-core">here</a>.</p>
+</li>
+</ol>
+<h2 id="publishing-the-website">Publishing the website</h2>
+<p>Before doing anything we have to publish the website first. We will automate this process later but for now, we will do it manually.</p>
+<pre tabindex="0"><code>dotnet publish -c Release
+</code></pre><blockquote>
+<p>Note: This will publish the web app in Framework dependent (Meaning that ASP.NET Core runtime has to be installed on the server) and cross-platform (Meaning that it can work on any operating system) mode. You might need to publish it for a specific platform if you&rsquo;re using native libraries or one of your <em>Nuget</em> packages uses them by using the <a href="https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-publish"><code>--runtime</code> switch</a>.</p>
+</blockquote>
+<p>Compress the contents of <code>bin\Release\netcoreapp3.1\publish\</code>  folder (and rename it to publish.zip) and upload it to <code>/home/www/sample</code> folder by dragging it into Explorer tab of VSCode.</p>
+<p>Run these commands to unzip and delete the zip file:</p>
+<pre tabindex="0"><code>cd /home/www/sample
+unzip publish.zip
+rm publish.zip
+</code></pre><p>Okay, now that all of the necessary files are on the server, you can now test if the app actually works:</p>
+<pre tabindex="0"><code>dotnet AspNetOnLinux.dll --urls=http://localhost:9999
+</code></pre><p>If everything is set up correctly and port <code>9999</code> is not being used by any other processes, kestrel must be up and running now.</p>
+<ul>
+<li>If there were an exception like <code>System.IO.IOException: Failed to bind to address http://127.0.0.1:9999: address already in use.</code> Then change the port to something else.</li>
+<li>If There was an error like <code>Command 'dotnet' not found</code> Then it means that ASP.NET Core runtime has not been installed properly. Install them and try again.</li>
+</ul>
+<p>Now that we have confirmed that everything works press next we need to configure Nginx as a reverse proxy, i.e. it listens for an external port on an IP address or domain name and re-routes it to kestrel.</p>
+<h2 id="configuring-nginx">Configuring Nginx</h2>
+<p>Keep kestrel running and open <strong>a new</strong> terminal in VSCode and run:</p>
+<pre tabindex="0"><code>code /etc/nginx/sites-available/default
+</code></pre><p>This will open Nginx default configurations in VSCode.</p>
+<pre tabindex="0"><code>server {
+    listen        IP_ADDRESS;
+    server_name   HOST_NAME;
+    location / {
+        proxy_pass         KESTREL_URL;
+        proxy_http_version 1.1;
+        proxy_set_header   Upgrade $http_upgrade;
+        proxy_set_header   Connection keep-alive;
+        proxy_set_header   Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+    }
+}
+</code></pre><p>Copy the above snippet to the configuration file and make these adjustments:</p>
+<ol>
+<li>Instead of <code>IP_ADDRESS</code> write the external ip address to which you want Nginx to listen. Example: <code>8080</code>. If <code>HOST_NAME</code> is a domain name you might want to use port <code>80</code>.</li>
+<li>Instead of <code>HOST_NAME</code> write the domain name or IP address you want Nginx to listen to. If you&rsquo;ve rented a VM they usually give you a static public IP that you can use for this. or if you want to use a domain name, you need to configure its DNS settings so that it points to your server&rsquo;s public IP address.</li>
+<li>Instead of <code>KESTREL_URL</code> write the URL you have kestrel listening to. Example: <code>http://localhost:9999</code></li>
+</ol>
+<p>Save the file and run this command for Nginx to reload the configuration file:</p>
+<pre tabindex="0"><code># Validate configuration file
+nginx -t
+# Reload configuration file
+nginx -s reload
+</code></pre><p>Now in a browser go to <code>http://HOST_NAME:IP_ADDRESS/</code> and it should show our web app running 😊</p>
+<p>For more information on configuration Nginx go to <a href="https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-3.1">Microsoft docs</a>.</p>
+<h2 id="setting-up-systemd">Setting up systemd</h2>
+<p>Everything seems to be working now. But if you close the ssh session our website will no longer be running and Nginx will return <code>ERROR 502: Bad Gateway</code> if you visited the website. To make sure the website will always be running and will be restarted if it crashes we can use <code>systemd</code>.</p>
+<p>Go back to the terminal that&rsquo;s running kestrel and press CTRL+C to stop it. And then run these commands:</p>
+<pre tabindex="0"><code>code /etc/systemd/system/sample.service
+</code></pre><p>This will open up a blank file in VSCode. Write this configuration in the file:</p>
+<pre tabindex="0"><code>[Unit]
+Description=Sample ASP.NET Core application
+
+[Service]
+WorkingDirectory=/home/www/sample
+ExecStart=/usr/bin/dotnet /home/www/sample/sample.dll --urls=http://localhost:9999
+Restart=always
+# Restart service after 10 seconds if the dotnet service crashes:
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=dotnet-ec
+User=root
+# You can put your environment variables here:
+Environment=ASPNETCORE_ENVIRONMENT=Production
+
+[Install]
+WantedBy=multi-user.target
+</code></pre><p>Save it and then run these commands:</p>
+<pre tabindex="0"><code># Reload systemd configuration
+systemctl daemon-reload
+
+systemctl enable sample
+systemctl start sample
+</code></pre><p>You can verify that our application is up and running by running this command:</p>
+<pre tabindex="0"><code>systemctl status sample
+</code></pre><p>It should not show any errors if everything has gone according to our plan. Press CTRL+C to stop showing status.</p>
+<p>Now our sample web application will be running reliably and will be restarted if it crashed. You can close VSCode and visit <code>http://HOST_NAME:IP_ADDRESS/</code> and it should be serving requests.</p>
+<hr>
+<p>In the next post, we will talk about setting up a CI/CD pipeline using GitHub actions.</p>
+<p>The code is available on  <a href="https://github.com/encrypt0r/AspNetOnLinux">GitHub</a>.</p>
+
+</content>
+
+
+
+<p>
+  
+  <a href="http://localhost:1313/tags/aspnet/">#aspnet</a>
+
+  
+  <a href="http://localhost:1313/tags/linux/">#linux</a>
+
+  
+</p>
+
+
+
+<section class="related-posts">
+  <h3>Keep reading</h3>
+  <ul>
+    
+    <li>
+      <a href="http://localhost:1313/posts/debugging-native-library-dependencies-linux/">Debugging native library dependencies on Linux</a>
+      <span class="related-posts__date">
+        04 Apr, 2020
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/a-more-useful-tree/">A more useful `tree`</a>
+      <span class="related-posts__date">
+        25 Sep, 2025
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/auth-in-integration-tests/">Mocking Authentication and Authorization in ASP.NET Core Integration Tests</a>
+      <span class="related-posts__date">
+        12 Dec, 2021
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/email-snapshot-testing/">Testing Email Templates in ASP.NET Core</a>
+      <span class="related-posts__date">
+        09 Dec, 2021
+      </span>
+    </li>
+    
+  </ul>
+</section>
+
+
+  </main>
+  <footer><div class="footer-links">
+  <a href="/">Home</a> · <a href="/about/">About</a>
+</div>
+<div class="footer-credit">Made with <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a></div>
+</footer>
+
+  
+</body>
+
+</html>

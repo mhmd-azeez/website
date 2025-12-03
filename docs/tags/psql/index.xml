@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Psql on Muhammad Azeez</title>
+    <link>http://localhost:1313/tags/psql/</link>
+    <description>Recent content in Psql on Muhammad Azeez</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 01 Apr 2021 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/psql/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Backing up and restoring databases in Postgres</title>
+      <link>http://localhost:1313/posts/backup-and-restore-in-postgres/</link>
+      <pubDate>Thu, 01 Apr 2021 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/backup-and-restore-in-postgres/</guid>
+      <description>&lt;p&gt;To get a dump of a database you can use &lt;code&gt;pg_dump&lt;/code&gt; or &lt;code&gt;pg_dumpall&lt;/code&gt; for dumping an entire cluster. It &lt;a href=&#34;https://www.postgresql.org/docs/9.1/app-pgdump.html&#34;&gt;supports 4 formats&lt;/a&gt;:&lt;/p&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;Format&lt;/th&gt;&#xA;          &lt;th&gt;Description&lt;/th&gt;&#xA;          &lt;th&gt;Restore via&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;plain&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;Output a plain-text SQL script file (the default).&lt;/td&gt;&#xA;          &lt;td&gt;&lt;code&gt;psql&lt;/code&gt;&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;custom&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;Output a custom-format archive suitable for input into pg_restore. Together with the directory output format, this is the most flexible output format in that it allows manual selection and reordering of archived items during restore. This format is also compressed by default.&lt;/td&gt;&#xA;          &lt;td&gt;&lt;code&gt;pg_restore&lt;/code&gt;&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;directory&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;Output a directory-format archive suitable for input into pg_restore. This will create a directory with one file for each table and blob being dumped, plus a so-called Table of Contents file describing the dumped objects in a machine-readable format that pg_restore can read. A directory format archive can be manipulated with standard Unix tools; for example, files in an uncompressed archive can be compressed with the gzip tool. This format is compressed by default.&lt;/td&gt;&#xA;          &lt;td&gt;&lt;code&gt;pg_restore&lt;/code&gt;&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;tar&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;Output a &lt;code&gt;tar&lt;/code&gt;-format archive suitable for input into pg_restore. The tar format is compatible with the directory format: extracting a tar-format archive produces a valid directory-format archive. However, the tar format does not support compression. Also, when using tar format the relative order of table data items cannot be changed during restore.&lt;/td&gt;&#xA;          &lt;td&gt;&lt;code&gt;pg_restore&lt;/code&gt;&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;h3 id=&#34;how-to-backup-a-database&#34;&gt;How to backup a database&lt;/h3&gt;&#xA;&lt;p&gt;To create a dump of &lt;code&gt;sample-db&lt;/code&gt; in &lt;code&gt;custom&lt;/code&gt; format and save it to &lt;code&gt;sample-db.dump&lt;/code&gt;:&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

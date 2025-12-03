@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="http://localhost:1313/favicon.ico" />
+<title>A more useful `tree` | Muhammad Azeez</title>
+<meta name="title" content="A more useful `tree`" />
+<meta name="description" content="While Linux does have the tree command, if you&rsquo;re doing programming, you probably don&rsquo;t want results in folders like node_modules, dist, etc&hellip;, so here is a useful little alias I have in my ~/.bash_aliases:
+ 1# tree alias that excludes common directories
+ 2treen() {
+ 3    local ignore=&#39;node_modules|__pycache__|*.pyc|.git|.next|dist|build|
+ 4    coverage|.cache|.venv|venv|bin|obj|packages|.vs|*.user|*.suo&#39;
+ 5    local args=(-I &#34;$ignore&#34;)
+ 6    if [ $# -gt 0 ]; then
+ 7        args&#43;=(-P &#34;$1&#34; --prune)
+ 8        shift
+ 9    fi
+10    command tree &#34;${args[@]}&#34; &#34;$@&#34;
+11}
+You can use it like so: treen **/*.ts" />
+<meta name="keywords" content="linux," />
+
+
+<meta property="og:url" content="http://localhost:1313/posts/a-more-useful-tree/">
+  <meta property="og:site_name" content="Muhammad Azeez">
+  <meta property="og:title" content="A more useful `tree`">
+  <meta property="og:description" content="While Linux does have the tree command, if you’re doing programming, you probably don’t want results in folders like node_modules, dist, etc…, so here is a useful little alias I have in my ~/.bash_aliases:
+1# tree alias that excludes common directories 2treen() { 3 local ignore=&#39;node_modules|__pycache__|*.pyc|.git|.next|dist|build| 4 coverage|.cache|.venv|venv|bin|obj|packages|.vs|*.user|*.suo&#39; 5 local args=(-I &#34;$ignore&#34;) 6 if [ $# -gt 0 ]; then 7 args&#43;=(-P &#34;$1&#34; --prune) 8 shift 9 fi 10 command tree &#34;${args[@]}&#34; &#34;$@&#34; 11} You can use it like so: treen **/*.ts">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-09-25T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-09-25T00:00:00+00:00">
+    <meta property="article:tag" content="Linux">
+    <meta property="og:image" content="http://localhost:1313/assets/images/cover.jpg">
+
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="http://localhost:1313/assets/images/cover.jpg">
+  <meta name="twitter:title" content="A more useful `tree`">
+  <meta name="twitter:description" content="While Linux does have the tree command, if you’re doing programming, you probably don’t want results in folders like node_modules, dist, etc…, so here is a useful little alias I have in my ~/.bash_aliases:
+1# tree alias that excludes common directories 2treen() { 3 local ignore=&#39;node_modules|__pycache__|*.pyc|.git|.next|dist|build| 4 coverage|.cache|.venv|venv|bin|obj|packages|.vs|*.user|*.suo&#39; 5 local args=(-I &#34;$ignore&#34;) 6 if [ $# -gt 0 ]; then 7 args&#43;=(-P &#34;$1&#34; --prune) 8 shift 9 fi 10 command tree &#34;${args[@]}&#34; &#34;$@&#34; 11} You can use it like so: treen **/*.ts">
+
+
+
+
+  <meta itemprop="name" content="A more useful `tree`">
+  <meta itemprop="description" content="While Linux does have the tree command, if you’re doing programming, you probably don’t want results in folders like node_modules, dist, etc…, so here is a useful little alias I have in my ~/.bash_aliases:
+1# tree alias that excludes common directories 2treen() { 3 local ignore=&#39;node_modules|__pycache__|*.pyc|.git|.next|dist|build| 4 coverage|.cache|.venv|venv|bin|obj|packages|.vs|*.user|*.suo&#39; 5 local args=(-I &#34;$ignore&#34;) 6 if [ $# -gt 0 ]; then 7 args&#43;=(-P &#34;$1&#34; --prune) 8 shift 9 fi 10 command tree &#34;${args[@]}&#34; &#34;$@&#34; 11} You can use it like so: treen **/*.ts">
+  <meta itemprop="datePublished" content="2025-09-25T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2025-09-25T00:00:00+00:00">
+  <meta itemprop="wordCount" content="1294">
+  <meta itemprop="image" content="http://localhost:1313/assets/images/cover.jpg">
+  <meta itemprop="keywords" content="Linux">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #222;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background-color: #01242e;
+      --heading-color: #eee;
+      --text-color: #ddd;
+      --link-color: #8cc2dd;
+      --visited-color: #8b6fcb;
+      --blockquote-color: #ccc;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  time {
+    font-family: monospace;
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--blockquote-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+
+</style>
+<link rel="stylesheet" href="/assets/css/highlight.css">
+<link rel="stylesheet" href="/assets/css/override.css">
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+  <header><div class="site-brand site-brand--inline">
+  <a href="/" class="title">
+    <h2>Muhammad Azeez</h2>
+  </a>
+  <nav class="site-nav"><a href="/">Home</a>
+<a href="/about/">About</a>
+</nav>
+</div>
+</header>
+  <main>
+<h1>A more useful `tree`</h1>
+<p>
+  <i>
+    <time datetime='2025-09-25'>
+      25 Sep, 2025
+    </time>
+  </i>
+</p>
+<content>
+  <p>While Linux does have the <code>tree</code> command, if you&rsquo;re doing programming, you probably don&rsquo;t want results in folders like <code>node_modules</code>, <code>dist</code>, etc&hellip;, so here is a useful little alias I have in my <code>~/.bash_aliases</code>:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1</span><span><span style="color:#60a0b0;font-style:italic"># tree alias that excludes common directories</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2</span><span>treen<span style="color:#666">()</span> <span style="color:#666">{</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3</span><span>    <span style="color:#007020">local</span> <span style="color:#bb60d5">ignore</span><span style="color:#666">=</span><span style="color:#4070a0">&#39;node_modules|__pycache__|*.pyc|.git|.next|dist|build|
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4</span><span><span style="color:#4070a0">    coverage|.cache|.venv|venv|bin|obj|packages|.vs|*.user|*.suo&#39;</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5</span><span>    <span style="color:#007020">local</span> <span style="color:#bb60d5">args</span><span style="color:#666">=(</span>-I <span style="color:#4070a0">&#34;</span><span style="color:#bb60d5">$ignore</span><span style="color:#4070a0">&#34;</span><span style="color:#666">)</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6</span><span>    <span style="color:#007020;font-weight:bold">if</span> <span style="color:#666">[</span> <span style="color:#bb60d5">$#</span> -gt <span style="color:#40a070">0</span> <span style="color:#666">]</span>; <span style="color:#007020;font-weight:bold">then</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7</span><span>        <span style="color:#bb60d5">args</span><span style="color:#666">+=(</span>-P <span style="color:#4070a0">&#34;</span><span style="color:#bb60d5">$1</span><span style="color:#4070a0">&#34;</span> --prune<span style="color:#666">)</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8</span><span>        <span style="color:#007020">shift</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9</span><span>    <span style="color:#007020;font-weight:bold">fi</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10</span><span>    <span style="color:#007020">command</span> tree <span style="color:#4070a0">&#34;</span><span style="color:#70a0d0">${</span><span style="color:#bb60d5">args</span>[@]<span style="color:#70a0d0">}</span><span style="color:#4070a0">&#34;</span> <span style="color:#4070a0">&#34;</span><span style="color:#bb60d5">$@</span><span style="color:#4070a0">&#34;</span>
+</span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11</span><span><span style="color:#666">}</span>
+</span></span></code></pre></div><p>You can use it like so: <code>treen **/*.ts</code></p>
+<p>Example:</p>
+<p>With <code>treen</code>:</p>
+<pre tabindex="0"><code>mo@mo-x1:~/work/dylibso/js-sdk$ treen
+.
+├── benches
+│   ├── deno
+│   │   └── main.ts
+│   └── node
+│       ├── main.js
+│       ├── package.json
+│       └── package-lock.json
+├── DEVELOPING.md
+├── examples
+│   ├── deno.ts
+│   ├── index.html
+│   └── node.js
+├── jsr.json
+├── justfile
+├── LICENSE
+├── package.json
+├── package-lock.json
+├── playwright.config.js
+├── README.md
+├── src
+│   ├── background-plugin.ts
+│   ├── call-context.ts
+│   ├── foreground-plugin.ts
+│   ├── http-context.ts
+│   ├── interfaces.ts
+│   ├── manifest.ts
+│   ├── mod.test.ts
+│   ├── mod.ts
+│   ├── polyfills
+│   │   ├── browser-capabilities.ts
+│   │   ├── browser-fs.ts
+│   │   ├── browser-wasi.ts
+│   │   ├── bun-capabilities.ts
+│   │   ├── bun-response-to-module.ts
+│   │   ├── bun-worker-url.ts
+│   │   ├── deno-capabilities.ts
+│   │   ├── deno-minimatch.ts
+│   │   ├── deno-wasi.ts
+│   │   ├── host-node-worker_threads.ts
+│   │   ├── node-capabilities.ts
+│   │   ├── node-fs.ts
+│   │   ├── node-minimatch.ts
+│   │   ├── node-wasi.ts
+│   │   ├── response-to-module.ts
+│   │   └── worker-node-worker_threads.ts
+│   ├── worker.ts
+│   └── worker-url.ts
+├── tests
+│   ├── data
+│   │   └── test.txt
+│   └── playwright.test.js
+├── tree.txt
+├── tsconfig.json
+├── types
+│   └── deno
+│       └── index.d.ts
+└── wasm
+    ├── 02-var-reflected.wasm
+    ├── alloc.wasm
+    ├── circular-lhs.wasm
+    ├── circular-rhs.wasm
+    ├── circular.wasm
+    ├── code-functions.wasm
+    ├── code.wasm
+    ├── config.wasm
+    ├── consume.wasm
+    ├── corpus
+    │   ├── 00-circular-lhs.wat
+    │   ├── 01-circular-rhs.wat
+    │   ├── 02-var-reflected.wat
+    │   ├── circular.wat
+    │   ├── fs-link.wat
+    │   ├── loop-forever-init.wat
+    │   └── loop-forever.wat
+    ├── exit.wasm
+    ├── fail.wasm
+    ├── fs-link.wasm
+    ├── fs.wasm
+    ├── hello_haskell.wasm
+    ├── hello.wasm
+    ├── http_headers.wasm
+    ├── http.wasm
+    ├── input_offset.wasm
+    ├── log.wasm
+    ├── loop-forever-init.wasm
+    ├── loop-forever.wasm
+    ├── memory.wasm
+    ├── reflect.wasm
+    ├── sleep.wasm
+    ├── upper.wasm
+    ├── var.wasm
+    └── wasistdout.wasm
+
+13 directories, 80 files
+mo@mo-x1:~/work/dylibso/js-sdk$ 
+</code></pre><p>With <code>tree</code>:</p>
+<pre tabindex="0"><code>.
+├── benches
+│   ├── deno
+│   │   └── main.ts
+│   └── node
+│       ├── main.js
+│       ├── package.json
+│       └── package-lock.json
+├── DEVELOPING.md
+├── examples
+│   ├── deno.ts
+│   ├── index.html
+│   └── node.js
+├── jsr.json
+├── justfile
+├── LICENSE
+├── node_modules
+│   ├── @aashutoshrathi
+│   │   └── word-wrap
+│   │       ├── index.d.ts
+│   │       ├── index.js
+│   │       ├── LICENSE
+│   │       ├── package.json
+│   │       └── README.md
+│   ├── acorn
+│   │   ├── bin
+│   │   │   └── acorn
+│   │   ├── CHANGELOG.md
+│   │   ├── dist
+│   │   │   ├── acorn.d.mts
+│   │   │   ├── acorn.d.ts
+│   │   │   ├── acorn.js
+│   │   │   ├── acorn.mjs
+│   │   │   └── bin.js
+│   │   ├── LICENSE
+│   │   ├── package.json
+│   │   └── README.md
+│   ├── acorn-jsx
+│   │   ├── index.d.ts
+│   │   ├── index.js
+│   │   ├── LICENSE
+│   │   ├── package.json
+│   │   ├── README.md
+│   │   └── xhtml.js
+│   ├── ajv
+│   │   ├── dist
+│   │   │   ├── ajv.bundle.js
+│   │   │   ├── ajv.min.js
+│   │   │   └── ajv.min.js.map
+│   │   ├── lib
+│   │   │   ├── ajv.d.ts
+│   │   │   ├── ajv.js
+│   │   │   ├── cache.js
+│   │   │   ├── compile
+│   │   │   │   ├── async.js
+│   │   │   │   ├── equal.js
+│   │   │   │   ├── error_classes.js
+│   │   │   │   ├── formats.js
+│   │   │   │   ├── index.js
+│   │   │   │   ├── resolve.js
+│   │   │   │   ├── rules.js
+│   │   │   │   ├── schema_obj.js
+│   │   │   │   ├── ucs2length.js
+│   │   │   │   └── util.js
+│   │   │   ├── data.js
+│   │   │   ├── definition_schema.js
+│   │   │   ├── dot
+│   │   │   │   ├── allOf.jst
+│   │   │   │   ├── anyOf.jst
+│   │   │   │   ├── coerce.def
+│   │   │   │   ├── comment.jst
+│   │   │   │   ├── const.jst
+│   │   │   │   ├── contains.jst
+│   │   │   │   ├── custom.jst
+│   │   │   │   ├── defaults.def
+│   │   │   │   ├── definitions.def
+│   │   │   │   ├── dependencies.jst
+│   │   │   │   ├── enum.jst
+│   │   │   │   ├── errors.def
+│   │   │   │   ├── format.jst
+│   │   │   │   ├── if.jst
+│   │   │   │   ├── items.jst
+│   │   │   │   ├── _limitItems.jst
+│   │   │   │   ├── _limit.jst
+│   │   │   │   ├── _limitLength.jst
+│   │   │   │   ├── _limitProperties.jst
+│   │   │   │   ├── missing.def
+│   │   │   │   ├── multipleOf.jst
+│   │   │   │   ├── not.jst
+│   │   │   │   ├── oneOf.jst
+│   │   │   │   ├── pattern.jst
+│   │   │   │   ├── properties.jst
+│   │   │   │   ├── propertyNames.jst
+│   │   │   │   ├── ref.jst
+│   │   │   │   ├── required.jst
+│   │   │   │   ├── uniqueItems.jst
+│   │   │   │   └── validate.jst
+│   │   │   ├── dotjs
+│   │   │   │   ├── allOf.js
+│   │   │   │   ├── anyOf.js
+│   │   │   │   ├── comment.js
+│   │   │   │   ├── const.js
+│   │   │   │   ├── contains.js
+│   │   │   │   ├── custom.js
+│   │   │   │   ├── dependencies.js
+│   │   │   │   ├── enum.js
+│   │   │   │   ├── format.js
+│   │   │   │   ├── if.js
+│   │   │   │   ├── index.js
+│   │   │   │   ├── items.js
+│   │   │   │   ├── _limitItems.js
+│   │   │   │   ├── _limit.js
+│   │   │   │   ├── _limitLength.js
+│   │   │   │   ├── _limitProperties.js
+│   │   │   │   ├── multipleOf.js
+│   │   │   │   ├── not.js
+│   │   │   │   ├── oneOf.js
+│   │   │   │   ├── pattern.js
+│   │   │   │   ├── properties.js
+│   │   │   │   ├── propertyNames.js
+│   │   │   │   ├── README.md
+│   │   │   │   ├── ref.js
+│   │   │   │   ├── required.js
+│   │   │   │   ├── uniqueItems.js
+│   │   │   │   └── validate.js
+│   │   │   ├── keyword.js
+│   │   │   └── refs
+│   │   │       ├── data.json
+│   │   │       ├── json-schema-draft-04.json
+│   │   │       ├── json-schema-draft-06.json
+│   │   │       ├── json-schema-draft-07.json
+│   │   │       └── json-schema-secure.json
+
+... A million files later ...
+
+│   └── yocto-queue
+│       ├── index.d.ts
+│       ├── index.js
+│       ├── license
+│       ├── package.json
+│       └── readme.md
+├── package.json
+├── package-lock.json
+├── playwright.config.js
+├── README.md
+├── src
+│   ├── background-plugin.ts
+│   ├── call-context.ts
+│   ├── foreground-plugin.ts
+│   ├── http-context.ts
+│   ├── interfaces.ts
+│   ├── manifest.ts
+│   ├── mod.test.ts
+│   ├── mod.ts
+│   ├── polyfills
+│   │   ├── browser-capabilities.ts
+│   │   ├── browser-fs.ts
+│   │   ├── browser-wasi.ts
+│   │   ├── bun-capabilities.ts
+│   │   ├── bun-response-to-module.ts
+│   │   ├── bun-worker-url.ts
+│   │   ├── deno-capabilities.ts
+│   │   ├── deno-minimatch.ts
+│   │   ├── deno-wasi.ts
+│   │   ├── host-node-worker_threads.ts
+│   │   ├── node-capabilities.ts
+│   │   ├── node-fs.ts
+│   │   ├── node-minimatch.ts
+│   │   ├── node-wasi.ts
+│   │   ├── response-to-module.ts
+│   │   └── worker-node-worker_threads.ts
+│   ├── worker.ts
+│   └── worker-url.ts
+├── tests
+│   ├── data
+│   │   └── test.txt
+│   └── playwright.test.js
+├── tree.txt
+├── tsconfig.json
+├── types
+│   └── deno
+│       └── index.d.ts
+└── wasm
+    ├── 02-var-reflected.wasm
+    ├── alloc.wasm
+    ├── circular-lhs.wasm
+    ├── circular-rhs.wasm
+    ├── circular.wasm
+    ├── code-functions.wasm
+    ├── code.wasm
+    ├── config.wasm
+    ├── consume.wasm
+    ├── corpus
+    │   ├── 00-circular-lhs.wat
+    │   ├── 01-circular-rhs.wat
+    │   ├── 02-var-reflected.wat
+    │   ├── circular.wat
+    │   ├── fs-link.wat
+    │   ├── loop-forever-init.wat
+    │   └── loop-forever.wat
+    ├── exit.wasm
+    ├── fail.wasm
+    ├── fs-link.wasm
+    ├── fs.wasm
+    ├── hello_haskell.wasm
+    ├── hello.wasm
+    ├── http_headers.wasm
+    ├── http.wasm
+    ├── input_offset.wasm
+    ├── log.wasm
+    ├── loop-forever-init.wasm
+    ├── loop-forever.wasm
+    ├── memory.wasm
+    ├── reflect.wasm
+    ├── sleep.wasm
+    ├── upper.wasm
+    ├── var.wasm
+    └── wasistdout.wasm
+
+874 directories, 8134 files
+</code></pre><p>P.S: I don&rsquo;t really remember what <code>n</code> stands for in <code>treen</code> anymore. Must have meant something when I first wrote the alias</p>
+<p>Update 1: I realized using a function would be better than an alias, as you can still use the glob filtering and -I param. The old alias was:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1</span><span><span style="color:#007020">alias</span> <span style="color:#bb60d5">treen</span><span style="color:#666">=</span><span style="color:#4070a0">&#39;tree -I &#34;node_modules|__pycache__|*.pyc|.git|.next|dist|build|coverage|.cache|.venv|venv|bin|obj|packages|.vs|*.user|*.suo&#34;&#39;</span>
+</span></span></code></pre></div>
+</content>
+
+
+
+<p>
+  
+  <a href="http://localhost:1313/tags/linux/">#linux</a>
+
+  
+</p>
+
+
+
+<section class="related-posts">
+  <h3>Keep reading</h3>
+  <ul>
+    
+    <li>
+      <a href="http://localhost:1313/posts/aspnet-on-linux-1/">Running ASP.NET Core on Linux Part 1</a>
+      <span class="related-posts__date">
+        07 Apr, 2020
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/debugging-native-library-dependencies-linux/">Debugging native library dependencies on Linux</a>
+      <span class="related-posts__date">
+        04 Apr, 2020
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/claude-code-dev-loop-grug/">Claude Code Dev Loop for Grug Brained Developer</a>
+      <span class="related-posts__date">
+        26 Nov, 2025
+      </span>
+    </li>
+    
+    <li>
+      <a href="http://localhost:1313/posts/planetscale-vs-hetzner-postgres/">Comparing PlanetScale PostgreSQL with Hetzner Local Postgres</a>
+      <span class="related-posts__date">
+        13 Nov, 2025
+      </span>
+    </li>
+    
+  </ul>
+</section>
+
+
+  </main>
+  <footer><div class="footer-links">
+  <a href="/">Home</a> · <a href="/about/">About</a>
+</div>
+<div class="footer-credit">Made with <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a></div>
+</footer>
+
+  
+</body>
+
+</html>
