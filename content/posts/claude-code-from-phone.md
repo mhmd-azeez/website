@@ -2,7 +2,7 @@
 title: "Claude Code from Your Phone"
 date: 2025-12-11
 slug: "claude-code-from-phone"
-tags: ["ai", "workflow", "tooling"]
+tags: ["ai", "workflow", "tailscale"]
 ---
 
 I use [Claude Code](https://docs.anthropic.com/en/docs/claude-code) a lot. Sometimes I kick off a task on my desktop, then want to check on it from my laptop on the couch, or from my phone while I'm out (Why let the precious tokens expire, amirite?). Here's my setup for accessing the same Claude Code session from anywhere.
