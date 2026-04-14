@@ -26,4 +26,4 @@ For every price the agent quotes, it has to tell us where the price came from: t
 We went one step further: a regex filter catches any price-like numbers that slipped through without a citation, and stops them from reaching the customer.
 
 Here's how we show citations in the UI:
-![Message24 shows the citations for each AI response](../../static/assets/images/posts/agent-harness-hallucinations/citations.png)
+![Message24 shows the citations for each AI response](/assets/images/posts/agent-harness-hallucinations/citations.png)
