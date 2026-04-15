@@ -5,9 +5,9 @@ slug: "agent-harness-hallucinations"
 tags: ["agents", "ai"]
 ---
 
-One of the biggest problems my customers kept hitting on [Message24](https://message24.net) was hallucination. A shopper asks about a product that doesn't exist; the LLM invents a price. Someone asks if an item is in stock; the LLM swears it is. Not a bug, just an LLM being helpful the only way it knows how: by making stuff up.
+One of the biggest problems my customers kept hitting on [Message24](https://message24.net) was hallucination. A shopper asks about a product that doesn't exist; the LLM invents a price. Someone asks if an item is in stock; the LLM swears it is.
 
-Some LLMs find it really hard to say "I don't know" (or in our case, escalate the conversation). They'd rather be useful idiots. LLMs are golden retrievers; they want to please, even if it costs them their honesty.
+Some LLMs find it really hard to say "I don't know" (or in our case, escalate the conversation). LLMs are golden retrievers; they want to please, even if it costs them their honesty.
 
 I tried the obvious fix first: threatening and begging. Every variation of "do not make things up" in the system prompt. The LLM nodded, agreed, and then made things up anyway. Prompt engineering gets you close, but it's a request, not a rule. For production, you need deterministic guardrails.
 
