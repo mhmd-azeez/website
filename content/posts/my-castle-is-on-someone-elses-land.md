@@ -9,9 +9,9 @@ From the first day I started [Message24](http://message24.net/), one of my bigge
 
 I didn't have to wait long.
 
-**October 2025.** Meta [bans general-purpose AI assistants](https://dig.watch/updates/meta-changes-whatsapp-terms-to-block-third-party-ai-assistants) from the WhatsApp Business API. ChatGPT, Perplexity, anything where the AI itself is the product. New providers immediately, everyone already on the platform gets until January 15, 2026. The reason Meta gave: those bots pushed enormous volumes of messages it had no way to charge for.
+**October 2025.** Meta [bans general-purpose AI assistants](https://dig.watch/updates/meta-changes-whatsapp-terms-to-block-third-party-ai-assistants) from the WhatsApp Business API. ChatGPT, Perplexity, anything where the AI itself is the product. New providers immediately, everyone already on the platform gets until January 15, 2026. Officially it was about server load and unintended use of the API. What those bots also happened to be was enormous volumes of traffic that fit none of Meta's billing categories.
 
-**December 2025.** The European Commission opens an investigation. Italy's regulator doesn't wait for it and [orders Meta to drop the ban](https://www.tlt.com/insights-and-events/insight/ai-chatbots-and-competition-law-a-look-into-the-meta-whatsapp-antitrust-investigations). Meta drops it. In Italy.
+**December 2025.** The European Commission opens an investigation. Three weeks later Italy's regulator skips ahead to a remedy and [orders Meta to drop the ban](https://www.tlt.com/insights-and-events/insight/ai-chatbots-and-competition-law-a-look-into-the-meta-whatsapp-antitrust-investigations). Meta drops it. In Italy.
 
 **February 2026.** The Commission issues a Statement of Objections and says it intends to impose interim measures. Still no verdict.
 
