@@ -18,7 +18,7 @@ A flag is checked everywhere the feature lives: the API, background jobs, the AI
 
 This is the admin page for flags. Automations is on for everyone now, and the two business overrides underneath are left over from when it was on for only those two businesses:
 
-![Feature Flags Dashboard](../../static/assets/images/posts/feature-flags/feature-flags.png)
+![Feature Flags Dashboard](/assets/images/posts/feature-flags/feature-flags.png)
 
 To keep thing simple, there's no flag service. Flags are rows in a key-value table in PostgreSQL:
 
