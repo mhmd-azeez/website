@@ -3,6 +3,7 @@ title: "Feature flags with one Postgres table"
 date: 2026-10-02
 slug: "feature-flags"
 tags: ["feature-flags", "postgresql"]
+images: ["/assets/images/posts/feature-flags/cover.png"]
 ---
 
 In April I had to record a screen video for Meta's app review (a huge pain, to be honest). The feature I was showing needed a permission Meta hadn't granted yet, so I couldn't turn it on for everyone. Recording it locally wasn't realistic either, because most of it depends on real webhooks. So I added a feature flag: the feature stayed off in production except on the one business I was recording.
